@@ -5,13 +5,17 @@ using UnityEngine;
 /// <summary>
 /// 플레이어 캐릭터를 나타냅니다. 
 /// </summary>
-public sealed class PlayerCharacter : PlayerCharacterBase
+public sealed class PlayerCharacter : PlayerCharacterBase,
+    IDefaultPlayerInputReceivable
 {
-    
-    public void OnSpaceeInput()
-    {
-        Debug.Log("스페이스바 입력됨");
-    }
-    
+    private PlayerCharacterMovement _MovementComponent;
+
+    public PlayerCharacterMovement movement => _MovementComponent ??
+        (_MovementComponent = GetComponent<PlayerCharacterMovement>());
+
+
+
+    void IDefaultPlayerInputReceivable.OnMovementInput(Vector2 inputAxis)
+        => movement.OnMovementInput(inputAxis);
 
 }
