@@ -18,4 +18,6 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     void IDefaultPlayerInputReceivable.OnMovementInput(Vector2 inputAxis)
         => movement.OnMovementInput(inputAxis);
 
+    void IDefaultPlayerInputReceivable.OnJumpInput() => movement.OnJumpInput();
+
 }

@@ -33,4 +33,9 @@ public sealed class GameScenePlayerController : PlayerControllerBase
        _PlayerInputReceivable?.OnMovementInput(inputAxis);
     }
 
+    private void OnJumpInput()
+    {
+        _PlayerInputReceivable?.OnJumpInput();
+    }
+
 }

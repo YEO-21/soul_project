@@ -12,6 +12,9 @@ public interface IDefaultPlayerInputReceivable
     // 이동
     void OnMovementInput(Vector2 inputAxis);
 
+    // 점프 입력
+    void OnJumpInput();
+
     // 걷기 달리기
 
     // 피하기 키
