@@ -83,6 +83,9 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         // 땅에 닿음 상태 갱신
         isGrounded = characterController.isGrounded;
 
+        // 바닥에 대한 정보를 얻습니다.
+        TryGetFloorInfo();
+
         // 점프 / 중력을 계산합니다.
         CalculateJumpAndGravity();
 
@@ -118,10 +121,39 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         return true;
     }
 
+    public LayerMask m_DetectLayer;
+    private Vector3 _HitPoint;
+    private Vector3 _HitNormal;
+    private bool _IsDetected;
+
+    /// <summary>
+    /// 바닥에 대한 정보를 얻습니다.
+    /// </summary>
+    /// <returns></returns>
+    private bool TryGetFloorInfo()
+    {
+        Ray ray = new Ray(transform.position, Vector3.down);
+
+        _IsDetected = false;
+       if (Physics.Raycast(ray, out RaycastHit hitInfo, 50.0f,
+           m_DetectLayer, QueryTriggerInteraction.Ignore))
+       {
+            _HitPoint = hitInfo.point;
+            _HitNormal = hitInfo.normal;
+            _IsDetected = true;
+
+            float angle = Vector3.Angle(Vector3.up, _HitNormal);
+            Debug.Log($"지면 경사 : {angle}");
+       }
+
+        return true;
+    }
+
     /// <summary>
     /// 입력값을 월드 방향으로 변환합니다.
     /// </summary>
     /// <returns></returns>
+    /// 
     private Vector3 InputToWorldDirection()
     {
         // 뷰의 앞/옆 방향을 얻습니다.
@@ -186,6 +218,24 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
             _JumpRequested = true;
         }
     }
+
+#if UNITY_EDITOR
+
+    private void OnDrawGizmos()
+    {
+       if(_IsDetected)
+       {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(_HitPoint, _HitPoint + _HitNormal);
+       }
+    }
+
+
+
+
+#endif
+
+
 
 
 }
