@@ -1,0 +1,23 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+/// <summary>
+/// 플레이어 캐릭터를 나타냅니다. 
+/// </summary>
+public sealed class PlayerCharacter : PlayerCharacterBase,
+    IDefaultPlayerInputReceivable
+{
+    private PlayerCharacterMovement _MovementComponent;
+
+    public PlayerCharacterMovement movement => _MovementComponent ??
+        (_MovementComponent = GetComponent<PlayerCharacterMovement>());
+
+
+
+    void IDefaultPlayerInputReceivable.OnMovementInput(Vector2 inputAxis)
+        => movement.OnMovementInput(inputAxis);
+
+    void IDefaultPlayerInputReceivable.OnJumpInput() => movement.OnJumpInput();
+
+}
