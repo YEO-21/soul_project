@@ -63,6 +63,10 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// </summary>
     public Vector3 gravity => Physics.gravity * m_GravityMultiplier;
 
+    #region DEBUG
+    private DrawGizmoLineInfo _DrawLineInfo;
+    #endregion
+
 
     public void Update()
     {
@@ -122,9 +126,7 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     }
 
     public LayerMask m_DetectLayer;
-    private Vector3 _HitPoint;
-    private Vector3 _HitNormal;
-    private bool _IsDetected;
+    
 
     /// <summary>
     /// 바닥에 대한 정보를 얻습니다.
@@ -134,16 +136,10 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     {
         Ray ray = new Ray(transform.position, Vector3.down);
 
-        _IsDetected = false;
-       if (Physics.Raycast(ray, out RaycastHit hitInfo, 50.0f,
+       if (PhysicsExt.Raycast(out _DrawLineInfo, ray, out RaycastHit hitInfo, 50.0f,
            m_DetectLayer, QueryTriggerInteraction.Ignore))
        {
-            _HitPoint = hitInfo.point;
-            _HitNormal = hitInfo.normal;
-            _IsDetected = true;
-
-            float angle = Vector3.Angle(Vector3.up, _HitNormal);
-            Debug.Log($"지면 경사 : {angle}");
+            
        }
 
         return true;
@@ -223,11 +219,7 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-       if(_IsDetected)
-       {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(_HitPoint, _HitPoint + _HitNormal);
-       }
+       
     }
 
 
