@@ -1,7 +1,9 @@
+using Cinemachine.Utility;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(CharacterController))]
 public sealed class PlayerCharacterMovement : MonoBehaviour
@@ -18,6 +20,9 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// 점프 힘
     /// </summary>
     public float m_JumpPower = 30.0f;
+
+    [Header("# 바닥 관련")]
+    public LayerMask m_FloorLayers;
 
     /// <summary>
     /// 이동 입력 상태를 나타냅니다.
@@ -64,7 +69,7 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     public Vector3 gravity => Physics.gravity * m_GravityMultiplier;
 
     #region DEBUG
-    private DrawGizmoLineInfo _DrawLineInfo;
+    private DrawGizmoSphereInfo _GroundCheckGizmoInfo;
     #endregion
 
 
@@ -74,6 +79,8 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         Movement();
         
     }
+
+    Vector3 _MoveDirection;
 
 
     /// <summary>
@@ -88,7 +95,18 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         isGrounded = characterController.isGrounded;
 
         // 바닥에 대한 정보를 얻습니다.
-        TryGetFloorInfo();
+        bool isFloorDetected = 
+            TryGetFloorInfo(out bool isWalkableFloor, out bool isOnSlope, out Vector3 floorNormal);
+
+        // 바닥을 감지한 경우
+        if(isFloorDetected)
+        {
+            // 경사면을 이동 방향에 적용합니다.
+            ApplySlopeAngleToMoveDirecion(isWalkableFloor, isOnSlope, floorNormal, ref worldDirection);
+        }
+
+        // 디버깅용
+        _MoveDirection = worldDirection;
 
         // 점프 / 중력을 계산합니다.
         CalculateJumpAndGravity();
@@ -125,25 +143,108 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         return true;
     }
 
-    public LayerMask m_DetectLayer;
     
-
     /// <summary>
     /// 바닥에 대한 정보를 얻습니다.
     /// </summary>
-    /// <returns></returns>
-    private bool TryGetFloorInfo()
+    /// <param name="isWalkableFloor">이동 가능한 바닥 감지 여부를 반환</param>
+    /// <param name="isOnSlope">경사면 감지 여부를 반환</param>
+    /// <param name="floorNormal">감지한 바닥의 노멀을 반환</param>
+    /// <returns>바닥 감지 여부를 반환</returns>
+    private bool TryGetFloorInfo(out bool isWalkableFloor, out bool isOnSlope, out Vector3 floorNormal)
     {
-        Ray ray = new Ray(transform.position, Vector3.down);
+        // 경사면 처리를 위한 구체 발사 길이
+        float slopeCheckRadius = characterController.radius;
 
-       if (PhysicsExt.Raycast(out _DrawLineInfo, ray, out RaycastHit hitInfo, 50.0f,
-           m_DetectLayer, QueryTriggerInteraction.Ignore))
-       {
-            
-       }
+        // 경사면 처리를 위한 구체 영역 발사 시작 위치
+        Vector3 slopeCheckOrigin = transform.position + (Vector3.up * slopeCheckRadius);
 
-        return true;
+        // 경사면 처리를 위한 구체 영역 발사 방향
+        Vector3 slopeCheckDirection = Vector3.down;
+
+
+        // 경사면 처리를 위한 Ray 변수
+        Ray slopeRayData = new Ray(slopeCheckOrigin, slopeCheckDirection);
+
+        // 경사면 처리를 위한 구체 발사 길이
+        float slopeCheckLength = slopeCheckRadius * 2;
+
+
+        bool isDetected = PhysicsExt.Spherecast(
+             out _GroundCheckGizmoInfo,
+             slopeRayData,
+             slopeCheckRadius,
+             out RaycastHit slopeHit,
+             slopeCheckLength,
+             m_FloorLayers,
+             QueryTriggerInteraction.Ignore);
+
+        // 바닥을 감지한 경우
+        if (isDetected)
+        {
+            // 감지한 바닥의 법선벡터를 이용하여 각도를 얻습니다.
+            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+
+            // 경사면 노멀 초기화
+            floorNormal = slopeHit.normal;
+
+            // 경사면 감지를 검사합니다.
+            isOnSlope = angle != 0.0f;
+
+            // 현재 오를 수 있는 경사면임을 확인합니다.
+            isWalkableFloor = angle <= characterController.slopeLimit;
+
+        }
+        // 바닥면을 감지하지 못한 경우
+        else
+        {
+            isWalkableFloor = isOnSlope = false;
+            floorNormal = Vector3.zero;
+        }
+
+
+        return isDetected;
     }
+
+    /// <summary>
+    /// 경사면을 이동 방향에 적용시킵니다.
+    /// 
+    /// </summary>
+    /// <param name="isWalkableFloorDetected">이동 가능한 바닥 감지 여부 전달</param>
+    /// <param name="isSlopeDetected">경사면 감지 여부를 전달</param>
+    /// <param name="floorNormal">바닥 노멀을 전달</param>
+    /// <param name="moveDirection">이동 방향을 전달</param>
+    private void ApplySlopeAngleToMoveDirecion(
+        bool isWalkableFloorDetected,
+        bool isSlopeDetected,
+        in Vector3 floorNormal,
+        ref Vector3 moveDirection)
+    {
+        // 경사면을 감지한 경우
+        if(isSlopeDetected)
+        {
+            // 이동 가능한 바닥을 감지한 경우
+            if (isWalkableFloorDetected) 
+            {
+                // 이동에 사용될 방향을 바닥의 기울어진 방향으로 투영시킵니다.
+                moveDirection = Vector3.ProjectOnPlane(moveDirection, floorNormal).normalized;
+            }
+            // 경사면을 감지했지만, 이동할 수 없는 각도인 경우 (가파른 경사면 처리)
+            else
+            {
+                // 이동 방향을 바닥의 앞 방향으로 지정하여 오르지 못하도록 합니다.
+                moveDirection = floorNormal;
+
+                // 미끄러질 수 있도록 땅 감지를 취소합니다.
+                isGrounded = false;
+            }
+
+
+        }
+
+
+    }
+
 
     /// <summary>
     /// 입력값을 월드 방향으로 변환합니다.
@@ -219,11 +320,11 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-       
+        PhysicsExt.DrawGizmoSphere(_GroundCheckGizmoInfo);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + _MoveDirection*5);
     }
-
-
-
 
 #endif
 

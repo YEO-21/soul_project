@@ -124,7 +124,7 @@ public static class PhysicsExt
         Gizmos.DrawLine(drawInfo.start, drawInfo.end);
     }
 
-    public static void DrawSphereInfo(in DrawGizmoSphereInfo drawInfo)
+    public static void DrawGizmoSphere(in DrawGizmoSphereInfo drawInfo)
     {
         if (drawInfo == null) return;
 
