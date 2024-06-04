@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class GameManagerBase : MonoBehaviour
 {
+
     /// <summary>
     /// 이 형태의 객체를 나타냅니다.
     /// </summary>
     private static GameManagerBase _ThisInstance;
+
+    /// <summary>
+    /// GameManager 하위에 존재하는 관리 객체들을 나타냅니다.
+    /// </summary>
+    private List<IManagerClass> _Managers = new();
 
     public static GameManagerBase Get() => Get<GameManagerBase>();
 
@@ -20,6 +26,11 @@ public class GameManagerBase : MonoBehaviour
         }
         // GameManager 객체를 반환합니다.
         return _ThisInstance as T;
+    }
+
+    public T GetManager<T>() where T : MonoBehaviour, IManagerClass
+    {
+        return null;
     }
 
 
