@@ -16,6 +16,8 @@ public interface IDefaultPlayerInputReceivable
     void OnJumpInput();
 
     // 걷기 달리기
+    void OnSprintInput(bool isPressed);
+
 
     // 피하기 키
     

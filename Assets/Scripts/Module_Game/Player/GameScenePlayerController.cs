@@ -23,6 +23,12 @@ public sealed class GameScenePlayerController : PlayerControllerBase
         base.StartControlCharacter(controlCharacter);
 
         _PlayerInputReceivable = controlCharacter as IDefaultPlayerInputReceivable;
+
+        // 커서를 화면 중앙에 계속 배치하도록 합니다.
+        Cursor.lockState = CursorLockMode.Locked;
+
+        // 커서를 표시하지 않도록 합니다.
+        Cursor.visible = false;
     }
 
 
@@ -36,6 +42,15 @@ public sealed class GameScenePlayerController : PlayerControllerBase
     private void OnJumpInput()
     {
         _PlayerInputReceivable?.OnJumpInput();
+    }
+
+    private void OnSprintInput(InputValue value)
+    {
+        _PlayerInputReceivable?.OnSprintInput(value.isPressed);
+        //value.isPressed
+
+
+
     }
 
 }

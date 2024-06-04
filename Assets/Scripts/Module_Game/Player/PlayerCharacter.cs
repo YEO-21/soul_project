@@ -20,4 +20,6 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
 
     void IDefaultPlayerInputReceivable.OnJumpInput() => movement.OnJumpInput();
 
+    void IDefaultPlayerInputReceivable.OnSprintInput(bool isPressed) => movement.OnSprintInput(isPressed);
+
 }

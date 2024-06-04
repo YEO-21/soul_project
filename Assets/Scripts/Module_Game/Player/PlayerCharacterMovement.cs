@@ -14,12 +14,28 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// <summary>
     /// 걷기 속력
     /// </summary>
-    public float m_WalkSpeed = 6.0f;
+    public float m_WalkSpeed = 2.5f;
+
+    /// <summary>
+    /// 달리기 속력
+    /// </summary>
+    public float m_SprintSpeed = 6.0f;
+
 
     /// <summary>
     /// 점프 힘
     /// </summary>
     public float m_JumpPower = 30.0f;
+
+    /// <summary>
+    /// 가속 / 제동력 
+    /// </summary>
+    public float m_AccelerationBrakingForce = 30.0f;
+
+    /// <summary>
+    /// 방향 전환 저항
+    /// </summary>
+    public float m_DirectionHandlingDrag = 5.0f;
 
     [Header("# 바닥 관련")]
     public LayerMask m_FloorLayers;
@@ -34,6 +50,20 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// </summary>
     private Vector2 _MovementInputAxis;
 
+    /// <summary>
+    /// 입력에 따른 캐릭터 이동 방향을 나타냅니다.
+    /// 경사면에 따른 방향은 이 변수에 적용되지 않습니다.
+    /// </summary>
+    private Vector3 _HorizontalDirection;
+
+    /// <summary>
+    /// 캐릭터에 적용될 수평 속도를 나타냅니다.
+    /// 경사면에 따른 방향도 이 곳에 연산됩니다.
+    /// </summary>
+    private Vector3 _HorizontalVelocity;
+
+
+
 
     /// <summary>
     /// 캐릭터에 적용될 수직 속도를 나타냅니다.
@@ -41,14 +71,36 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     private Vector3 _VerticalVelocity;
 
     /// <summary>
+    /// 적용될 이동 속력입니다.
+    /// </summary>
+    private float _MoveSpeed;
+
+    /// <summary>
     /// 점프 요청됨을 나타내기 위한 변수
     /// </summary>
     private bool _JumpRequested;
 
     /// <summary>
+    /// 이전 바닥 감지 상태를 기록하기 위한 변수입니다.
+    /// 낙하 시작을 감지하기 위하여 사용됩니다.
+    /// </summary>
+    private bool _PrevGroundedState;
+
+    /// <summary>
     /// CharacterController 컴포넌트를 나타냅니다.
     /// </summary>
     private CharacterController _CharacterController;
+
+    /// <summary>
+    /// 질주 상태를 나타냅니다.
+    /// </summary>
+    public bool isSprint { get; private set; }
+
+    /// <summary>
+    /// 점프 상태를 나타냅니다.
+    /// </summary>
+    public bool isJumping { get; private set; }
+
 
     /// <summary>
     /// CharacterController 컴포넌트에 대한 프로퍼티입니다.
@@ -80,16 +132,19 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         
     }
 
-    Vector3 _MoveDirection;
-
-
     /// <summary>
     /// 이동과 관련된 연산을 모두 이곳에서 진행합니다.
     /// </summary>
     private void Movement()
     {
         // 이동 입력을 월드 기준 방향으로 변환합니다.
-        Vector3 worldDirection = InputToWorldDirection();
+        Vector3 targetWorldDirection = InputToWorldDirection();
+        _HorizontalDirection = Vector3.MoveTowards(
+            _HorizontalDirection, targetWorldDirection, m_DirectionHandlingDrag * Time.deltaTime);
+
+        // 이동에 사용될 방향
+        Vector3 moveDirection = _HorizontalDirection;
+
 
         // 땅에 닿음 상태 갱신
         isGrounded = characterController.isGrounded;
@@ -102,18 +157,22 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         if(isFloorDetected)
         {
             // 경사면을 이동 방향에 적용합니다.
-            ApplySlopeAngleToMoveDirecion(isWalkableFloor, isOnSlope, floorNormal, ref worldDirection);
+            ApplySlopeAngleToMoveDirecion(isWalkableFloor, isOnSlope, floorNormal, ref moveDirection);
         }
 
-        // 디버깅용
-        _MoveDirection = worldDirection;
 
         // 점프 / 중력을 계산합니다.
         CalculateJumpAndGravity();
 
+        // 적용될 속력을 계산합니다.
+        UpdateMoveSpeed();
+
+        // 적용시킬 속도를 계산합니다.
+        _HorizontalVelocity = moveDirection * _MoveSpeed;
+
         // 이동
         characterController.Move(
-            (worldDirection * m_WalkSpeed *Time.deltaTime) + 
+            (_HorizontalVelocity * Time.deltaTime) + 
             (_VerticalVelocity * Time.deltaTime));
 
     }
@@ -277,9 +336,37 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// </summary>
     private void CalculateJumpAndGravity()
     {
-        // 점프 요청이 존재한다면
-        if(_JumpRequested) 
+        // 점프 상태가 아니며, 더이상 바닥을 감지하지 못하는 경우(낙하를 시작하는 경우)
+        if(_PrevGroundedState && !isGrounded && !isJumping)
         {
+            // 수직 속도 초기화
+            _VerticalVelocity = Vector3.zero;
+
+            // 점프 상태로 변경하여, 낙하하는 동안 점프하지 못하도록 합니다.
+            isJumping = true;
+        }
+
+        // 땅을 감지한 경우
+        if (isGrounded)
+        {
+            // 점프 상태 초기화
+            isJumping = false;
+
+            // 최대 낙하 속력을 지정합니다.
+            float maxFallSpeed = m_SprintSpeed * -2;
+
+            // 낙하 속력이 최대치를 넘은 경우, 최대 낙하 속력으로 지정합니다.
+            if(_VerticalVelocity.y < maxFallSpeed)
+                _VerticalVelocity.y = maxFallSpeed;
+        }
+
+
+        // 점프 요청이 존재한다면
+        if(!isJumping && _JumpRequested) 
+        {
+            // 점프 상태로 설정합니다.
+            isJumping = true;
+
             // 수직 속도를 점프 힘으로 설정하여 캐릭터가 튀어오르도록 합니다.
             _VerticalVelocity = Vector3.up * m_JumpPower;
 
@@ -290,6 +377,31 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
 
         // 수직 속도에 중력을 더하여 가속하도록 합니다.
         _VerticalVelocity += gravity * Time.deltaTime;
+
+        // 이전 바닥 감지 상태 갱신
+        _PrevGroundedState = isGrounded;
+    }
+
+    /// <summary>
+    /// 이동 속력을 갱신합니다.
+    /// </summary>
+    private void UpdateMoveSpeed()
+    {
+        // 점프 상태인 경우 속력을 갱신하지 않도록 합니다.
+        if (isJumping) return;
+
+        // 목표 속력을 지정합니다.
+        float targetSpeed = isSprint ? m_SprintSpeed : m_WalkSpeed;
+
+        // 이동 입력이 들어오지 않은 경우 목표 속력을 0 으로 설정합니다.
+        if (!_IsMovementInput) targetSpeed = 0.0f;
+
+        // 이동 속력을 갱신합니다.
+        _MoveSpeed = Mathf.MoveTowards(
+            _MoveSpeed, targetSpeed, m_AccelerationBrakingForce * Time.deltaTime);
+
+
+
     }
 
 
@@ -316,14 +428,21 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 달리기 키 입력 시 호출되는 메서드입니다.
+    /// </summary>
+    /// <param name="isPressed"></param>
+    public void OnSprintInput(bool isPressed)
+    {
+        isSprint = isPressed;
+    }
+
+
 #if UNITY_EDITOR
 
     private void OnDrawGizmos()
     {
         PhysicsExt.DrawGizmoSphere(_GroundCheckGizmoInfo);
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + _MoveDirection*5);
     }
 
 #endif
