@@ -14,11 +14,15 @@ public class PlayerControllerBase : MonoBehaviour
     /// </summary>
    public PlayerCharacterBase controlledCharacter { get; private set; }
 
+    public void Update()
+    {
+    }
+
     /// <summary>
     /// 캐릭터 조종을 시작합니다.
     /// </summary>
     /// <param name="controlCharacter"></param>
-   public virtual void StartControlCharacter(PlayerCharacterBase controlCharacter)
+    public virtual void StartControlCharacter(PlayerCharacterBase controlCharacter)
    {
         // 현재 조종중인 캐릭터와 같은 캐릭터를 조종 시작하려고 하는 경우 함수 호출 종료
         if (controlledCharacter == controlCharacter) return;

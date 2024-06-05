@@ -21,7 +21,8 @@ public class ManagerClassBase<T> : MonoBehaviour, IManagerClass
 {
     private static T _ThisInstance;
 
-    public static T instance => _ThisInstance;
+    public static T instance => _ThisInstance ??
+        (_ThisInstance = GameManagerBase.Get().GetManager<T>());
 
     public virtual void OnManagerInitialized() {}
 }
