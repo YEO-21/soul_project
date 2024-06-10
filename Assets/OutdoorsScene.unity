@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2170.3176, g: 2283.4124, b: 3338.6685, a: 1}
+  m_IndirectSpecularColor: {r: 2170.5754, g: 2283.8577, b: 3340.7778, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -586,6 +586,7 @@ MonoBehaviour:
   m_JumpPower: 15
   m_AccelerationBrakingForce: 30
   m_DirectionHandlingDrag: 5
+  m_RotationSpeed: 720
   m_FloorLayers:
     serializedVersion: 2
     m_Bits: 1
@@ -779,6 +780,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Knight_Character
       objectReference: {fileID: 0}
+    - target: {fileID: 8256778992719208357, guid: 820c24c6b8486e24aaa4d619c4211851,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 3d8446e9213c0ce48b3a616d47fd2b80, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1568,7 +1574,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1729640216}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.39942503, y: 1e-45, z: 1e-45, w: 0.91676587}
+  m_LocalRotation: {x: -0.39942503, y: 1e-45, z: -0, w: 0.91676587}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
