@@ -3,12 +3,12 @@
     "maps": [
         {
             "name": "GameMode",
-            "id": "f1cb9f3c-e04e-48a3-a79a-b96fb9855943",
+            "id": "7562dfe9-1ac5-44bc-b4d3-e18a77a513c4",
             "actions": [
                 {
                     "name": "MovementInput",
                     "type": "Value",
-                    "id": "38ef8ee3-7895-4d6c-a546-830bc991cdfd",
+                    "id": "342c2f02-bf94-4d32-95c9-f73c3ba91dc1",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
@@ -17,7 +17,16 @@
                 {
                     "name": "JumpInput",
                     "type": "Button",
-                    "id": "d5bf93eb-f1df-4f69-8ddd-cf77dc88ff5c",
+                    "id": "dbc9d958-d23e-4e9d-8590-14c7b0f9634f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SprintInput",
+                    "type": "PassThrough",
+                    "id": "e3e4fffb-2e12-42da-9f09-65de3fc1c40b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -27,7 +36,7 @@
             "bindings": [
                 {
                     "name": "2D Vector",
-                    "id": "dc5f3e91-2bc5-4429-932b-af0890a22085",
+                    "id": "d841f570-4b32-4a2c-9223-aa9bedaa3951",
                     "path": "2DVector",
                     "interactions": "",
                     "processors": "",
@@ -38,7 +47,7 @@
                 },
                 {
                     "name": "up",
-                    "id": "afeb439b-0c78-4e69-b1c9-cb9ff5f02207",
+                    "id": "9715692b-13c2-46b0-8c2a-9a7845197098",
                     "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
@@ -49,7 +58,7 @@
                 },
                 {
                     "name": "down",
-                    "id": "a18d543e-122f-452c-9165-eac13ee2c3e3",
+                    "id": "daf28bf1-ba5b-4872-b19b-ee51e205dcdc",
                     "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
@@ -60,7 +69,7 @@
                 },
                 {
                     "name": "left",
-                    "id": "5d4a615e-2958-4de9-a213-f63b36da99db",
+                    "id": "3c37a83c-1d5d-4fad-a243-0e15aca5f542",
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
@@ -71,7 +80,7 @@
                 },
                 {
                     "name": "right",
-                    "id": "12dda059-0b03-45f7-a039-35b4e3b99e7d",
+                    "id": "c453d9a4-f145-42b7-8ef2-d73d1494e59f",
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
@@ -82,12 +91,23 @@
                 },
                 {
                     "name": "",
-                    "id": "c54b8564-06f4-466d-bd59-a133c654690c",
+                    "id": "c985e530-1dd5-4c68-8a7f-14248b78f550",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
                     "action": "JumpInput",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cec15cbe-99f1-4ef2-b478-4894bd5bc66c",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "SprintInput",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -4,7 +4,4 @@ using UnityEngine;
 
 public sealed class GameManager : GameManagerBase
 {
-    
-
-
 }

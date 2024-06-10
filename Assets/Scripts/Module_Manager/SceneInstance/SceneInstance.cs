@@ -31,10 +31,6 @@ public class SceneInstance : MonoBehaviour
                 // 해당 캐릭터를 조종하도록 합니다.
                 playerController.StartControlCharacter(playerCharacter);
             }
-
         }
-
     }
-
-
 }
