@@ -126,6 +126,25 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// </summary>
     public Vector3 gravity => Physics.gravity * m_GravityMultiplier;
 
+    #region Events
+    /// <summary>
+    /// 수평 이동속력 변경 이벤트
+    /// </summary>
+    public event System.Action<float> onHorizontalSpeedChanged;
+
+    /// <summary>
+    /// 점프 시작 이벤트
+    /// </summary>
+    public event System.Action onJumpStarted;
+
+    /// <summary>
+    /// 땅에 닿음 이벤트
+    /// </summary>
+    public event System.Action onGrounded;
+
+
+    #endregion
+
     #region DEBUG
     private DrawGizmoSphereInfo _GroundCheckGizmoInfo;
     #endregion
@@ -182,6 +201,9 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
 
         // 적용시킬 속도를 계산합니다.
         _HorizontalVelocity = moveDirection * _MoveSpeed;
+
+        // 이동 속력 변경 이벤트 발생
+        onHorizontalSpeedChanged?.Invoke(_HorizontalVelocity.magnitude);
 
         // 이동
         characterController.Move(
@@ -347,6 +369,9 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
 
             // 점프 상태로 변경하여, 낙하하는 동안 점프하지 못하도록 합니다.
             isJumping = true;
+
+            // 점프 시작 이벤트 발생
+            onJumpStarted?.Invoke();
         }
 
         // 땅을 감지한 경우
@@ -354,6 +379,9 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         {
             // 점프 상태 초기화
             isJumping = false;
+
+            // 땅 감지 이벤트를 발생합니다.
+            onGrounded?.Invoke();
 
             // 최대 낙하 속력을 지정합니다.
             float maxFallSpeed = m_SprintSpeed * -2;
@@ -368,6 +396,9 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         {
             // 점프 상태로 설정합니다.
             isJumping = true;
+
+            // 점프 시작 이벤트 발생
+            onJumpStarted?.Invoke();
 
             // 수직 속도를 점프 힘으로 설정하여 캐릭터가 튀어오르도록 합니다.
             _VerticalVelocity = Vector3.up * m_JumpPower;

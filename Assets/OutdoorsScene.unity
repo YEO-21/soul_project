@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2170.5754, g: 2283.8577, b: 3340.7778, a: 1}
+  m_IndirectSpecularColor: {r: 2167.8567, g: 2279.6233, b: 3329.7388, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -788,7 +788,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8256778992711822753, guid: 820c24c6b8486e24aaa4d619c4211851,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1834052087}
   m_SourcePrefab: {fileID: 100100000, guid: 820c24c6b8486e24aaa4d619c4211851, type: 3}
 --- !u!1 &975580661
 GameObject:
@@ -1574,7 +1578,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1729640216}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.39942503, y: 1e-45, z: -0, w: 0.91676587}
+  m_LocalRotation: {x: -0.39942503, y: 1e-45, z: 1e-45, w: 0.91676587}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1870,6 +1874,24 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &1834052085 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8256778992711822753, guid: 820c24c6b8486e24aaa4d619c4211851,
+    type: 3}
+  m_PrefabInstance: {fileID: 972077799}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1834052087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1834052085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd40b16f9040ddf4dbccc57b8e6b4a7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1869652348
 GameObject:
   m_ObjectHideFlags: 0
@@ -2101,7 +2123,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2103273350}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.3826835, y: 0.000000015896621, z: 0.000000006584596, w: 0.92387956}
+  m_LocalRotation: {x: -0.3826835, y: -0.000000015896624, z: -0.000000006584597, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

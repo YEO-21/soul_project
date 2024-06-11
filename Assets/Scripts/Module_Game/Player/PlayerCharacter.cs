@@ -10,8 +10,17 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
 {
     private PlayerCharacterMovement _MovementComponent;
 
-    public PlayerCharacterMovement movement => _MovementComponent ?? (_MovementComponent = GetComponent<PlayerCharacterMovement>());
+    private PlayerCharacterAnimController _AnimController;
 
+    public PlayerCharacterMovement movement => _MovementComponent ?? (_MovementComponent = GetComponent<PlayerCharacterMovement>());
+    public PlayerCharacterAnimController animController => 
+        _AnimController ?? 
+        (_AnimController = GetComponentInChildren<PlayerCharacterAnimController>());
+
+    private void Start()
+    {
+        animController.Initailize(movement);
+    }
 
 
     void IDefaultPlayerInputReceivable.OnMovementInput(Vector2 inputAxis) => movement.OnMovementInput(inputAxis);
