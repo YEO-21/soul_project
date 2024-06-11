@@ -65,6 +65,16 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// 경사면에 따른 방향도 이 곳에 연산됩니다.
     /// </summary>
     private Vector3 _HorizontalVelocity;
+    
+    /// <summary>
+    /// 피하기 이동 시 적용될 월드 기준 방향
+    /// </summary>
+    private Vector3 _DodgeWorldDirection;
+
+    /// <summary>
+    /// 피하기 이동 시 적용될 속도
+    /// </summary>
+    private Vector3 _DodgeVelocity;
 
     /// <summary>
     /// 캐릭터에 적용될 수직 속도를 나타냅니다.
@@ -85,6 +95,11 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// 점프 요청됨을 나타내기 위한 변수
     /// </summary>
     private bool _JumpRequested;
+
+    /// <summary>
+    /// 피하기 요청됨을 나타내기 위한 변수
+    /// </summary>
+    private bool _DodgeRequested;
 
     /// <summary>
     /// 이전 바닥 감지 상태를 기록하기 위한 변수입니다.
@@ -183,6 +198,10 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
             out bool isWalkableFloor, 
             out bool isOnSlope, 
             out Vector3 floorNormal);
+
+        // 구르기 상태 처리
+        UpdateDodgetState();
+
 
         // 바닥을 감지한 경우
         if (isFloorDetected) 
@@ -332,6 +351,19 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     }
 
     /// <summary>
+    /// 피하기 상태에 대한 처리를 진행합니다.
+    /// </summary>
+    private void UpdateDodgetState()
+    {
+        // 피하기 요청이 존재하는 경우
+        if(_DodgeRequested)
+        {
+
+        }
+    }
+
+
+    /// <summary>
     /// 입력값을 월드 방향으로 변환합니다.
     /// </summary>
     /// <returns></returns>
@@ -377,11 +409,14 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         // 땅을 감지한 경우
         if (isGrounded)
         {
-            // 점프 상태 초기화
-            isJumping = false;
+            if(isJumping)
+            {
+                // 점프 상태 초기화
+                isJumping = false;
 
-            // 땅 감지 이벤트를 발생합니다.
-            onGrounded?.Invoke();
+                // 땅 감지 이벤트를 발생합니다.
+                onGrounded?.Invoke();
+            }
 
             // 최대 낙하 속력을 지정합니다.
             float maxFallSpeed = m_SprintSpeed * -2;
@@ -491,6 +526,35 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
             // 점프 요청
             _JumpRequested = true;
         }
+    }
+
+    /// <summary>
+    /// 피하기 입력 시 호출되는 메서드입니다.
+    /// </summary>
+    public void OnDodgeInput()
+    {
+        // 뷰의 앞/오른쪽 방향을 얻습니다.
+        if(TryGetViewDirection(out Vector3 viewForward, out Vector3 viewRight))
+        {
+            // 이동 입력이 존재하는 경우
+            if (_IsMovementInput)
+            {
+                Vector3 forwardDirection = viewForward * _MovementInputAxis.y;
+                Vector3 rightDirection = viewRight * _MovementInputAxis.x;
+
+                _DodgeWorldDirection = (forwardDirection + rightDirection).normalized;
+            }
+            // 이동 입력이 존재하지 않는 경우
+            else
+            {
+                _DodgeWorldDirection = viewForward * -1.0f;
+            }
+
+            // 피하기 요청 상태로 설정합니다.
+            _DodgeRequested = true;
+        }
+
+      
     }
 
     /// <summary>

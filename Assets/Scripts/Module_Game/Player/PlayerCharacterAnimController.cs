@@ -28,7 +28,10 @@ public sealed class PlayerCharacterAnimController : AnimController
         // 이동 속력 변경 이벤트 바인딩
         movement.onHorizontalSpeedChanged += CALLBACK_OnHorizontalMoveSpeedChanged;
 
+        // 점프 시작 콜백 등록
         movement.onJumpStarted += CALLBACK_OnJumpStarted;
+
+        // 점프 끝 콜백 등록
         movement.onGrounded += CALLBACK_OnGrounded;
     }
 
@@ -50,7 +53,14 @@ public sealed class PlayerCharacterAnimController : AnimController
     /// <param name="speed"></param>
     private void CALLBACK_OnHorizontalMoveSpeedChanged(float speed) => _TargetMoveSpeed = speed;
 
+    /// <summary>
+    /// 점프 시작 시 호출되는 메서드입니다.
+    /// </summary>
     private void CALLBACK_OnJumpStarted() => _IsOnAir = true;
+
+    /// <summary>
+    /// 땅에 닿았을 경우 호출되는 메서드입니다.
+    /// </summary>
     private void CALLBACK_OnGrounded() => _IsOnAir = false;
 
 }

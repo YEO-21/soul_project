@@ -25,7 +25,8 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
 
     void IDefaultPlayerInputReceivable.OnMovementInput(Vector2 inputAxis) => movement.OnMovementInput(inputAxis);
 
-    void IDefaultPlayerInputReceivable.OnJumpInput() => movement.OnJumpInput();
+    //void IDefaultPlayerInputReceivable.OnJumpInput() => movement.OnJumpInput();
+    void IDefaultPlayerInputReceivable.OnJumpInput() => movement.OnDodgeInput();
 
     void IDefaultPlayerInputReceivable.OnSprintInput(bool isPressed) => movement.OnSprintInput(isPressed);
 }
