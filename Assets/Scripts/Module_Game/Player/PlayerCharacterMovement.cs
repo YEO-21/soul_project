@@ -21,6 +21,11 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     public float m_SprintSpeed = 6.0f;
 
     /// <summary>
+    /// 구르기(피하기) 속력
+    /// </summary>
+    public float m_DodgeRollSpeed = 15.0f;
+
+    /// <summary>
     /// 점프 힘
     /// </summary>
     public float m_JumpPower = 30.0f;
@@ -29,6 +34,12 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// 가속 / 제동력
     /// </summary>
     public float m_AccelerationBrakingForce = 30.0f;
+
+    /// <summary>
+    /// 구르기(피하기) 제동력
+    /// </summary>
+    public float m_DodgeRollBrakingForce = 15.0f;
+
 
     /// <summary>
     /// 방향 전환 저항
@@ -77,6 +88,11 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     private Vector3 _DodgeVelocity;
 
     /// <summary>
+    /// 현재 적용된 피하기 속력
+    /// </summary>
+    private float _CurrentDodgeMoveSpeed;
+
+    /// <summary>
     /// 캐릭터에 적용될 수직 속도를 나타냅니다.
     /// </summary>
     private Vector3 _VerticalVelocity;
@@ -100,6 +116,11 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// 피하기 요청됨을 나타내기 위한 변수
     /// </summary>
     private bool _DodgeRequested;
+
+    /// <summary>
+    /// 피하기 이동 허용 여부
+    /// </summary>
+    private bool _AllowDodgeMovement;
 
     /// <summary>
     /// 이전 바닥 감지 상태를 기록하기 위한 변수입니다.
@@ -131,6 +152,11 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     public bool isJumping { get; private set; }
 
     /// <summary>
+    /// 피하기 상태임을 나타냅니다.
+    /// </summary>
+    public bool isDodging { get; private set; }
+
+    /// <summary>
     /// 땅 감지 상태를 나타내는 프로퍼티입니다.
     /// 내부적으로 CharacterController 의 isGrounded 프로퍼티를 사용합니다.
     /// </summary>
@@ -157,6 +183,10 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// </summary>
     public event System.Action onGrounded;
 
+    /// <summary>
+    /// 구르기 시작 이벤트
+    /// </summary>
+    public event System.Action onDodgeRollStarted;
 
     #endregion
 
@@ -164,6 +194,12 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     private DrawGizmoSphereInfo _GroundCheckGizmoInfo;
     #endregion
 
+
+    public void Initialize(PlayerCharacterAnimController animController)
+    {
+        animController.onDodgeRollAnimStarted += CALLBACK_OnDodgeRollAnimationStarted;
+        animController.onDodgeRollAnimFinished += CALLBACK_OnDodgeRollAnimationFinished;
+    }
 
 
     public void Update()
@@ -189,6 +225,9 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         // 이동에 사용될 방향
         Vector3 moveDirection = _HorizontalDirection;
 
+        // 피하기에 사용될 방향
+        Vector3 dodgeDirection = _AllowDodgeMovement ? _DodgeWorldDirection : Vector3.zero;
+
 
         // 땅에 닿음 상태 갱신
         isGrounded = characterController.isGrounded;
@@ -209,6 +248,15 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
             // 경사면을 이동 방향에 적용합니다.
             ApplySlopeAngleToMoveDirection(
                 isWalkableFloor, isOnSlope, floorNormal, ref moveDirection);
+
+            // 피하기 상태인 경우
+            if(isDodging)
+            {
+                ApplySlopeAngleToMoveDirection(
+                    isWalkableFloor, isOnSlope, floorNormal, ref dodgeDirection);
+
+
+            }
         }
 
 
@@ -218,8 +266,14 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         // 적용될 속력을 계산합니다.
         UpdateMoveSpeed();
 
+        // 피하기 속력 갱신
+        UpdateDodgeSpeed();
+
         // 적용시킬 속도를 계산합니다.
         _HorizontalVelocity = moveDirection * _MoveSpeed;
+
+        // 피하기 속도를 계산합니다.
+        _DodgeVelocity = dodgeDirection * _CurrentDodgeMoveSpeed;
 
         // 이동 속력 변경 이벤트 발생
         onHorizontalSpeedChanged?.Invoke(_HorizontalVelocity.magnitude);
@@ -227,7 +281,8 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         // 이동
         characterController.Move(
             (_HorizontalVelocity * Time.deltaTime) +
-            (_VerticalVelocity * Time.deltaTime));
+            (_VerticalVelocity * Time.deltaTime) + 
+            (_DodgeVelocity * Time.deltaTime));
     }
 
     /// <summary>
@@ -358,7 +413,25 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         // 피하기 요청이 존재하는 경우
         if(_DodgeRequested)
         {
+            // 땅에 닿은 상탣가 아닌 경우, 요청을 취고합니다.
+            if(!isGrounded)
+            {
+                // 피하기 요청을 취소시킵니다.
+                _DodgeRequested = false;
+                return;
+            }
 
+            // 피하기 상태로 설정
+            isDodging = true;
+
+            // 피하기 요청을 처리합니다.
+            _DodgeRequested = false;
+
+            // 피하기 속력 적용
+            _CurrentDodgeMoveSpeed = m_DodgeRollSpeed;
+
+            // 피하기 시작 이벤트 발생
+            onDodgeRollStarted?.Invoke(); 
         }
     }
 
@@ -471,6 +544,36 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     }
 
     /// <summary>
+    /// 피하기 속력을 갱신합니다.
+    /// </summary>
+    private void UpdateDodgeSpeed()
+    {
+        // 피하기 상태인 경우
+        if(isDodging)
+        {
+            // 피하기 이동이 허용되지 않은 상태에서 감속되지 않도록 합니다.
+            if (!_AllowDodgeMovement) return;
+
+            // 피하기 속력에 제동력 적용
+            _CurrentDodgeMoveSpeed = Mathf.MoveTowards(
+                _CurrentDodgeMoveSpeed,
+                0.0f,
+                m_DodgeRollBrakingForce * Time.deltaTime);
+
+            // 피하기 이동을 거의 멈춘 경우
+            if(_CurrentDodgeMoveSpeed < 0.01f)
+            {
+                // 속력을 0으로 초기화합니다.
+                _CurrentDodgeMoveSpeed = 0.0f;
+
+                // 피하기 상태를 종료시킵니다.
+                isDodging = false;
+            }
+        }
+    }
+
+
+    /// <summary>
     /// 회전과 관련된 연산을 모두 이곳에서 처리합니다.
     /// </summary>
     private void Rotation()
@@ -491,7 +594,23 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// </summary>
     private void RotationToMoveDirection()
     {
-        _TargetYawRotation = Mathf.Atan2(_HorizontalDirection.x, _HorizontalDirection.z) * Mathf.Rad2Deg;
+        // 피하기 상태인 경우
+        if(isDodging)
+        {
+            Vector3 currentVelocity = characterController.velocity;
+            currentVelocity.y = 0.0f;
+            currentVelocity.Normalize();
+
+            _TargetYawRotation = Mathf.Atan2(
+                currentVelocity.x, currentVelocity.z) * Mathf.Rad2Deg;
+        }
+        // 기본 상태인 경우
+        else
+        {
+            _TargetYawRotation = Mathf.Atan2(
+                _HorizontalDirection.x, _HorizontalDirection.z) * Mathf.Rad2Deg;
+        }
+
 
         // 현재 Yaw 회전값
         float currentYawRotation = Mathf.MoveTowardsAngle(
@@ -499,7 +618,7 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
             _TargetYawRotation,
             m_RotationSpeed * Time.deltaTime);
 
-        if(_IsMovementInput)
+        if(_IsMovementInput || isDodging)
         {
             transform.eulerAngles = Vector3.up * currentYawRotation;
         }
@@ -533,9 +652,16 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// </summary>
     public void OnDodgeInput()
     {
+        // 피하기 상태가 아닌 경우에만 실행
+        if (isDodging) return;
+
+
         // 뷰의 앞/오른쪽 방향을 얻습니다.
         if(TryGetViewDirection(out Vector3 viewForward, out Vector3 viewRight))
         {
+            viewForward.y = 0.0f;
+            viewForward.Normalize();
+
             // 이동 입력이 존재하는 경우
             if (_IsMovementInput)
             {
@@ -565,6 +691,30 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     {
         isSprint = isPressed;
     }
+
+
+
+    /// <summary>
+    /// 구르기(피하기) 애니메이션 시작 시 호출되는 메서드
+    /// </summary>
+    private void CALLBACK_OnDodgeRollAnimationStarted()
+    {
+        if(isDodging)
+        {
+            _AllowDodgeMovement = true;
+        }
+    }
+
+    /// <summary>
+    /// 구르기(피하기) 애니메이션 끝 메서드
+    /// </summary>
+    private void CALLBACK_OnDodgeRollAnimationFinished()
+    {
+        _AllowDodgeMovement = false;
+        _CurrentDodgeMoveSpeed = 0.0f;
+        isDodging = false;
+    }
+
 
 
 #if UNITY_EDITOR

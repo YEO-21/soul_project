@@ -11,6 +11,8 @@ public sealed class PlayerCharacterAnimController : AnimController
 {
     private const string PARAM_MOVESPEED = "_MoveSpeed";
     private const string PARAM_ONAIR = "_IsOnAir";
+    private const string PARAM_DODGEROLLREQUESTED = "_DodgeRollRequested";
+
 
     public float m_MoveSpeedBlend = 10.0f;
 
@@ -20,6 +22,19 @@ public sealed class PlayerCharacterAnimController : AnimController
     private float _MoveSpeed;
 
     private float _TargetMoveSpeed;
+
+    #region 이벤트
+    /// <summary>
+    /// 구르기 애니메이션 시작 이벤트
+    /// </summary>
+    public event System.Action onDodgeRollAnimStarted;
+
+    /// <summary>
+    /// 구르기 애니메이션 끝 이벤트
+    /// </summary>
+    public event System.Action onDodgeRollAnimFinished;
+    #endregion
+
 
     private bool _IsOnAir;
 
@@ -33,6 +48,9 @@ public sealed class PlayerCharacterAnimController : AnimController
 
         // 점프 끝 콜백 등록
         movement.onGrounded += CALLBACK_OnGrounded;
+
+        // 피하기 시작 콜백 등록
+        movement.onDodgeRollStarted += CALLBACK_OnDodgeRollStarted;
     }
 
     private void Movement_onJumpStarted()
@@ -62,5 +80,20 @@ public sealed class PlayerCharacterAnimController : AnimController
     /// 땅에 닿았을 경우 호출되는 메서드입니다.
     /// </summary>
     private void CALLBACK_OnGrounded() => _IsOnAir = false;
+
+    /// <summary>
+    /// 피하기 시작 시 호출되는 메서드입니다.
+    /// </summary>
+    private void CALLBACK_OnDodgeRollStarted() => SetParam(PARAM_DODGEROLLREQUESTED);
+
+    /// <summary>
+    /// 피하기 애니메이션 시작 이벤트
+    /// </summary>
+    private void AnimEvent_OnDodgeRollStarted() => onDodgeRollAnimStarted?.Invoke();
+
+    /// <summary>
+    /// 피하기 애니메이션 끝 이벤트
+    /// </summary>
+    private void AnimEvent_OnDodgeRollFinished() => onDodgeRollAnimFinished?.Invoke();
 
 }
