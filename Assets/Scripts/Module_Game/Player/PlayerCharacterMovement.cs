@@ -618,7 +618,7 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
             _TargetYawRotation,
             m_RotationSpeed * Time.deltaTime);
 
-        if(_IsMovementInput || isDodging)
+        if(_IsMovementInput || _AllowDodgeMovement)
         {
             transform.eulerAngles = Vector3.up * currentYawRotation;
         }

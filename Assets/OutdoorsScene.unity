@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2167.8567, g: 2279.6233, b: 3329.7388, a: 1}
+  m_IndirectSpecularColor: {r: 2168.2483, g: 2280.0706, b: 3331.356, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -583,8 +583,10 @@ MonoBehaviour:
   m_GravityMultiplier: 5
   m_WalkSpeed: 2.5
   m_SprintSpeed: 6
+  m_DodgeRollSpeed: 15
   m_JumpPower: 15
   m_AccelerationBrakingForce: 30
+  m_DodgeRollBrakingForce: 15
   m_DirectionHandlingDrag: 5
   m_RotationSpeed: 720
   m_FloorLayers:
@@ -1578,7 +1580,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1729640216}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.39942503, y: 1e-45, z: 1e-45, w: 0.91676587}
+  m_LocalRotation: {x: -0.39942503, y: -3e-45, z: -1e-45, w: 0.91676587}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1892,6 +1894,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd40b16f9040ddf4dbccc57b8e6b4a7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_MoveSpeedBlend: 10
 --- !u!1 &1869652348
 GameObject:
   m_ObjectHideFlags: 0
