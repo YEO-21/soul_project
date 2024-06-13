@@ -43,4 +43,9 @@ public sealed class GameScenePlayerController : PlayerControllerBase
     {
         _PlayerInputReceivable?.OnSprintInput(value.isPressed);
     }
+
+    private void OnNormalAttackInput()
+    {
+        _PlayerInputReceivable?.OnNormalAttackInput();
+    }
 }

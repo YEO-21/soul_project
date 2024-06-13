@@ -31,6 +31,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "NormalAttackInput",
+                    "type": "Button",
+                    "id": "ece5d962-9407-491c-ad36-048790be1402",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -108,6 +117,17 @@
                     "processors": "",
                     "groups": "PC",
                     "action": "SprintInput",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cf18f61c-df40-4776-88ae-1e07f08fab8d",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "NormalAttackInput",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
