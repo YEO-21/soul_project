@@ -48,4 +48,11 @@ public abstract class PlayerAttackBase
         return this;
     }
 
+    /// <summary>
+    /// 연계 가능한 공격 코드로 변환합니다.
+    /// </summary>
+    /// <param name="nextAttackCode">이 공격 객체와 비교될 공격 코드가 전달됩니다.</param>
+    /// <returns>연계 가능한 공격 코드로 변환후 반환합니다.</returns>
+    public virtual string ConvertToLinkableAttackCode(string attackCode) => null;
+
 }

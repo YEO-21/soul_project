@@ -53,4 +53,12 @@ public sealed class PlayerAttackInfo
 
     [Header("# 공격 코드")]
     public string m_PlayerAttackCode;
+
+    /// <summary>
+    /// 정수 형태의 공격 코드를 나타냅니다.
+    /// </summary>
+    private int _IntAttackCode = -1;
+
+    public int intAttackCode =>(_IntAttackCode <0) ? 
+        (_IntAttackCode = int.Parse(m_PlayerAttackCode)) : _IntAttackCode;
 }
