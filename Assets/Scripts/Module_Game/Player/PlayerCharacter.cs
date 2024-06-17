@@ -21,9 +21,9 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
 
     private void Start()
     {
-        movement.Initialize(animController);
+        movement.Initialize(animController, attack);
         animController.Initailize(movement, attack);
-        attack.Initialize(animController);
+        attack.Initialize(animController, movement);
     }
 
 

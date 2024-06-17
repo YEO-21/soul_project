@@ -188,6 +188,10 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// </summary>
     public event System.Action onDodgeRollStarted;
 
+    /// <summary>
+    /// 공격 상태 확인을 위한 대리자
+    /// </summary>
+    private System.Func<bool> _IsAttacking;
     #endregion
 
     #region DEBUG
@@ -195,10 +199,14 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     #endregion
 
 
-    public void Initialize(PlayerCharacterAnimController animController)
+    public void Initialize(PlayerCharacterAnimController animController,
+        PlayerCharacterAttack attack)
     {
         animController.onDodgeRollAnimStarted += CALLBACK_OnDodgeRollAnimationStarted;
         animController.onDodgeRollAnimFinished += CALLBACK_OnDodgeRollAnimationFinished;
+        attack.onAttackStarted += CALLBACK_OnAttackStarted;
+
+        _IsAttacking = () => attack.isAttacking;
     }
 
 
@@ -541,6 +549,9 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
             _MoveSpeed, 
             targetSpeed, 
             m_AccelerationBrakingForce * Time.deltaTime);
+
+        // 공격중 상태인 경우 이동 블록
+        if (_IsAttacking.Invoke()) _MoveSpeed = 0.0f;
     }
 
     /// <summary>
@@ -594,6 +605,9 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// </summary>
     private void RotationToMoveDirection()
     {
+        // 공격 상태
+        bool isAttacking = _IsAttacking.Invoke();
+
         // 피하기 상태인 경우
         if(isDodging)
         {
@@ -607,8 +621,16 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         // 기본 상태인 경우
         else
         {
-            _TargetYawRotation = Mathf.Atan2(
-                _HorizontalDirection.x, _HorizontalDirection.z) * Mathf.Rad2Deg;
+           
+           if(!isAttacking)
+            {
+             _TargetYawRotation = Mathf.Atan2(
+              _HorizontalDirection.x, _HorizontalDirection.z) * Mathf.Rad2Deg;
+
+            }
+
+
+
         }
 
 
@@ -618,7 +640,7 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
             _TargetYawRotation,
             m_RotationSpeed * Time.deltaTime);
 
-        if(_IsMovementInput || _AllowDodgeMovement)
+        if(_IsMovementInput || _AllowDodgeMovement || isAttacking)
         {
             transform.eulerAngles = Vector3.up * currentYawRotation;
         }
@@ -652,6 +674,9 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// </summary>
     public void OnDodgeInput()
     {
+        // 공격중 상태인 경우 구르기 요청 취소
+        if (_IsAttacking.Invoke()) return;
+
         // 피하기 상태가 아닌 경우에만 실행
         if (isDodging) return;
 
@@ -713,6 +738,18 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         _AllowDodgeMovement = false;
         _CurrentDodgeMoveSpeed = 0.0f;
         isDodging = false;
+    }
+
+    private void CALLBACK_OnAttackStarted(int attackCode)
+    {
+        if (TryGetViewDirection(out Vector3 viewForward, out Vector3 viewRight))
+        {
+            viewForward.y = 0.0f;
+            viewForward.Normalize();
+
+            _TargetYawRotation =
+                Mathf.Atan2(viewForward.x, viewForward.z) * Mathf.Rad2Deg;
+        }
     }
 
 

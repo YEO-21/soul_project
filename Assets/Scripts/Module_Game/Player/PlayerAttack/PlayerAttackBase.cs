@@ -55,4 +55,11 @@ public abstract class PlayerAttackBase
     /// <returns>연계 가능한 공격 코드로 변환후 반환합니다.</returns>
     public virtual string ConvertToLinkableAttackCode(string attackCode) => null;
 
+    /// <summary>
+    /// 공격 추각 가능 여부를 반환합니다.
+    /// </summary>
+    /// <param name="nextAttackCode">다음 공격 코드가 전달됩니다.</param>
+    /// <returns></returns>
+    public virtual bool IsAttackAddable(string nextAttackCode) => true;
+
 }

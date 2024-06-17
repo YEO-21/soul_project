@@ -27,9 +27,19 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
     private PlayerAttackBase _NextAttack;
 
     /// <summary>
+    /// 공격 상태임을 나타내기 위한 프로퍼티
+    /// </summary>
+    public bool isAttacking { get; private set; }
+
+    /// <summary>
     /// 공격 시작 이벤트
     /// </summary>
     public event System.Action<int /*attackCode*/> onAttackStarted;
+
+    /// <summary>
+    /// 구르기 상태 확인을 위한 대리자
+    /// </summary>
+    private System.Func<bool> _IsDodging;
 
     private void Awake()
     {
@@ -38,9 +48,12 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
             GameManager.instance.m_PlayerAttackInfoScriptableObject;
     }
 
-    public void Initialize(PlayerCharacterAnimController animController)
+    public void Initialize(PlayerCharacterAnimController animController,
+        PlayerCharacterMovement movement)
     {
         animController.onAttackAnimationFinished += CALLBACK_OnAttackAnimationFinished;
+
+        _IsDodging = () => movement.isDodging;
     }
 
     private void Update()
@@ -58,6 +71,9 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
 
         // 현재 공격이 실행중인 경우 함수 호출 종료
         if (_CurrentAttack != null) return;
+
+        // 공격 상태로 설정합니다.
+        isAttacking = true;
 
         // 요청된 공격을 현재 공격으로 설정합니다.
         _CurrentAttack = _NextAttack;
@@ -97,9 +113,18 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
     /// <param name="attackCode"/>요청시킬 공격 코드를 전달합니다.</param>>
     public void RequestAttack(string attackCode)
    {
+        // 공격이 요청되었을 때 구르기 상태라면 요청 취소
+        if (_IsDodging.Invoke()) return;
 
         // 다음 공격을 예약하지 못하는 경우라면 함수 호출 종료
         if (_NextAttack != null) return;
+
+        // 현재 진행중인 공격이 존재하는 경우
+        if(_CurrentAttack != null)
+        {
+            // 공격을 추가할 수 없는 경우 함수 호출 종료
+            if (!_CurrentAttack.IsAttackAddable(attackCode)) return;
+        }
 
         // 연계 가능한 공격 코드로 변환
         ConvertLinkableAttackCode(ref attackCode);
@@ -122,5 +147,10 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
     private void CALLBACK_OnAttackAnimationFinished()
     {
         _CurrentAttack = null;
+
+        if (_NextAttack == null) 
+        {
+            isAttacking = false;        
+        }
     }
 }
