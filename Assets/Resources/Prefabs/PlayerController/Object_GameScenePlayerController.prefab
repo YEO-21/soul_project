@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4037174648608257234
+--- !u!1 &311221935467257615
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,9 +8,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4672599350974066467}
-  - component: {fileID: 7199486915815143679}
-  - component: {fileID: 1523000463783199722}
+  - component: {fileID: 3055469772315047272}
+  - component: {fileID: 5288703656406531184}
+  - component: {fileID: 8769571779414974010}
   m_Layer: 0
   m_Name: Object_GameScenePlayerController
   m_TagString: Untagged
@@ -18,47 +18,46 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4672599350974066467
+--- !u!4 &3055469772315047272
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4037174648608257234}
+  m_GameObject: {fileID: 311221935467257615}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.47673, y: -0.9383015, z: 9.453363}
+  m_LocalPosition: {x: -4.0435367, y: -4.276473, z: -9.316977}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7199486915815143679
+--- !u!114 &5288703656406531184
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4037174648608257234}
+  m_GameObject: {fileID: 311221935467257615}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9589e9e3dc8063544a94cce81e54599d, type: 3}
+  m_Script: {fileID: 11500000, guid: 5fb610fb040837840bb8f65ec0e6f880, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PlayerCharacter: {fileID: 0}
---- !u!114 &1523000463783199722
+--- !u!114 &8769571779414974010
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4037174648608257234}
+  m_GameObject: {fileID: 311221935467257615}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 61e4a09ae8ce20c40a40bb3498fe37f1,
+  m_Actions: {fileID: -944628639613478452, guid: a87a13c9e093baa4f80bd398fc505c26,
     type: 3}
   m_NotificationBehavior: 0
   m_UIInputModule: {fileID: 0}

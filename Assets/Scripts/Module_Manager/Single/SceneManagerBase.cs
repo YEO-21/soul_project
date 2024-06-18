@@ -12,8 +12,10 @@ public class SceneManagerBase : ManagerClassBase<SceneManagerBase>
 
     public override void OnManagerInitialized()
     {
+        base.OnManagerInitialized();
+
         // 씬이 교체될 때마다 발생하는 이벤트를 등록합니다.
-        UnityEngine.SceneManagement.SceneManager.activeSceneChanged+= CALLBACK_OnSceneChanged;
+        UnityEngine.SceneManagement.SceneManager.activeSceneChanged += CALLBACK_OnSceneChanged;
     }
 
     /// <summary>
@@ -26,7 +28,7 @@ public class SceneManagerBase : ManagerClassBase<SceneManagerBase>
         UnityEngine.SceneManagement.Scene nextScene)
     {
         // 씬이 로드 완료된 경우
-        if(nextScene.isLoaded)
+        if (nextScene.isLoaded)
         {
             sceneInstance = GetSceneInstance<SceneInstance>();
         }
@@ -38,8 +40,6 @@ public class SceneManagerBase : ManagerClassBase<SceneManagerBase>
     /// <typeparam name="T">얻을 씬 객체 형식을 전달합니다.</typeparam>
     /// <returns>T 형식의 씬 객체를 반환합니다.</returns>
     public T GetSceneInstance<T>() where T : SceneInstance
-    => (FindObjectOfType<SceneInstance>() ??
+        => (FindObjectOfType<SceneInstance>() ??
             new GameObject("Single_DefaultSceneInstance").AddComponent<SceneInstance>()) as T;
-    
-
 }

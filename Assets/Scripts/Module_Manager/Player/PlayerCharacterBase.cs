@@ -23,8 +23,6 @@ public class PlayerCharacterBase : MonoBehaviour
     /// <summary>
     /// 이 캐릭터의 조종이 끝났을 경우 호출됩니다.
     /// </summary>
-    public virtual void OnControlFinished() => playerController = null;
-
-
-
+    public virtual void OnControlFinished()
+        => playerController = null;
 }
