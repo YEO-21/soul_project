@@ -15,16 +15,18 @@ using UnityEngine;
 /// </summary>
 public class BehaviorController : MonoBehaviour
 {
-    private void Start()
-    {
-        StartBehaivor<BehaviorSequencer>();
-    }
-
+   
 
     /// <summary>
     /// 행동 루틴을 나타냅니다.
     /// </summary>
     private Coroutine _BehaviorRoutine;
+
+    /// <summary>
+    /// 행동 객체에서 사용하게 될 데이터를 나타냅니다.
+    /// </summary>
+    protected Dictionary<string, object> m_Keys = new();
+
 
 
     /// <summary>
@@ -51,6 +53,15 @@ public class BehaviorController : MonoBehaviour
 
         }
     }
+
+    /// <summary>
+    /// Key를 추가하거나, 설정합니다.
+    /// </summary>
+    /// <param name="keyName"></param>
+    /// <param name="value"></param>
+    public void SetKey(string keyName, object value)
+       => m_Keys[keyName] = value;
+    
 
     private IEnumerator Run<TRunnableBehavior>()
         where TRunnableBehavior : RunnableBehavior, new()
