@@ -27,16 +27,24 @@ public class BehaviorSequencer : BehaviorCompositeBase
             // 등록시킨 행동 객체 생성
             RunnableBehavior runnable = getRunnable.Invoke();
 
-            // 행동 실행
-            yield return runnable.OnBehaivorStarted();
-
-            // 실행한 행동이 실패한 경우 다음 행동을 실행하지 않도록 합니다.
-            if(!runnable.isSucceeded)
+            if (runnable.OnInitialized(behaviorController))
             {
+                // 행동 실행
+                yield return runnable.OnBehaivorStarted();
 
-                // 다음 행동을 실행하지 않도록 합니다.
+                // 실행한 행동이 실패한 경우 다음 행동을 실행하지 않도록 합니다.
+                if (!runnable.isSucceeded)
+                {
+
+                    // 다음 행동을 실행하지 않도록 합니다.
+                    isSucceeded = false;
+                    yield break;
+                }
+            }
+            else
+            {
                 isSucceeded = false;
-                yield break;
+                yield return null;
             }
         }
 

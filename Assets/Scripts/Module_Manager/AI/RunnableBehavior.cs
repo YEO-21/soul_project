@@ -7,9 +7,26 @@ using System.Collections;
 public abstract class RunnableBehavior
 {
     /// <summary>
+    /// 이 행동을 제어하는 객체를 나타냅니다.
+    /// </summary>
+    public BehaviorController behaviorController { get; private set; } 
+
+
+    /// <summary>
     /// 이 행동의 실행 성공 여부를 나타냅니다.
     /// </summary>
     public bool isSucceeded { get; protected set; }
+
+    /// <summary>
+    /// 이 행동 객체가 초기화될 때 호출되는 메서드입니다.
+    /// </summary>
+    /// <param name="behaviorController">이 행동을 제어하는 객체가 전달됩니다.</param>
+    public virtual bool OnInitialized(BehaviorController behaviorController)
+    {
+        this.behaviorController = behaviorController;
+
+        return true;
+    }
 
 
     /// <summary>

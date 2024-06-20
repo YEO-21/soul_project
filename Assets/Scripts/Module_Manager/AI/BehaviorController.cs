@@ -27,6 +27,10 @@ public class BehaviorController : MonoBehaviour
     /// </summary>
     protected Dictionary<string, object> m_Keys = new();
 
+    /// <summary>
+/// m_Keys에 대한 읽기 전용 프로퍼티 입니다.
+/// </summary>
+    public Dictionary<string, object> keys => m_Keys;
 
 
     /// <summary>
@@ -59,8 +63,24 @@ public class BehaviorController : MonoBehaviour
     /// </summary>
     /// <param name="keyName"></param>
     /// <param name="value"></param>
-    public void SetKey(string keyName, object value)
+    public void SetKey(string keyName, object value = null)
        => m_Keys[keyName] = value;
+
+    public T GetKey<T>(string keyName) => (T)GetKey(keyName);
+    
+
+    public object GetKey(string keyName)
+    {
+        if(m_Keys.TryGetValue(keyName, out object value))
+        {
+            return value;
+        }
+
+#if UNITY_EDITOR
+        Debug.LogError($"[{keyName}] 에 대한 내용을 찾을 수 없습니다.");
+#endif
+        return null;
+    }
     
 
     private IEnumerator Run<TRunnableBehavior>()
@@ -69,12 +89,17 @@ public class BehaviorController : MonoBehaviour
         // 행동들을 계속 실행시킵니다.
         while(true)
         {
+
             // 행동 객체를 생성합니다.
             TRunnableBehavior root = new TRunnableBehavior();
 
-
-            // 행동을 시작시키고 행동이 끝날 때까지 대기합니다.
-            yield return root.OnBehaivorStarted();
+            // 행동 객체 초기화 성공 시
+            if (root.OnInitialized(this))
+            {
+                // 행동을 시작시키고 행동이 끝날 때까지 대기합니다.
+                yield return root.OnBehaivorStarted();
+            }
+            else yield return null;
         }
     }
 

@@ -8,6 +8,14 @@ using UnityEngine;
 /// </summary>
 public sealed class SkeletonBehaviorController : EnemyBehaviorController
 {
+    protected override void Awake()
+    {
+        base.Awake();
+
+        SetKey(KEY_MAXMOVEDISTANCE, 10.0f);
+    }
+
+
     private void Start()
     {
         StartBehaivor<SkeletonRootBehavior>();

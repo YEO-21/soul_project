@@ -7,7 +7,33 @@ using UnityEngine;
 /// </summary>
 public abstract class EnemyBehaviorController : BehaviorController
 {
-   
+    /// <summary>
+    /// 이 적 캐릭터가 생성된 위치를 나타냅니다.
+    /// </summary>
+    public const string KEY_SPAWNPOSITION = "OriginPosition";
+
+
+    /// <summary>
+    /// 생성된 위치부터 이동 가능한 반경을 나타냅니다.
+    /// </summary>
+    public const string KEY_MAXMOVEDISTANCE = "MaxMoveDistance";
+
+    /// <summary>
+    /// 이동 목표 위치를 나타냅니다.
+    /// </summary>
+    public const string KEY_TARGETPOSITION = "TargetPosition";
+
+    protected virtual void Awake()
+    {
+        // 최대 이동 가능 반경 키 추가
+        SetKey(KEY_MAXMOVEDISTANCE);
+
+        // 생성 위치 키 추가
+        SetKey(KEY_SPAWNPOSITION, transform.position);
+
+        // 이동 목표 키 추가
+        SetKey(KEY_TARGETPOSITION);
+    }
 
 
 }
