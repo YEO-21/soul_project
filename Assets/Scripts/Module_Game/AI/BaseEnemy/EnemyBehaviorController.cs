@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 /// <summary>
 /// 적 캐릭터 행동 제어 컴포넌트입니다.
@@ -22,6 +23,11 @@ public abstract class EnemyBehaviorController : BehaviorController
     /// 이동 목표 위치를 나타냅니다.
     /// </summary>
     public const string KEY_TARGETPOSITION = "TargetPosition";
+
+    private NavMeshAgent _NavMeshAgent;
+
+    public NavMeshAgent agent => 
+        _NavMeshAgent ?? (_NavMeshAgent = GetComponent<NavMeshAgent>());
 
     protected virtual void Awake()
     {
