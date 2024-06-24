@@ -18,7 +18,7 @@ public sealed class SkeletonBehaviorController : EnemyBehaviorController
 
     private void Start()
     {
-        StartBehaivor<SkeletonRootBehavior>();
+        //StartBehaivor<SkeletonRootBehavior>();
         
     }
 

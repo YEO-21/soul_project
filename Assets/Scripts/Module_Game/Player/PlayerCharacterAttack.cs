@@ -9,11 +9,23 @@ using UnityEngine;
 /// </summary>
 public sealed class PlayerCharacterAttack : MonoBehaviour
 {
+    [Header("# 장착중인 무기")]
+    public WeaponBase m_EquippedWeapon;
+
+    [Header("# 공격 감지 레이어")]
+    public LayerMask m_DetectLayer;
+
+
+
     /// <summary>
     /// 플레이어 공격 정보 ScriptableObject 에셋
     /// </summary>
     private PlayerAttackInfoScriptableObject _PlayerAttackInfoScriptableObject;
 
+    /// <summary>
+    /// 플레이어 캐릭터 객체를 나타냅니다.
+    /// </summary>
+    private PlayerCharacter _PlayerCharacter;
 
     /// <summary>
     /// 현재 공격
@@ -48,12 +60,31 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
             GameManager.instance.m_PlayerAttackInfoScriptableObject;
     }
 
-    public void Initialize(PlayerCharacterAnimController animController,
+    private void Start()
+    {
+        // 장착중인 무기 초기화
+        m_EquippedWeapon.InitializeWeapon(m_DetectLayer);
+        m_EquippedWeapon.onDetected += CALLBACK_OnDamageableObjectDetected;
+    }
+
+    public void Initialize(
+        PlayerCharacter owner,
+        PlayerCharacterAnimController animController,
         PlayerCharacterMovement movement)
     {
+        _PlayerCharacter = owner;
+
         animController.onAttackAnimationFinished += CALLBACK_OnAttackAnimationFinished;
 
+        animController.onAttackAreaCheckStarted += CALLBACK_OnAttackAreaCheckStarted;
+        animController.onAttackAreaCheckFinished += CALLBACK_OnAttackAreaCheckFinished;
+
         _IsDodging = () => movement.isDodging;
+    }
+
+    private void AnimController_onAttackAreaCheckStarted()
+    {
+        throw new System.NotImplementedException();
     }
 
     private void Update()
@@ -135,9 +166,7 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
             attackCode, out attackInfo)) return;
 
         // 다음 공격을 설정합니다
-        _NextAttack = PlayerAttackBase.GetPlayerAttack(attackInfo);
-
-        Debug.Log($"예약된 공격 이름 : {_NextAttack.attackInfo.m_AttackName}");
+        _NextAttack = PlayerAttackBase.GetPlayerAttack(_PlayerCharacter, attackInfo);
    }
 
 
@@ -152,5 +181,32 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
         {
             isAttacking = false;        
         }
+    }
+
+    /// <summary>
+    /// 공격 영역 검사 시작 
+    /// </summary>
+    private void CALLBACK_OnAttackAreaCheckStarted()
+    {
+        m_EquippedWeapon?.StartAttackAreaCheck();
+    }
+
+    /// <summary>
+    /// 공격 영역 검사 끝
+    /// </summary>
+    ///
+    private void CALLBACK_OnAttackAreaCheckFinished()
+    {
+        m_EquippedWeapon?.StopAttackAreaCheck();
+    }
+
+    /// <summary>
+    /// 피해를 입을 수 있는 객체를 감지한 경우
+    /// </summary>
+    /// <param name="to"></param>
+    private void CALLBACK_OnDamageableObjectDetected(IDamageable to)
+    {
+        _CurrentAttack?.OnDamageableObjectDetected(to);
+
     }
 }

@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 131494440258766889}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.205}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -56,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 5179775772361391886}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.077}
+  m_LocalPosition: {x: 0, y: 0, z: 1.159}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -163,6 +163,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AttackCheckStartPosition: {fileID: 5637593945994112235}
   m_AttackCheckEndPosition: {fileID: 6700739535191470982}
+  m_AttackCheckRadius: 0.2
+  m_SwordParticle: {fileID: 7301695804733428979}
 --- !u!1 &8970846541806671859
 GameObject:
   m_ObjectHideFlags: 0

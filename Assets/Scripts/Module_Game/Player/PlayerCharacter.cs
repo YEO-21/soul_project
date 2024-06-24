@@ -7,7 +7,8 @@ using UnityEngine;
 /// 플레이어 캐릭터를 나타냅니다.
 /// </summary>
 public sealed class PlayerCharacter : PlayerCharacterBase,
-    IDefaultPlayerInputReceivable
+    IDefaultPlayerInputReceivable,
+    IDamageable
 {
     private PlayerCharacterMovement _MovementComponent;
     private PlayerCharacterAttack _AttackComponent;
@@ -23,7 +24,7 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     {
         movement.Initialize(animController, attack);
         animController.Initailize(movement, attack);
-        attack.Initialize(animController, movement);
+        attack.Initialize(this, animController, movement);
     }
 
 
@@ -35,4 +36,9 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     void IDefaultPlayerInputReceivable.OnSprintInput(bool isPressed) => movement.OnSprintInput(isPressed);
 
     void IDefaultPlayerInputReceivable.OnNormalAttackInput() => attack.RequestAttack(Constants.PLAYER_ATTACK_NORMAL);
+
+    public void OnHit(DamageBase damageInstance)
+    {
+        throw new System.NotImplementedException();
+    }
 }
