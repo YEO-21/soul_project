@@ -10,6 +10,12 @@ using UnityEngine;
 public abstract class PlayerAttackBase
 {
     /// <summary>
+    ///  이미 공격된 적 객체를 기록할 리스트입니다.
+    ///  중복 공격을 막기 위하여 사용됩니다.
+    /// </summary>
+    private List<IDamageable> _AttackedEnemies;
+
+    /// <summary>
     /// 공격을 실행하고 있는 플레이어 캐릭터 객체를 나타냅니다.
     /// </summary>
     private PlayerCharacter _PlayerCharacter;
@@ -53,6 +59,11 @@ public abstract class PlayerAttackBase
     {
         _PlayerCharacter = owner;
         this.attackInfo = attackInfo;
+
+        if(!this.attackInfo.m_AlllowDuplicateDamage)
+        {
+            _AttackedEnemies = new();
+        }
         return this;
     }
 
@@ -76,8 +87,19 @@ public abstract class PlayerAttackBase
     /// <param name="to"></param>
     public virtual void OnDamageableObjectDetected(IDamageable to)
     {
+        // 중복 공격을 허용하지 않는 경우
+        if(!attackInfo.m_AlllowDuplicateDamage)
+        {
+            // 이미 공격 처리된 적인지 확인하고, 공격 처리된 적이라면 추가 피해를 주지 않습니다.
+            if (_AttackedEnemies.Contains(to)) return;
+
+            // 아직 공격처리되지 않은 적인 경우, 리스트에 추가하여 다음 공격을 진행하지 않도록 합니다.
+            else _AttackedEnemies.Add(to);
+        }
+
+
         // 감지된 객체에게 피해를 입힙니다.
-        DamageBase.Hit(to, new SampleDamage(_PlayerCharacter.transform, 500.0f));
+        DamageBase.Hit(to, new SampleDamage(_PlayerCharacter.transform, attackInfo.m_Damage));
     }
 
 }

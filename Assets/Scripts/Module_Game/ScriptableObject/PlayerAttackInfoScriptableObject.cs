@@ -54,6 +54,13 @@ public sealed class PlayerAttackInfo
     [Header("# 공격 코드")]
     public string m_PlayerAttackCode;
 
+    [Header("# 중복 피해 허용 여부")]
+    public bool m_AlllowDuplicateDamage;
+
+    [Header("# 피해량")]
+    public float m_Damage;
+
+
     /// <summary>
     /// 정수 형태의 공격 코드를 나타냅니다.
     /// </summary>

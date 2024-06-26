@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-5328859681343702162
+--- !u!114 &-6692841505893544969
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -24,7 +24,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_Body
-  m_Shader: {fileID: -6465566751694194690, guid: 081075c10b5c8794ebfe22e4df1c14e7,
+  m_Shader: {fileID: -6465566751694194690, guid: ac62e6dcf02e88348a1c512281cd95ca,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -89,7 +89,7 @@ Material:
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
     - _ExcludeFromTUAndAA: 0
-    - _NormalAmount: 3
+    - _NormalAmmount: 3
     - _OpaqueCullMode: 2
     - _RayTracing: 0
     - _ReceivesSSR: 1
