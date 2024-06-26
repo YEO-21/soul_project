@@ -40,6 +40,16 @@ public sealed class PlayerCharacterAnimController : AnimController
     /// 공격 애니메이션 재생 끝 이벤트
     /// </summary>
     public event System.Action onAttackAnimationFinished;
+
+    /// <summary>
+    /// 공격 영역 검사 시작 이벤트
+    /// </summary>
+    public event System.Action onAttackAreaCheckStarted;
+
+    /// <summary>
+    /// 공격 영역 검사 끝 이벤트
+    /// </summary>
+    public event System.Action onAttackAreaCheckFinished;
     #endregion
 
 
@@ -122,6 +132,22 @@ public sealed class PlayerCharacterAnimController : AnimController
 
         // 공격 애니메이션 끝 이벤트 발생
         onAttackAnimationFinished?.Invoke();
+    }
+
+    /// <summary>
+    /// 공격 영역 확인 시작됨
+    /// </summary>
+    private void AnimEvent_OnAttackAreaCheckStarted()
+    {
+        onAttackAreaCheckStarted?.Invoke();
+    }
+
+    /// <summary>
+    /// 공격 영역 확인 끝남
+    /// </summary>
+    private void AnimEvent_OnAttackAreaCheckFinished()
+    {
+        onAttackAreaCheckFinished?.Invoke();
     }
 
 }
