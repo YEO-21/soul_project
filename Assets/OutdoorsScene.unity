@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2170.2131, g: 2282.805, b: 3336.9614, a: 1}
+  m_IndirectSpecularColor: {r: 2168.1428, g: 2279.8381, b: 3330.2896, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -166,7 +166,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5332964}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 59d8c5f86dbd9704eade5d73d173f6e7, type: 3}
+  m_Avatar: {fileID: 9000000, guid: 70b3f9a485a308847952fa8438bfd4b8, type: 3}
   m_Controller: {fileID: 9100000, guid: 7355f70988725f24abb4959d4c8ccad1, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
@@ -688,6 +688,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 174ae44e1574d4d408bca0e09f77dc86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isNormalState: 1
 --- !u!195 &569968467
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1084,6 +1085,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 174ae44e1574d4d408bca0e09f77dc86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isNormalState: 1
 --- !u!114 &950174533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1999,7 +2001,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1729640216}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.39942503, y: -3e-45, z: -1e-45, w: 0.91676587}
+  m_LocalRotation: {x: -0.39942503, y: 1e-45, z: 1e-45, w: 0.91676587}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -6920,7 +6922,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4058066078536677152}
-  - component: {fileID: 4058066078543861952}
   m_Layer: 0
   m_Name: Base mesh
   m_TagString: Untagged
@@ -11806,27 +11807,6 @@ Transform:
   - {fileID: 4058066078536677184}
   m_Father: {fileID: 4058066078536677244}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &4058066078543861952
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4058066078536444672}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 59d8c5f86dbd9704eade5d73d173f6e7, type: 3}
-  m_Controller: {fileID: 9100000, guid: 7355f70988725f24abb4959d4c8ccad1, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!137 &4058066078548010496
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0

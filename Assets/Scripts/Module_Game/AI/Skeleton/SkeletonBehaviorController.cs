@@ -22,8 +22,25 @@ public sealed class SkeletonBehaviorController : EnemyBehaviorController
         
     }
 
+    public void Initialize(EnemySkeleton skeleton)
+    {
+        skeleton.onHit += CALLBACK_OnHit;
+    }
 
+    private void CALLBACK_OnHit(DamageBase damageInstance)
+    {
+        // 피해를 입힌 플레이어 캐릭터 객체를 얻습니다.
+        PlayerCharacter playerChracter = damageInstance.from.GetComponent<PlayerCharacter>();
 
+        if (!playerChracter) return;
+
+        // 공격적인 상태로 설정합니다.
+        SetKey(KEY_ISAGGRESSIVESTATE, true);
+
+        // 플레이어 캐릭터 객체 설정
+        SetKey(KEY_PLAYERCHARACTER, playerChracter);
+        
+    }
 
 
 }

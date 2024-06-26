@@ -28,10 +28,31 @@ public class BehaviorController : MonoBehaviour
     protected Dictionary<string, object> m_Keys = new();
 
     /// <summary>
+    /// 감각 객체들을 나타냅니다.
+    /// </summary>
+    protected List<SenseBase> m_Senses = new();
+
+    /// <summary>
 /// m_Keys에 대한 읽기 전용 프로퍼티 입니다.
 /// </summary>
     public Dictionary<string, object> keys => m_Keys;
 
+
+    protected virtual void Update()
+    {
+        SenseTick();
+    }
+
+    /// <summary>
+    /// 감각 객체 Tick
+    /// </summary>
+    protected virtual void SenseTick()
+    {
+        foreach(SenseBase senseInstance in m_Senses)
+        {
+            senseInstance.OnSenseUpdated();
+        }
+    }
 
     /// <summary>
     /// 행동을 실행시킵니다.
@@ -81,7 +102,28 @@ public class BehaviorController : MonoBehaviour
 #endif
         return null;
     }
-    
+
+    /// <summary>
+    /// 감각 객체를 등록합니다.
+    /// </summary>
+    /// <typeparam name="TSense">감각 객체 형식을 전달합니다.</typeparam>
+    /// <returns></returns>
+    public TSense RegisterSense<TSense>()
+        where TSense : SenseBase, new()
+    {
+        // 감지 객체 생성
+        TSense senseInstance = new TSense();
+
+        // 감각 객체 초기화
+        senseInstance.OnSenseIntialized(this);
+
+        // 감각 객체 추가
+        m_Senses.Add(senseInstance);
+
+        return senseInstance;
+
+    }
+
 
     private IEnumerator Run<TRunnableBehavior>()
         where TRunnableBehavior : RunnableBehavior, new()

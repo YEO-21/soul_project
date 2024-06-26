@@ -13,7 +13,6 @@ public abstract class EnemyBehaviorController : BehaviorController
     /// </summary>
     public const string KEY_SPAWNPOSITION = "OriginPosition";
 
-
     /// <summary>
     /// 생성된 위치부터 이동 가능한 반경을 나타냅니다.
     /// </summary>
@@ -23,6 +22,16 @@ public abstract class EnemyBehaviorController : BehaviorController
     /// 이동 목표 위치를 나타냅니다.
     /// </summary>
     public const string KEY_TARGETPOSITION = "TargetPosition";
+
+    /// <summary>
+    /// 플레이어 캐릭터를 나타냅니다.
+    /// </summary>
+    public const string KEY_PLAYERCHARACTER = "PlayerCharacter";
+
+    /// <summary>
+    /// 공격적 상태를 나타냅니다.
+    /// </summary>
+    public const string KEY_ISAGGRESSIVESTATE = "IsAggressiveState";
 
     private NavMeshAgent _NavMeshAgent;
 
@@ -39,6 +48,12 @@ public abstract class EnemyBehaviorController : BehaviorController
 
         // 이동 목표 키 추가
         SetKey(KEY_TARGETPOSITION);
+
+        // 플레이어 캐릭터 키 추가
+        SetKey(KEY_PLAYERCHARACTER);
+
+        // 공격적 상태 키 추가
+        SetKey(KEY_ISAGGRESSIVESTATE, false);
     }
 
 

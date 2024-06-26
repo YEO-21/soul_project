@@ -13,11 +13,17 @@ public class BT_MoveTo : RunnableBehavior
     /// </summary>
     private string _TargetPositionKey;
 
+    /// <summary>
+    /// 이동이 끝날때까지 행동을 대기시킵니다.
+    /// </summary>
+    private bool _WaitMoveFinish;
 
 
-    public BT_MoveTo(string targetPositionKey)
+
+    public BT_MoveTo(string targetPositionKey, bool waitMoveFinish = true)
     {
         _TargetPositionKey = targetPositionKey;
+        _WaitMoveFinish = waitMoveFinish;
     }
 
 
@@ -36,8 +42,13 @@ public class BT_MoveTo : RunnableBehavior
         // 설정된 목표 위치를 얻습니다.
         Vector3 destination = agent.destination;
 
-        yield return new WaitUntil(() => 
-        Vector3.Distance(behaviorController.transform.position , destination) < 0.1f);
+        if(_WaitMoveFinish)
+        {
+            yield return new WaitUntil(() =>
+             Vector3.Distance(behaviorController.transform.position, destination) < 0.1f);
+
+        }
+
 
         isSucceeded = true;
 

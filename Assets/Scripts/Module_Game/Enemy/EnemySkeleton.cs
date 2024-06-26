@@ -27,6 +27,7 @@ public sealed class EnemySkeleton : EnemyCharacterBase
 
     private void Start()
     {
+        (behaviorController as SkeletonBehaviorController).Initialize(this);
         animController.Initialize(this);
     }
 

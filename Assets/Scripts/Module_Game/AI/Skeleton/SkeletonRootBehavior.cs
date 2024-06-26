@@ -4,23 +4,16 @@ using UnityEngine;
 
 
 
-public sealed class SkeletonRootBehavior : BehaviorSequencer
+public sealed class SkeletonRootBehavior : BehaviorSelector
 {
     public SkeletonRootBehavior()
     {
-        SkeletonBehaviorController bhController = behaviorController as SkeletonBehaviorController;
+        // 플레이어를 감지하지 않았을 경우
+       AddBehavior<SkeletonNormalSequencer>();
 
-        // 이동할 랜덤한 위치 설정
-        AddBehavior(() => new BT_GetRandomPositionInNavigableRadius(
-            SkeletonBehaviorController.KEY_TARGETPOSITION,
-            SkeletonBehaviorController.KEY_MAXMOVEDISTANCE,
-            SkeletonBehaviorController.KEY_SPAWNPOSITION));
-
-        // 설정된 위치로 이동
-        AddBehavior(() => new BT_MoveTo(SkeletonBehaviorController.KEY_TARGETPOSITION));
-
-        // 대기
-        AddBehavior(() => new BT_Wait(Random.Range(0.0f, 3.0f)));
+       
+       // 플레이어를 감지한 경우
+       AddBehavior<SkeletonAggressiveSelector>();
 
     }
    
