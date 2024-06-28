@@ -148,5 +148,15 @@ public class BehaviorController : MonoBehaviour
 
     protected virtual void OnDestroy() => StopBehavior();
 
+#if UNITY_EDITOR
+    protected virtual void OnDrawGizmos()
+    {
+        foreach(SenseBase senseInstance in m_Senses)
+        {
+            senseInstance.OnDrawGizmos();
+        }
+    }
+#endif
+
 
 }

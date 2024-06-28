@@ -28,6 +28,11 @@ public abstract class SenseBase
     {
 
     }
+    
+    public virtual void OnDrawGizmos()
+    {
+
+    }
 
 
 }
