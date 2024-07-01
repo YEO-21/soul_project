@@ -23,6 +23,11 @@ public class BehaviorController : MonoBehaviour
     private Coroutine _BehaviorRoutine;
 
     /// <summary>
+    /// BehaviorController 에서 실행중인 루트 노드를 나타냅니다.
+    /// </summary>
+    private RunnableBehavior _RootRunnable;
+
+    /// <summary>
     /// 행동 객체에서 사용하게 될 데이터를 나타냅니다.
     /// </summary>
     protected Dictionary<string, object> m_Keys = new();
@@ -36,6 +41,7 @@ public class BehaviorController : MonoBehaviour
 /// m_Keys에 대한 읽기 전용 프로퍼티 입니다.
 /// </summary>
     public Dictionary<string, object> keys => m_Keys;
+
 
 
     protected virtual void Update()
@@ -69,8 +75,15 @@ public class BehaviorController : MonoBehaviour
     /// </summary>
     public void StopBehavior()
     {
+        // 행동 종료
+        if (_RootRunnable != null)
+        {
+            _RootRunnable.OnBehaviorFinished();
+            _RootRunnable = null;
+        }
+
         // 실행중인 루틴이 존재한다면
-        if(_BehaviorRoutine !=null)
+        if (_BehaviorRoutine !=null)
         {
             // 루틴 중단
             StopCoroutine(_BehaviorRoutine);
@@ -133,15 +146,19 @@ public class BehaviorController : MonoBehaviour
         {
 
             // 행동 객체를 생성합니다.
-            TRunnableBehavior root = new TRunnableBehavior();
+            _RootRunnable = new TRunnableBehavior();
 
             // 행동 객체 초기화 성공 시
-            if (root.OnInitialized(this))
+            if (_RootRunnable.OnInitialized(this))
             {
                 // 행동을 시작시키고 행동이 끝날 때까지 대기합니다.
-                yield return root.OnBehaivorStarted();
+                
+                yield return _RootRunnable.OnBehaivorStarted();
+
             }
             else yield return null;
+
+            _RootRunnable = null;
         }
     }
 
@@ -155,6 +172,8 @@ public class BehaviorController : MonoBehaviour
         {
             senseInstance.OnDrawGizmos();
         }
+
+        _RootRunnable?.OnDrawGizmos();
     }
 #endif
 

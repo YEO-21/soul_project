@@ -7,6 +7,7 @@ public sealed class SkeletonNormalSequencer : BehaviorSequencer
     public SkeletonNormalSequencer()
     {
 
+
         // 이동할 랜덤한 위치 설정
         AddBehavior(() => new BT_GetRandomPositionInNavigableRadius(
             SkeletonBehaviorController.KEY_TARGETPOSITION,
@@ -18,6 +19,8 @@ public sealed class SkeletonNormalSequencer : BehaviorSequencer
 
         // 대기
         AddBehavior(() => new BT_Wait(Random.Range(0.0f, 3.0f)));
+
+       
     }
 
     public override bool OnInitialized(BehaviorController behaviorController)

@@ -7,16 +7,10 @@ public sealed class SkeletonAggressiveSelector : BehaviorSequencer
 {
     public SkeletonAggressiveSelector()
     {
-        // 플레이어 캐릭터 위치를 목표 위치로 설정합니다.
-        AddBehavior(() => new BT_TargetPositionToPlayerPosition(
-            SkeletonBehaviorController.KEY_PLAYERCHARACTER,
-            SkeletonBehaviorController.KEY_TARGETPOSITION));
+        // 플레이어가 공격 가능 영역에 존재하지 않은 경우
+        AddBehavior<SkeletonTrackingSequencer>();
 
-        // 목표 위치로 이동합니다.
-        AddBehavior(() => new BT_MoveTo(SkeletonBehaviorController.KEY_TARGETPOSITION, false));
-
-        // 대기
-        AddBehavior(() => new BT_Wait(0.5f));
+       
     }
 
 

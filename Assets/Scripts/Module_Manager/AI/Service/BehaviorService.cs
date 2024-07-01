@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -20,4 +21,9 @@ public abstract class BehaviorService
     {
 
     }
+
+    public virtual void OnDrawGizmos()
+    {
+    }
+
 }

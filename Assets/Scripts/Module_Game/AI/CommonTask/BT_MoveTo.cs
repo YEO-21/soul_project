@@ -30,6 +30,7 @@ public class BT_MoveTo : RunnableBehavior
 
     public override IEnumerator OnBehaivorStarted()
     {
+
         // 길찾기 기능을 제공하는 컴포넌트를 얻습니다.
         NavMeshAgent agent = (behaviorController as EnemyBehaviorController).agent;
 
@@ -45,8 +46,7 @@ public class BT_MoveTo : RunnableBehavior
         if(_WaitMoveFinish)
         {
             yield return new WaitUntil(() =>
-             Vector3.Distance(behaviorController.transform.position, destination) < 0.1f);
-
+             Vector3.Distance(behaviorController.transform.position, destination) <= agent.stoppingDistance);
         }
 
 
