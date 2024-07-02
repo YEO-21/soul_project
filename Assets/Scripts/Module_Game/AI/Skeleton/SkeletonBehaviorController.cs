@@ -29,8 +29,9 @@ public sealed class SkeletonBehaviorController : EnemyBehaviorController
 
     private void Start()
     {
-        StartBehaivor<SkeletonRootBehavior>();
-        
+        StartBehavior();
+
+
     }
 
     public void Initialize(EnemySkeleton skeleton)
@@ -50,6 +51,9 @@ public sealed class SkeletonBehaviorController : EnemyBehaviorController
 
         // 플레이어 캐릭터 객체 설정
         SetKey(KEY_PLAYERCHARACTER, playerChracter);
+
+        agent.SetDestination(transform.position);
+        BehaviorStartRequest(2.0f);
         
     }
 
@@ -79,6 +83,14 @@ public sealed class SkeletonBehaviorController : EnemyBehaviorController
             SetKey(KEY_ISAGGRESSIVESTATE, false);
             SetKey(KEY_PLAYERCHARACTER, null);
         }
+    }
+
+    public override void StartBehavior()
+    {
+        base.StartBehavior();
+
+        StartBehaivor<SkeletonRootBehavior>();
+        Debug.Log("행동 재시작 됨 ");
     }
 
 

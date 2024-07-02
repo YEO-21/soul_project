@@ -56,5 +56,15 @@ public abstract class EnemyBehaviorController : BehaviorController
         SetKey(KEY_ISAGGRESSIVESTATE, false);
     }
 
+    public virtual void StartBehavior()
+    {
+        agent.enabled = true;
+    }
+
+    protected override void OnBehaviorRestarted()
+    {
+        StartBehavior();
+    }
+
 
 }

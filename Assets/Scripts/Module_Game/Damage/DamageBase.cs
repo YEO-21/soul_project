@@ -17,10 +17,16 @@ public abstract class DamageBase
     /// </summary>
     public float damage { get; private set; }
 
-    public DamageBase(Transform from, float damage)
+    /// <summary>
+    ///  크리티컬 대미지
+    /// </summary>
+    public bool isCriticalDamage { get; private set; }
+
+    public DamageBase(Transform from, float damage, bool isCriticalDamage)
     {
         this.from = from;
         this.damage = damage;
+        this.isCriticalDamage = isCriticalDamage;
     }
 
 
