@@ -26,6 +26,8 @@ public sealed class BS_CheckAttackableArea : BehaviorService
     /// </summary>
     private LayerMask _DetectLayer;
 
+    private string _IsAttackableKey;
+
     #region 디버그
     private DrawGizmoSphereInfo _DebugAttackArea;
     #endregion
@@ -34,16 +36,21 @@ public sealed class BS_CheckAttackableArea : BehaviorService
         float areaOffsetY,
         float areaOffsetZ,
         float areaRadius,
-        LayerMask detectLayer)
+        LayerMask detectLayer,
+        string isAttackableKey)
     {
         _AreaOffsetY = areaOffsetY;
         _AreaOffsetZ = areaOffsetZ;
         _AreaRadius = areaRadius;
         _DetectLayer = detectLayer;
+        _IsAttackableKey = isAttackableKey;
+       
     }
 
     public override void ServiceTick()
     {
+        if (behaviorController.GetKey<bool>(_IsAttackableKey)) return;
+
         // 검사 영역의 중심 위치를 계산합니다.
         Vector3 center = behaviorController.transform.position + 
             (behaviorController.transform.up * _AreaOffsetY) +
@@ -52,10 +59,13 @@ public sealed class BS_CheckAttackableArea : BehaviorService
         Collider[] detectCollisions = PhysicsExt.OverlapSphere(out _DebugAttackArea,
             center, _AreaRadius, _DetectLayer, QueryTriggerInteraction.Ignore);
 
-        if(detectCollisions.Length > 0)
+        if (detectCollisions.Length > 0)
         {
-            Debug.Log("플레이어 감지!");
+            EnemyBehaviorController behvController = behaviorController as EnemyBehaviorController;
+            behvController.SetKey(_IsAttackableKey, true);
+            behvController.BehaviorStartRequest();
         }
+        else behaviorController.SetKey(_IsAttackableKey, false);
 
     }
 

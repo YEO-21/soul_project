@@ -81,9 +81,9 @@ public abstract class RunnableBehavior
             foreach(BehaviorService service in behaviorServices)
             {
                 service.ServiceTick();
+                yield return null;
             }
 
-            yield return null;
         }
     }
 

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using UnityEngine;
 
-public sealed class SkeletonAggressiveSelector : BehaviorSequencer
+public sealed class SkeletonAggressiveSelector : BehaviorSelector
 {
     public SkeletonAggressiveSelector()
     {
+        AddBehavior<SkeletonAttackSelector>();
+
         // 플레이어가 공격 가능 영역에 존재하지 않은 경우
         AddBehavior<SkeletonTrackingSequencer>();
 

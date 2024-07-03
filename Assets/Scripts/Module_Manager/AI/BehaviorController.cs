@@ -61,6 +61,8 @@ public class BehaviorController : MonoBehaviour
         // 재시작 요청이 존재한다면
         if (_BehaviorRestartRequested)
         {
+           
+
             if(_BehaviorRestartRequestTime <= Time.time) 
             {
                 // 요청 처리됨
@@ -68,6 +70,7 @@ public class BehaviorController : MonoBehaviour
 
                 // 행동 재시작
                 OnBehaviorRestarted();
+                Debug.Log("행동 재시작");
             }
         }
     }
@@ -88,7 +91,7 @@ public class BehaviorController : MonoBehaviour
     /// </summary>
     protected virtual void OnBehaviorRestarted()
     {
-
+       
     }
 
     /// <summary>
@@ -133,7 +136,6 @@ public class BehaviorController : MonoBehaviour
     public virtual void BehaviorStartRequest(
         float startDelay = 0.0f, bool forceRestart = false)
     {
-        Debug.Log("행동 재시작 요청됨");
 
 
         // 행동 중단

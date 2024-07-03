@@ -8,11 +8,14 @@ using UnityEngine;
 /// </summary>
 public sealed class SkeletonBehaviorController : EnemyBehaviorController
 {
+    public const string KEY_ISATTACKABLE = "IsAttackable";
+
     protected override void Awake()
     {
         base.Awake();
 
         SetKey(KEY_MAXMOVEDISTANCE, 10.0f);
+        SetKey(KEY_ISATTACKABLE, false);
 
         SightSense sightSense = RegisterSense<SightSense>();
         sightSense.sightRadius = 2.0f;
@@ -90,7 +93,6 @@ public sealed class SkeletonBehaviorController : EnemyBehaviorController
         base.StartBehavior();
 
         StartBehaivor<SkeletonRootBehavior>();
-        Debug.Log("행동 재시작 됨 ");
     }
 
 

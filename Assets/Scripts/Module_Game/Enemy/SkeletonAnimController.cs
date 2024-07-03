@@ -9,16 +9,25 @@ public sealed class SkeletonAnimController : AnimController
     private const string PARAM_ISDAMAGED = "_IsDamaged";
     private const string PARAM_ISCRITICALDAMAGE = "_IsCriticalDamage";
     private const string PARAM_DAMAGEDDIRECTIONZ = "_DamagedDirectionZ";
+    private const string PARAM_ATTACKREQUESTED = "_AttackRequested";
 
     private EnemySkeleton _Skeleton;
 
-   public void Initialize(EnemySkeleton skeleton)
+    #region 이벤트
+    /// <summary>
+    /// 공격 애니메이션 끝 이벤트
+    /// </summary>
+    public event System.Action onAttackAnimationFinished;
+    #endregion
+
+    public void Initialize(EnemySkeleton skeleton)
     {
         _Skeleton = skeleton;
 
         skeleton.onMoveSpeedChanged += CALLBACK_OnMoveSpeedChanged;
         skeleton.onHit += CALLBACK_OnDamaged;
 
+        skeleton.attack.onAttackStarted += CALLBACK_OnAttackStarted;
      
 
         
@@ -88,5 +97,16 @@ public sealed class SkeletonAnimController : AnimController
 
 
     }
+
+    private void CALLBACK_OnAttackStarted()
+    {
+        SetParam(PARAM_ATTACKREQUESTED);
+    }
+
+    /// <summary>
+    /// 공격 애니메이션 끝 함수
+    /// </summary>
+    private void AnimEvent_OnAttackAnimFinished()
+        => onAttackAnimationFinished?.Invoke();
 
 }

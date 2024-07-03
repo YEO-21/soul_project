@@ -4,7 +4,12 @@ using UnityEngine;
 
 public sealed class EnemySkeleton : EnemyCharacterBase
 {
+    private SkeletonAttack _SkeletonAttack;
+
     private SkeletonAnimController _AnimController;
+
+    public SkeletonAttack attack => _SkeletonAttack ?? 
+        (_SkeletonAttack = GetComponent<SkeletonAttack>());
 
     public SkeletonAnimController animController => _AnimController ??
         (_AnimController = GetComponentInChildren<SkeletonAnimController>());
@@ -29,6 +34,7 @@ public sealed class EnemySkeleton : EnemyCharacterBase
     {
         (behaviorController as SkeletonBehaviorController).Initialize(this);
         animController.Initialize(this);
+        attack.Initialize(this);
     }
 
 }

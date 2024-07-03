@@ -33,6 +33,11 @@ public abstract class EnemyBehaviorController : BehaviorController
     /// </summary>
     public const string KEY_ISAGGRESSIVESTATE = "IsAggressiveState";
 
+    private EnemyCharacterBase _OwnerCharacter;
+
+    public EnemyCharacterBase ownerCharacter => _OwnerCharacter ?? 
+        (_OwnerCharacter = GetComponent<EnemyCharacterBase>());
+
     private NavMeshAgent _NavMeshAgent;
 
     public NavMeshAgent agent => 
