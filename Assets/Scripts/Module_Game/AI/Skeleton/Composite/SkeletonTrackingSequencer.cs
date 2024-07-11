@@ -10,7 +10,7 @@ public sealed class SkeletonTrackingSequencer : BehaviorSequencer
 
         // 공격 가능 영역 검사 서비스 추가
         AddService(() => new BS_CheckAttackableArea(
-            1.0f, 0.5f, 0.6f, LayerMask.GetMask("PlayerCharacter"),
+            1.0f, 0.0f, 1.0f, LayerMask.GetMask("PlayerCharacter"),
             SkeletonBehaviorController.KEY_ISATTACKABLE));
 
         // 플레이어 캐릭터 위치를 목표 위치로 설정합니다.

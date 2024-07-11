@@ -10,6 +10,11 @@ public sealed class SkeletonAttack : MonoBehaviour
     public bool isAttacking { get; private set; }
 
     /// <summary>
+    /// 공격 방향을 나타냅니다.
+    /// </summary>
+    public Vector3 attackDirection { get; private set; }
+
+    /// <summary>
     /// 공격 시작 이벤트
     /// </summary>
     public event System.Action onAttackStarted;
@@ -17,17 +22,19 @@ public sealed class SkeletonAttack : MonoBehaviour
     public void Initialize(EnemySkeleton skeleton)
     {
         skeleton.animController.onAttackAnimationFinished += CALLBACK_OnAttackAnimationFinished;
+        skeleton.onHit += CALLABACK_OnHit;
     }
 
 
     /// <summary>
     /// 공격을 시작합니다.
     /// </summary>
-   public void StartAttack()
+   public void StartAttack(Vector3 attackDirection)
     {
         if (isAttacking) return;
-
-        Debug.Log("공격 시작!");
+        
+        // 공격 방향을 기록합니다.
+        this.attackDirection  = attackDirection;
 
         isAttacking = true;
         onAttackStarted?.Invoke();
@@ -36,6 +43,14 @@ public sealed class SkeletonAttack : MonoBehaviour
     private void CALLBACK_OnAttackAnimationFinished()
     {
         isAttacking = false;
+    }
+
+    private void CALLABACK_OnHit(DamageBase damageInstance)
+    {
+        if(isAttacking)
+        {
+            isAttacking = false;
+        }
     }
 
 }

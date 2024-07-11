@@ -5,7 +5,8 @@ public sealed class SkeletonAttackSelector : BehaviorSelector
     public SkeletonAttackSelector()
     {
         AddBehavior(() => new BT_SkeletonAttack(
-            SkeletonBehaviorController.KEY_ISATTACKABLE));
+            SkeletonBehaviorController.KEY_ISATTACKABLE,
+            EnemyBehaviorController.KEY_PLAYERCHARACTER));
 
     }
 

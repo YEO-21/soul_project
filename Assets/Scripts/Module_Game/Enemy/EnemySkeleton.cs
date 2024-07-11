@@ -8,6 +8,11 @@ public sealed class EnemySkeleton : EnemyCharacterBase
 
     private SkeletonAnimController _AnimController;
 
+    /// <summary>
+    /// 목표 회전을 나타내는 방향
+    /// </summary>
+    private Vector3 _TargetDirection;
+
     public SkeletonAttack attack => _SkeletonAttack ?? 
         (_SkeletonAttack = GetComponent<SkeletonAttack>());
 
@@ -21,20 +26,61 @@ public sealed class EnemySkeleton : EnemyCharacterBase
     public event System.Action<float> onMoveSpeedChanged;
     #endregion
 
+    private void Start()
+    {
+        (behaviorController as SkeletonBehaviorController).Initialize(this);
+        animController.Initialize(this);
+        attack.Initialize(this);
+        attack.onAttackStarted += CALLBACK_OnAttackStarted;
+    }
 
 
     private void Update()
     {
         // 속력을 얻습니다.
         float speed = navAgent.velocity.magnitude;
-        onMoveSpeedChanged?.Invoke(speed); ;
+        onMoveSpeedChanged?.Invoke(speed);
+
+        // 목표를 향해 회전합니다.
+        TurnToTarget();
     }
 
-    private void Start()
+    private void TurnToTarget()
     {
-        (behaviorController as SkeletonBehaviorController).Initialize(this);
-        animController.Initialize(this);
-        attack.Initialize(this);
+        // NavMeshAgent 컴포넌트가 활성화된 경우 함수 호출 종료
+        if (navAgent.enabled) return;
+
+        // 목표 회전을 계산합니다.
+        float targetYawAngle = Mathf.Atan2(_TargetDirection.x, _TargetDirection.z) * Mathf.Rad2Deg;
+        float currentYawAngle = transform.eulerAngles.y;
+
+        float newYawAngle = Mathf.MoveTowardsAngle(
+            currentYawAngle, targetYawAngle, navAgent.angularSpeed * Time.deltaTime);
+        transform.eulerAngles = Vector3.up * newYawAngle;
+
     }
 
+    public override void OnHit(DamageBase damageInstance)
+    {
+        base.OnHit(damageInstance);
+
+        bool damagedFromBack = damageInstance.IsDamagedFromBackward(transform);
+
+        transform.forward = damageInstance.from.forward * (damagedFromBack ? 1.0f : -1.0f);
+    }
+
+    private void CALLBACK_OnAttackStarted()
+    {
+        // 공격 방향을 목표 방향으로 설정합니다.
+        _TargetDirection = attack.attackDirection;
+
+        // NavMeshAgent 잠시 비활성화
+        navAgent.SetDestination(transform.position);
+        navAgent.enabled = false;
+        
+       
+
+    }
+
+    
 }

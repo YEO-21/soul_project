@@ -34,6 +34,8 @@ public class BT_MoveTo : RunnableBehavior
         // 길찾기 기능을 제공하는 컴포넌트를 얻습니다.
         NavMeshAgent agent = (behaviorController as EnemyBehaviorController).agent;
 
+        agent.enabled = true;
+
         // 목표 위치를 얻습니다.
         Vector3 targetPosition = behaviorController.GetKey<Vector3>(_TargetPositionKey);
 

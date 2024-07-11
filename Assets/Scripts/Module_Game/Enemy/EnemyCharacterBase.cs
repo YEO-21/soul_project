@@ -9,10 +9,10 @@ using UnityEngine.AI;
 public abstract class EnemyCharacterBase : MonoBehaviour,
     IDamageable
 {
-    private BehaviorController _BehaviorController;
+    private EnemyBehaviorController _BehaviorController;
 
     public BehaviorController behaviorController => _BehaviorController ??
-        (_BehaviorController = GetComponent<BehaviorController>());
+        (_BehaviorController = GetComponent<EnemyBehaviorController>());
 
     private NavMeshAgent _NavAgent;
     public NavMeshAgent navAgent => _NavAgent ?? (_NavAgent = GetComponent<NavMeshAgent>());
