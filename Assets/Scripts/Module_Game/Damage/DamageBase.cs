@@ -50,7 +50,28 @@ public abstract class DamageBase
     /// <returns></returns>
     public bool IsDamagedFromBackward(Transform damagedTransform)
     {
-        return true;
+        Vector3 thisPos = damagedTransform.transform.position;
+        Vector3 fromPos = from.position;
+
+        // 피해를 입은 방향 (플레이어로 향하는 방향)
+        Vector3 damagedDirection = fromPos - thisPos;
+        damagedDirection.y = 0.0f;
+        damagedDirection.Normalize();
+
+        // 앞 방향 구하기
+        Vector3 thisForward = damagedTransform.forward;
+
+        // 현재 회전 구하기
+        float thisYaw = Mathf.Atan2(thisForward.z, thisForward.x) * Mathf.Rad2Deg;
+
+        // 대미지 입은 방향에 대한 Yaw 회전값
+        float damagedYaw = Mathf.Atan2(damagedDirection.z, damagedDirection.x) * Mathf.Rad2Deg;
+
+        // 각도차 구하기
+        float deltaYaw = Mathf.Abs(Mathf.DeltaAngle(thisYaw, damagedYaw));
+
+
+        return deltaYaw > 90.0f;
     }
 
 

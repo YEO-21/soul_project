@@ -31,7 +31,7 @@ public sealed class BT_SkeletonAttack : RunnableBehavior
 
         // 플레이어에 대한 방향
         Vector3 direction = dir.normalized;
-
+        
 
         // 공격 시작
         skeleton.attack.StartAttack(direction);

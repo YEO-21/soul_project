@@ -62,27 +62,8 @@ public sealed class SkeletonAnimController : AnimController
         //SetParam(PARAM_DAMAGEDDIRECTIONZ, attackNumber);
         #endregion
 
-        Vector3 thisPos = _Skeleton.transform.position;
-        Vector3 fromPos = damageInstance.from.position;
+        float damagedDirectionZ = damageInstance.IsDamagedFromBackward(_Skeleton.transform) ? -1.0f : 1.0f;
         
-        // 피해를 입은 방향 (플레이어로 향하는 방향)
-        Vector3 damagedDirection = fromPos - thisPos;
-        damagedDirection.y = 0.0f;
-        damagedDirection.Normalize();
-
-        // 앞 방향 구하기
-        Vector3 thisForward = _Skeleton.transform.forward;
-
-        // 현재 회전 구하기
-        float thisYaw = Mathf.Atan2(thisForward.z, thisForward.x) * Mathf.Rad2Deg;
-
-        // 대미지 입은 방향에 대한 Yaw 회전값
-        float damagedYaw = Mathf.Atan2(damagedDirection.z, damagedDirection.x) * Mathf.Rad2Deg;
-
-        // 각도차 구하기
-        float deltaYaw = Mathf.Abs(Mathf.DeltaAngle(thisYaw, damagedYaw));
-
-        float damagedDirectionZ = deltaYaw > 90.0f ? -1.0f : 1.0f;
 
         // 피해입음 설정
         if (damageInstance.isCriticalDamage) SetParam(PARAM_ISCRITICALDAMAGE);
