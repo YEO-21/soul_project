@@ -60,6 +60,9 @@ public sealed class PlayerAttackInfo
     [Header("# 피해량")]
     public float m_Damage;
 
+    [Header("# 크리티컬 대미지")]
+    public bool m_IsCriticalDamage;
+
 
     /// <summary>
     /// 정수 형태의 공격 코드를 나타냅니다.

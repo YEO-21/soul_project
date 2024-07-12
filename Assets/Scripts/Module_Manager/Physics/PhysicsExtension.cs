@@ -1,6 +1,9 @@
+using Palmmedia.ReportGenerator.Core.Parser.Analysis;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 /// <summary>
 /// 디버깅용 선 그리기에 필요한 정보를 담는 클래스
@@ -107,6 +110,26 @@ public static class PhysicsExt
         return result;
     }
 
+    public static Collider[] OverlapSphere(
+        out DrawGizmoSphereInfo info,
+        Vector3 center, float radius, int layer,
+            QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+    {
+        Collider[] detectCollisions = 
+            Physics.OverlapSphere(center, radius, layer, queryTriggerInteraction);
+
+        info = new DrawGizmoSphereInfo
+        {
+            isHit = detectCollisions.Length > 0,
+            start = center,
+            end = center,
+            radius = radius,
+        };
+
+        return detectCollisions;
+    }
+
+
 
     public static void DrawGizmoLine(in DrawGizmoLineInfo drawInfo)
     {
@@ -130,5 +153,13 @@ public static class PhysicsExt
         Gizmos.DrawWireSphere(drawInfo.start, drawInfo.radius); // 시작 위치 구체 그리기
         Gizmos.DrawLine(drawInfo.start, drawInfo.end);
         Gizmos.DrawWireSphere(drawInfo.end, drawInfo.radius); // 끝 위치 구체 그리기
+    }
+
+    public static void DrawOverlapSphere(in DrawGizmoSphereInfo drawinfo)
+    {
+        if(drawinfo == null) return;
+
+        Gizmos.color = drawinfo.drawColor;
+        Gizmos.DrawWireSphere(drawinfo.start, drawinfo.radius);
     }
 }

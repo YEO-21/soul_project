@@ -17,11 +17,14 @@ MonoBehaviour:
     m_PlayerAttackCode: 000001
     m_AlllowDuplicateDamage: 0
     m_Damage: 20
+    m_IsCriticalDamage: 0
   - m_AttackName: "\uAE30\uBCF8 \uACF5\uACA92"
     m_PlayerAttackCode: 000002
     m_AlllowDuplicateDamage: 0
     m_Damage: 25
+    m_IsCriticalDamage: 0
   - m_AttackName: "\uAE30\uBCF8 \uACF5\uACA93"
     m_PlayerAttackCode: 000003
     m_AlllowDuplicateDamage: 0
     m_Damage: 30
+    m_IsCriticalDamage: 1

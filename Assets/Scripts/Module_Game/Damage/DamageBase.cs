@@ -17,10 +17,16 @@ public abstract class DamageBase
     /// </summary>
     public float damage { get; private set; }
 
-    public DamageBase(Transform from, float damage)
+    /// <summary>
+    ///  크리티컬 대미지
+    /// </summary>
+    public bool isCriticalDamage { get; private set; }
+
+    public DamageBase(Transform from, float damage, bool isCriticalDamage)
     {
         this.from = from;
         this.damage = damage;
+        this.isCriticalDamage = isCriticalDamage;
     }
 
 
@@ -32,10 +38,20 @@ public abstract class DamageBase
     public static void Hit(IDamageable to, DamageBase damageInstance) 
     {
        
-
         // 피해를 입힙니다.
         to.OnHit(damageInstance);
 
     }
+
+    /// <summary>
+    /// 뒷 방향에서 피해를 입었는지에 대한 여부를 확인합니다.
+    /// </summary>
+    /// <param name="damagedTransform">피해를 입은 GameObject 의 Transform 을 전달합니다.</param>
+    /// <returns></returns>
+    public bool IsDamagedFromBackward(Transform damagedTransform)
+    {
+        return true;
+    }
+
 
 }

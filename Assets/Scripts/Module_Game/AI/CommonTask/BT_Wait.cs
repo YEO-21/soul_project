@@ -17,6 +17,7 @@ public class BT_Wait : RunnableBehavior
 
     public override IEnumerator OnBehaivorStarted()
     {
+
         yield return new WaitForSeconds(_WaitSeconds);
 
         isSucceeded = true;

@@ -99,7 +99,10 @@ public abstract class PlayerAttackBase
 
 
         // 감지된 객체에게 피해를 입힙니다.
-        DamageBase.Hit(to, new SampleDamage(_PlayerCharacter.transform, attackInfo.m_Damage));
+        DamageBase.Hit(to, new SampleDamage(
+            _PlayerCharacter.transform,
+            attackInfo.m_Damage,
+            attackInfo.m_IsCriticalDamage));
     }
 
 }
@@ -107,7 +110,8 @@ public abstract class PlayerAttackBase
 
 public class SampleDamage : DamageBase
 {
-    public SampleDamage(Transform from, float damage) : base(from, damage)
+    public SampleDamage(Transform from, float damage, bool isCriticalDamage)
+        : base(from, damage, isCriticalDamage)
     {
     }
 }
