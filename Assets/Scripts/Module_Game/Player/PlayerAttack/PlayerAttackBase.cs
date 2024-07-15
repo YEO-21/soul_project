@@ -25,6 +25,8 @@ public abstract class PlayerAttackBase
     /// </summary>
     public PlayerAttackInfo attackInfo { get; private set; }
 
+
+
     /// <summary>
     /// 플레이어 공격 객체를 생성하여 반환합니다.
     /// </summary>
@@ -103,6 +105,9 @@ public abstract class PlayerAttackBase
             _PlayerCharacter.transform,
             attackInfo.m_Damage,
             attackInfo.m_IsCriticalDamage));
+
+        
+
     }
 
 }

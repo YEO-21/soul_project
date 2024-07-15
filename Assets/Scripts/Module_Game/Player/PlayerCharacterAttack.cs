@@ -53,6 +53,11 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
     /// </summary>
     private System.Func<bool> _IsDodging;
 
+    /// <summary>
+    /// 피해를 입을 수 있는 객체를 감지한 경우 발생하는 이벤트
+    /// </summary>
+    public event System.Action<IDamageable> onNewDamageableDetected;
+
     private void Awake()
     {
         // 플레이어 공격 정보 에셋을 얻습니다.
@@ -108,6 +113,7 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
 
         // 요청된 공격을 현재 공격으로 설정합니다.
         _CurrentAttack = _NextAttack;
+
 
         // 요청된 공격 처리 완료
         _NextAttack = null;
@@ -207,6 +213,9 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
     private void CALLBACK_OnDamageableObjectDetected(IDamageable to)
     {
         _CurrentAttack?.OnDamageableObjectDetected(to);
+        onNewDamageableDetected(to);
 
     }
+
+  
 }

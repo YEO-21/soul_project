@@ -13,12 +13,23 @@ public sealed class GameScenePlayerController : PlayerControllerBase
     /// </summary>
     private IDefaultPlayerInputReceivable _PlayerInputReceivable;
 
+    /// <summary>
+    /// GameUIPanel 객체를 나타냅니다.
+    /// </summary>
+    public GameUIPanel gameUI { get; private set; }
+
 
     public override void StartControlCharacter(PlayerCharacterBase controlCharacter)
     {
         base.StartControlCharacter(controlCharacter);
 
         _PlayerInputReceivable = controlCharacter as IDefaultPlayerInputReceivable;
+
+        // GameUIPanel 를 찾습니다.
+        gameUI = FindObjectOfType<GameUIPanel>();
+
+        // GameUIPanel 초기화
+        gameUI.InitializeUI(this);
 
         // 커서를 화면 중앙에 계속 배치되도록 합니다.
         Cursor.lockState = CursorLockMode.Locked;

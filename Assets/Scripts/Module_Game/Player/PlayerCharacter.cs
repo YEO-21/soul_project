@@ -20,6 +20,10 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
         _AnimController ?? 
         (_AnimController = GetComponentInChildren<PlayerCharacterAnimController>());
 
+    public string objectName { get; private set; }
+    public float currentHp { get; private set; }
+    public float maxHp { get; private set; }
+
     private void Start()
     {
         movement.Initialize(animController, attack);
@@ -41,4 +45,7 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     {
         throw new System.NotImplementedException();
     }
+
+    
+    
 }

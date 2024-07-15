@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2184.3303, g: 2359.7678, b: 3633.3403, a: 1}
+  m_IndirectSpecularColor: {r: 1784.1508, g: 1870.9087, b: 2935.8403, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1045,6 +1045,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e592e7e7b095a984cb0549754a104a5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_EnemyCode: 000002
+  m_EnemyInfo:
+    m_EnemyCode: 
+    m_Name: 
+    m_MaxHp: 0
 --- !u!114 &569968466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1884,6 +1889,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e592e7e7b095a984cb0549754a104a5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_EnemyCode: 000001
+  m_EnemyInfo:
+    m_EnemyCode: 
+    m_Name: 
+    m_MaxHp: 0
 --- !u!114 &950174534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2415,6 +2425,7 @@ GameObject:
   - component: {fileID: 1317080379}
   - component: {fileID: 1317080381}
   - component: {fileID: 1317080380}
+  - component: {fileID: 1317080382}
   m_Layer: 5
   m_Name: Panel_TargetEnemy
   m_TagString: Untagged
@@ -2483,6 +2494,20 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &1317080382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1317080378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5f38ef365f31da43a545a05270db524, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NameText: {fileID: 1764834324}
+  m_HpImage: {fileID: 606668483}
 --- !u!1 &1357979787
 GameObject:
   m_ObjectHideFlags: 0
@@ -2745,6 +2770,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1435587850}
+  - component: {fileID: 1435587851}
   m_Layer: 5
   m_Name: Panel_GameUI
   m_TagString: Untagged
@@ -2774,6 +2800,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1435587851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435587849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03db752cf61d72046887e96e6a325b71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1457258125
 GameObject:
   m_ObjectHideFlags: 0
@@ -3115,6 +3153,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e683e1a9dfd38d34ba3708b5bc15a19a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_EnemyInfoScriptableObject: {fileID: 11400000, guid: 8409ce3fb78497844a6cb78044ecd878,
+    type: 2}
   m_PlayerAttackInfoScriptableObject: {fileID: 11400000, guid: 222f7068f2160fc44b203f1937bec04d,
     type: 2}
 --- !u!1 &1729640216
@@ -3195,7 +3235,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1729640216}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.39942503, y: 1e-45, z: -0, w: 0.91676587}
+  m_LocalRotation: {x: -0.39942503, y: 1e-45, z: 1e-45, w: 0.91676587}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3349,17 +3389,18 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: sdfsfsfsfsf
+  m_text: "\uC801 \uCE90\uB9AD\uD130\n"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f60ce0d08efeb234d9edb2344a9c63e5, type: 2}
+  m_sharedMaterial: {fileID: -3214185536813765917, guid: f60ce0d08efeb234d9edb2344a9c63e5,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4279881191
+  m_fontColor: {r: 0.9056604, g: 0.8035669, b: 0.09825563, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

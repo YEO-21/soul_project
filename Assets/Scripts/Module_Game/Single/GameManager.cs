@@ -9,6 +9,8 @@ public sealed class GameManager : GameManagerBase
     public static GameManager instance => 
         _Instance ?? (_Instance = GameManager.Get<GameManager>());
 
+    [Header("# 적 정보")]
+    public EnemyInfoScriptableObject m_EnemyInfoScriptableObject;
 
 
     [Header("# 플레이어 공격 정보")]
