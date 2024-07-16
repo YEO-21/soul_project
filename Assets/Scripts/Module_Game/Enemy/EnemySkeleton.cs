@@ -64,9 +64,15 @@ public sealed class EnemySkeleton : EnemyCharacterBase
     {
         base.OnHit(damageInstance);
 
+        // 뒷 방향에서 피해를 입었는지 확인합니다.
         bool damagedFromBack = damageInstance.IsDamagedFromBackward(transform);
 
-        transform.forward = damageInstance.from.forward * (damagedFromBack ? 1.0f : -1.0f);
+        // 피해를 입은 방향을 계산합니다.
+        Vector3 direction = transform.position - damageInstance.from.position;
+        direction.y = 0.0f;
+        direction.Normalize();
+
+        transform.forward = direction * (damagedFromBack ? 1.0f : -1.0f);
     }
 
     private void CALLBACK_OnAttackStarted()

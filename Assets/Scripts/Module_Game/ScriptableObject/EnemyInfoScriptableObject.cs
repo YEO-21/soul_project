@@ -48,5 +48,9 @@ public sealed class EnemyInfo
 
     [Header("# 최대 체력")]
     public float m_MaxHp;
+
+    [Header("# 공격력")]
+    public float m_Atk;
+
 }
 
