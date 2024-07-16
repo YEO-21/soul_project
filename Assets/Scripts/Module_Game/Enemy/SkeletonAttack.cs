@@ -4,6 +4,12 @@ using UnityEngine;
 
 public sealed class SkeletonAttack : MonoBehaviour
 {
+    [Header("# 장착중인 무기")]
+    public WeaponBase m_EquippedWeapon;
+
+    [Header("# 공격 감지 레이어")]
+    public LayerMask m_DetectLayer;
+
     /// <summary>
     /// 공격 상태를 나타냅니다.
     /// </summary>
@@ -22,6 +28,9 @@ public sealed class SkeletonAttack : MonoBehaviour
     public void Initialize(EnemySkeleton skeleton)
     {
         skeleton.animController.onAttackAnimationFinished += CALLBACK_OnAttackAnimationFinished;
+        skeleton.animController.onAttackAreaCheckStarted += CALLBACK_OnAttackAreaCheckStarted;
+        skeleton.animController.onAttackAreaCheckFinished += CALLBACK_OnAttackAreaCheckFinished;
+
         skeleton.onHit += CALLABACK_OnHit;
     }
 
@@ -53,4 +62,8 @@ public sealed class SkeletonAttack : MonoBehaviour
         }
     }
 
+    private void CALLBACK_OnAttackAreaCheckStarted()
+        => m_EquippedWeapon.StartAttackAreaCheck();
+    private void CALLBACK_OnAttackAreaCheckFinished()
+        => m_EquippedWeapon.StopAttackAreaCheck();
 }
