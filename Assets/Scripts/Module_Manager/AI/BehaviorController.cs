@@ -7,16 +7,14 @@ using UnityEngine;
 /// 기본적으로 Task 와 Composite 을 이용하여 행동을 정의할 수 있습니다.
 /// Task : 하나의 행동(작업)을 나타냅니다.
 /// Composite : 분기가 실행되는 방식의 기본 규칙을 정의합니다.
-/// Service : Task 와 Composite 에 추가되어 해당 분기가 
-/// 실행중일 때 동시에 실행되며 특정한 데이터를 제공합니다.
+/// Service : Task 와 Composite 에 추가되어 해당 분기가 실행중일 때 
+/// 동시에 실행되며 특정한 데이터를 제공합니다.
 /// 
 /// BehaviorController : 하나의 행동(Root) 와 연결되며 
 /// 행동을 제어하는 기본적인 기능을 제공합니다.
 /// </summary>
 public class BehaviorController : MonoBehaviour
 {
-   
-
     /// <summary>
     /// 행동 루틴을 나타냅니다.
     /// </summary>
@@ -47,9 +45,10 @@ public class BehaviorController : MonoBehaviour
     /// </summary>
     protected List<SenseBase> m_Senses = new();
 
+
     /// <summary>
-/// m_Keys에 대한 읽기 전용 프로퍼티 입니다.
-/// </summary>
+    /// m_Keys 에 대한 읽기 전용 프로퍼티입니다.
+    /// </summary>
     public Dictionary<string, object> keys => m_Keys;
 
 
@@ -61,16 +60,13 @@ public class BehaviorController : MonoBehaviour
         // 재시작 요청이 존재한다면
         if (_BehaviorRestartRequested)
         {
-           
-
-            if(_BehaviorRestartRequestTime <= Time.time) 
+            if (_BehaviorRestartRequestTime <= Time.time)
             {
                 // 요청 처리됨
                 _BehaviorRestartRequested = false;
 
                 // 행동 재시작
                 OnBehaviorRestarted();
-                Debug.Log("행동 재시작");
             }
         }
     }
@@ -87,22 +83,19 @@ public class BehaviorController : MonoBehaviour
     }
 
     /// <summary>
-    /// 행동이 재시작 될 때 호출됩니다.
-    /// </summary>
-    protected virtual void OnBehaviorRestarted()
-    {
-       
-    }
-
-    /// <summary>
     /// 행동을 실행시킵니다.
     /// </summary>
     /// <typeparam name="TRunnableBehavior">실행시킬 행동 형식을 전달합니다.</typeparam>
-    public void StartBehaivor<TRunnableBehavior>()
+    public void StartBehavior<TRunnableBehavior>()
         where TRunnableBehavior : RunnableBehavior, new()
     {
         _BehaviorRoutine = StartCoroutine(Run<TRunnableBehavior>());
     }
+
+    /// <summary>
+    /// 행동이 재시작될 때 호출됩니다.
+    /// </summary>
+    protected virtual void OnBehaviorRestarted() { }
 
     /// <summary>
     /// 행동을 중단합니다.
@@ -117,12 +110,11 @@ public class BehaviorController : MonoBehaviour
         }
 
         // 실행중인 루틴이 존재한다면
-        if (_BehaviorRoutine !=null)
+        if (_BehaviorRoutine != null)
         {
             // 루틴 중단
             StopCoroutine(_BehaviorRoutine);
             _BehaviorRoutine = null;
-
         }
     }
 
@@ -136,7 +128,7 @@ public class BehaviorController : MonoBehaviour
     public virtual void BehaviorStartRequest(
         float startDelay = 0.0f, bool forceRestart = false)
     {
-
+        Debug.Log("행동 재시작 요청됨");
 
         // 행동 중단
         StopBehavior();
@@ -144,18 +136,13 @@ public class BehaviorController : MonoBehaviour
         // 재시작 요청된 시간을 계산합니다.
         float requestTime = Time.time + startDelay;
 
-        if(forceRestart)
-        {
-            _BehaviorRestartRequestTime = requestTime;
-           
-        }
+        if (forceRestart) _BehaviorRestartRequestTime = requestTime;
 
         // 현재 요청이 이전에 실행한 시간보다 빠른 시점일 경우 요청 무시
-        else if(_BehaviorRestartRequestTime > requestTime) return;
+        else if (_BehaviorRestartRequestTime > requestTime) return;
 
         _BehaviorRestartRequestTime = requestTime;
         _BehaviorRestartRequested = true;
-
 
     }
 
@@ -165,14 +152,13 @@ public class BehaviorController : MonoBehaviour
     /// <param name="keyName"></param>
     /// <param name="value"></param>
     public void SetKey(string keyName, object value = null)
-       => m_Keys[keyName] = value;
+        => m_Keys[keyName] = value;
 
     public T GetKey<T>(string keyName) => (T)GetKey(keyName);
-    
 
     public object GetKey(string keyName)
     {
-        if(m_Keys.TryGetValue(keyName, out object value))
+        if (m_Keys.TryGetValue(keyName, out object value))
         {
             return value;
         }
@@ -180,6 +166,7 @@ public class BehaviorController : MonoBehaviour
 #if UNITY_EDITOR
         Debug.LogError($"[{keyName}] 에 대한 내용을 찾을 수 없습니다.");
 #endif
+
         return null;
     }
 
@@ -191,27 +178,24 @@ public class BehaviorController : MonoBehaviour
     public TSense RegisterSense<TSense>()
         where TSense : SenseBase, new()
     {
-        // 감지 객체 생성
+        // 감각 객체 생성
         TSense senseInstance = new TSense();
 
         // 감각 객체 초기화
-        senseInstance.OnSenseIntialized(this);
+        senseInstance.OnSenseInitialized(this);
 
         // 감각 객체 추가
         m_Senses.Add(senseInstance);
 
         return senseInstance;
-
     }
-
 
     private IEnumerator Run<TRunnableBehavior>()
         where TRunnableBehavior : RunnableBehavior, new()
     {
         // 행동들을 계속 실행시킵니다.
-        while(true)
+        while (true)
         {
-
             // 행동 객체를 생성합니다.
             _RootRunnable = new TRunnableBehavior();
 
@@ -219,16 +203,13 @@ public class BehaviorController : MonoBehaviour
             if (_RootRunnable.OnInitialized(this))
             {
                 // 행동을 시작시키고 행동이 끝날 때까지 대기합니다.
-                
-                yield return _RootRunnable.OnBehaivorStarted();
-
+                yield return _RootRunnable.OnBehaviorStarted();
             }
             else yield return null;
 
             _RootRunnable = null;
         }
     }
-
 
     protected virtual void OnDestroy() => StopBehavior();
 

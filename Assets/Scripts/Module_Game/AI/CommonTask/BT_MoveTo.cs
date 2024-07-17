@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 /// <summary>
-///  지정한 위치로 이동합니다.
+/// 지정한 위치로 이동합니다.
 /// </summary>
 public class BT_MoveTo : RunnableBehavior
 {
@@ -18,17 +18,13 @@ public class BT_MoveTo : RunnableBehavior
     /// </summary>
     private bool _WaitMoveFinish;
 
-
-
     public BT_MoveTo(string targetPositionKey, bool waitMoveFinish = true)
     {
         _TargetPositionKey = targetPositionKey;
         _WaitMoveFinish = waitMoveFinish;
     }
 
-
-
-    public override IEnumerator OnBehaivorStarted()
+    public override IEnumerator OnBehaviorStarted()
     {
 
         // 길찾기 기능을 제공하는 컴포넌트를 얻습니다.
@@ -45,14 +41,12 @@ public class BT_MoveTo : RunnableBehavior
         // 설정된 목표 위치를 얻습니다.
         Vector3 destination = agent.destination;
 
-        if(_WaitMoveFinish)
+        if (_WaitMoveFinish)
         {
             yield return new WaitUntil(() =>
-             Vector3.Distance(behaviorController.transform.position, destination) <= agent.stoppingDistance);
+                Vector3.Distance(behaviorController.transform.position, destination) <= agent.stoppingDistance);
         }
 
-
         isSucceeded = true;
-
     }
 }

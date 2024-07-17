@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public sealed class SkeletonAnimController : AnimController
 {
@@ -15,10 +14,22 @@ public sealed class SkeletonAnimController : AnimController
 
     #region 이벤트
     /// <summary>
+    /// 공격 영역 검사 시작 이벤트
+    /// </summary>
+    public event System.Action onAttackAreaCheckStarted;
+
+    /// <summary>
+    /// 공격 영역 검사 끝 이벤트
+    /// </summary>
+    public event System.Action onAttackAreaCheckFinished;
+
+    /// <summary>
     /// 공격 애니메이션 끝 이벤트
     /// </summary>
     public event System.Action onAttackAnimationFinished;
+
     #endregion
+
 
     public void Initialize(EnemySkeleton skeleton)
     {
@@ -28,10 +39,6 @@ public sealed class SkeletonAnimController : AnimController
         skeleton.onHit += CALLBACK_OnDamaged;
 
         skeleton.attack.onAttackStarted += CALLBACK_OnAttackStarted;
-     
-
-        
-
     }
 
     private void CALLBACK_OnMoveSpeedChanged(float speed)
@@ -39,43 +46,16 @@ public sealed class SkeletonAnimController : AnimController
         SetParam(PARAM_SPEED, speed);
     }
 
-    private void CALLBACK_OnDamaged(DamageBase damageInstance)
+    private void CALLBACK_OnDamaged(DamageBase damgeInstance)
     {
-        #region YeoStyle
-        //SetParam(PARAM_ISDAMAGED);
-
-        //// 적 캐릭터 앞 방향벡터
-        //Vector3 skeletonForward = _Skeleton.transform.forward;
-
-        //// 플레이어 캐릭터 앞 방향벡터
-        //Vector3 playerForwawrd = damageInstance.from.forward;
-
-        //// 방향벡터의 곱 연산
-        //bool IsBackAttack = (skeletonForward.z * playerForwawrd.z) > 0;
-
-        //float attackNumber = 0.0f;
-
-        //// 뒤에서 공격 받았을 경우 -1
-        //// 앞에서 공격 받았을 경우 1
-        //attackNumber = IsBackAttack ? -1.0f : 1.0f;
-
-        //SetParam(PARAM_DAMAGEDDIRECTIONZ, attackNumber);
-        #endregion
-
-        float damagedDirectionZ = damageInstance.IsDamagedFromBackward(_Skeleton.transform) ? -1.0f : 1.0f;
-        
+        float damagedDirectionZ = damgeInstance.IsDamagedFromBackward(_Skeleton.transform) ? -1.0f : 1.0f;
 
         // 피해입음 설정
-        if (damageInstance.isCriticalDamage) SetParam(PARAM_ISCRITICALDAMAGE);
+        if (damgeInstance.isCriticalDamage) SetParam(PARAM_ISCRITICALDAMAGE);
         else SetParam(PARAM_ISDAMAGED);
-
 
         // 피해 입은 방향 설정
         SetParam(PARAM_DAMAGEDDIRECTIONZ, damagedDirectionZ);
-
-          
-            
-
 
     }
 
@@ -89,5 +69,17 @@ public sealed class SkeletonAnimController : AnimController
     /// </summary>
     private void AnimEvent_OnAttackAnimFinished()
         => onAttackAnimationFinished?.Invoke();
+
+    /// <summary>
+    /// 공격 영역 검사 시작 함수
+    /// </summary>
+    private void AnimEvent_OnAttackAreaCheckStarted()
+        => onAttackAreaCheckStarted.Invoke();
+
+    /// <summary>
+    /// 공격 영역 검사 끝 함수
+    /// </summary>
+    private void AnimEvent_OnAttackAreaCheckFinished()
+        => onAttackAreaCheckFinished.Invoke();
 
 }

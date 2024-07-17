@@ -31,6 +31,8 @@ public sealed class GameScenePlayerController : PlayerControllerBase
         // GameUIPanel 초기화
         gameUI.InitializeUI(this);
 
+
+
         // 커서를 화면 중앙에 계속 배치되도록 합니다.
         Cursor.lockState = CursorLockMode.Locked;
 

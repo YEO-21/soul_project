@@ -21,19 +21,17 @@ public abstract class EnemyCharacterBase : MonoBehaviour,
     /// </summary>
     public EnemyInfo enemyInfo { get; private set; }
 
-    public EnemyInfo m_EnemyInfo;
-
     public BehaviorController behaviorController => _BehaviorController ??
         (_BehaviorController = GetComponent<EnemyBehaviorController>());
-
-    public NavMeshAgent navAgent => _NavAgent ?? (_NavAgent = GetComponent<NavMeshAgent>());
+    public NavMeshAgent navAgent => _NavAgent ?? 
+        (_NavAgent = GetComponent<NavMeshAgent>());
 
     public string objectName => enemyInfo.m_Name;
     public float currentHp { get; protected set; }
     public float maxHp => enemyInfo.m_MaxHp;
 
-    // 피해를 입을 경우 발생하는 이벤트
     #region 이벤트
+    // 피해를 입을 경우 발생하는 이벤트
     public event System.Action<DamageBase> onHit;
     #endregion
 
@@ -47,8 +45,8 @@ public abstract class EnemyCharacterBase : MonoBehaviour,
     {
         EnemyInfoScriptableObject enemyInfoScriptableObject = GameManager.instance.m_EnemyInfoScriptableObject;
 
-        EnemyInfo findedEnemyInfo;
-        if(enemyInfoScriptableObject.TryGetEnemyInfo(m_EnemyCode, out findedEnemyInfo))
+        if (enemyInfoScriptableObject.TryGetEnemyInfo(
+            m_EnemyCode, out EnemyInfo findedEnemyInfo))
         {
             enemyInfo = findedEnemyInfo;
             currentHp = enemyInfo.m_MaxHp;
@@ -56,10 +54,7 @@ public abstract class EnemyCharacterBase : MonoBehaviour,
 #if UNITY_EDITOR
         else Debug.Log($"[{m_EnemyCode}] 에 대한 적 정보를 찾을 수 없습니다.");
 #endif
-        //bool isSuccessToFind = GameManager.instance.m_EnemyInfoScriptableObject.TryGetEnemyInfo(
-        //    m_EnemyCode, out m_EnemyInfo);
 
-        //if (isSuccessToFind) enemyInfo = m_EnemyInfo;
     }
 
 
@@ -69,6 +64,7 @@ public abstract class EnemyCharacterBase : MonoBehaviour,
     /// <param name="damage"></param>
     public virtual void OnHit(DamageBase damageInstance)
     {
+        // 피해량을 계산합니다. 
         CalculateDamage(damageInstance);
         onHit?.Invoke(damageInstance);
     }
@@ -81,8 +77,5 @@ public abstract class EnemyCharacterBase : MonoBehaviour,
     {
         currentHp -= damageInstance.damage;
     }
-    
-
-
 
 }

@@ -1,6 +1,4 @@
 using GameModule;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -15,20 +13,40 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     private PlayerCharacterAnimController _AnimController;
 
     public PlayerCharacterMovement movement => _MovementComponent ?? (_MovementComponent = GetComponent<PlayerCharacterMovement>());
-    public PlayerCharacterAttack attack => _AttackComponent ?? (_AttackComponent = GetComponent<PlayerCharacterAttack>());
-    public PlayerCharacterAnimController animController => 
-        _AnimController ?? 
+    public PlayerCharacterAttack attack => 
+        _AttackComponent ?? (_AttackComponent = GetComponent<PlayerCharacterAttack>());
+    public PlayerCharacterAnimController animController => _AnimController ??
         (_AnimController = GetComponentInChildren<PlayerCharacterAnimController>());
 
-    public string objectName { get; private set; }
+    public string objectName { get; private set; } = "PlayerCharacter";
     public float currentHp { get; private set; }
     public float maxHp { get; private set; }
 
+    /// <summary>
+    /// 피해를 입고 있는 상태임을 나타냅니다.
+    /// </summary>
+    public bool isHit { get; private set; }
+
+    /// <summary>
+    /// 피해를 입었을 경우 발생하는 이벤트
+    /// </summary>
+    public event System.Action<DamageBase> onHit;
+
+    /// <summary>
+    /// 구르기중 상태를 나타내기 위한 대리자
+    /// </summary>
+    private System.Func<bool> _IsDodging;
+
     private void Start()
     {
-        movement.Initialize(animController, attack);
-        animController.Initailize(movement, attack);
-        attack.Initialize(this, animController, movement);
+        movement.Initialize(this);
+        attack.Initialize(this);
+        animController.Initialize(this);
+
+        // Hit 애니메이션 끝남 콜백 등록
+        animController.onHitAnimationFinished += CALLBACK_OnHitAnimationFinished;
+
+        _IsDodging = () => movement.isDodging;
     }
 
 
@@ -39,13 +57,24 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
 
     void IDefaultPlayerInputReceivable.OnSprintInput(bool isPressed) => movement.OnSprintInput(isPressed);
 
-    void IDefaultPlayerInputReceivable.OnNormalAttackInput() => attack.RequestAttack(Constants.PLAYER_ATTACK_NORMAL);
+    void IDefaultPlayerInputReceivable.OnNormalAttackInput() => attack.RequestAttack(Constants.PLAYER_ATTACKCODE_NORMAL);
 
     public void OnHit(DamageBase damageInstance)
     {
-        throw new System.NotImplementedException();
+        // 구르기중인 경우 호출 종료.
+        if (_IsDodging.Invoke()) return;
+
+        // 피해를 입는 상태로 설정합니다.
+        isHit = true;
+
+        // 피해 입음 이벤트 발생
+        onHit?.Invoke(damageInstance);
     }
 
-    
-    
+    private void CALLBACK_OnHitAnimationFinished()
+    {
+        isHit = false;
+    }
+
+
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEditor;
 
 /// <summary>
-/// AI Behavior Controller 를 사용하는 객체의 등록된 키를 노출시키기 위한
+/// AI Behavior Controller 를 사용하는 객체의 등록된 키를 노출시키기 위한 
 /// 창 클래스입니다.
 /// </summary>
 public class AIBehaviorControllerKeyViewer : EditorWindow
@@ -35,7 +35,7 @@ public class AIBehaviorControllerKeyViewer : EditorWindow
     private void Update()
     {
         // 선택된 모든 오브젝트 트랜스폼을 얻습니다.
-        Transform[] selectedTransformsInWorld =  Selection.GetTransforms(
+        Transform[] selectedTransformsInWorld = Selection.GetTransforms(
             SelectionMode.TopLevel | 
             SelectionMode.ExcludePrefab | 
             SelectionMode.Editable);
@@ -43,18 +43,15 @@ public class AIBehaviorControllerKeyViewer : EditorWindow
         // 리스트 비우기
         _SelectedBehaviorControllers.Clear();
 
-        // 선택된 BehaviorController 컴포넌트를 얻습니다.
-        foreach(Transform transforms in selectedTransformsInWorld)
+        // 선택된 오브젝트의 BehaviorController 컴포넌트를 얻습니다.
+        foreach (Transform transforms in selectedTransformsInWorld)
         {
             BehaviorController behaviorController = transforms.GetComponent<BehaviorController>();
-            if(behaviorController)
-            _SelectedBehaviorControllers.Add(behaviorController);
+            if (behaviorController) _SelectedBehaviorControllers.Add(behaviorController);
         }
 
         // 창을 갱신합니다.
         Repaint();
-        
-
     }
 
     private void OnGUI()
@@ -62,7 +59,8 @@ public class AIBehaviorControllerKeyViewer : EditorWindow
         try
         {
             // 스크롤 시작 위치 설정
-            _CurrentScrollPosition = GUILayout.BeginScrollView(_CurrentScrollPosition, false, true);
+            _CurrentScrollPosition = GUILayout.BeginScrollView(
+                _CurrentScrollPosition, false, true);
 
             foreach (BehaviorController bhController in _SelectedBehaviorControllers)
             {
@@ -73,7 +71,7 @@ public class AIBehaviorControllerKeyViewer : EditorWindow
                 GUIStyle labelStyle_GameObjectName = new();
                 labelStyle_GameObjectName.fontSize = 13;
                 labelStyle_GameObjectName.fontStyle = FontStyle.Bold;
-                labelStyle_GameObjectName.normal.textColor = Color.red;
+                labelStyle_GameObjectName.normal.textColor = Color.cyan;
 
                 // 이름을 출력합니다.
                 GUILayout.Label(selectedObjectName, labelStyle_GameObjectName);
@@ -85,13 +83,13 @@ public class AIBehaviorControllerKeyViewer : EditorWindow
                     object keyValue = keyInfo.Value;
                     bool valueIsEmpty = keyValue == null;
 
-                    GUILayout.Label($"{(valueIsEmpty ? "○" : "●")} {keyName}] [{keyValue}]");
+                    GUILayout.Label($"{(valueIsEmpty ? "○" : "●")}[{keyName}] {keyValue}");
                 }
 
                 GUILayout.Space(20.0f);
             }
         }
-        catch(System.Exception)
+        catch (System.Exception) 
         {
             _SelectedBehaviorControllers.Clear();
         }
@@ -99,7 +97,5 @@ public class AIBehaviorControllerKeyViewer : EditorWindow
         // 스크롤 끝 위치 설정
         GUILayout.EndScrollView();
     }
-
 }
-
 #endif

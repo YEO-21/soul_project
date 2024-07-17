@@ -35,7 +35,7 @@
                 {
                     "name": "NormalAttackInput",
                     "type": "Button",
-                    "id": "ece5d962-9407-491c-ad36-048790be1402",
+                    "id": "687d0201-ccc9-443a-968d-a12bd6a00da4",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -122,7 +122,7 @@
                 },
                 {
                     "name": "",
-                    "id": "cf18f61c-df40-4776-88ae-1e07f08fab8d",
+                    "id": "599e9ca6-deee-4f53-86a8-78225432f38e",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",

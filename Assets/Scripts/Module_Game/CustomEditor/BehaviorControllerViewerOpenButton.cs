@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
+using UnityEngine;
 
 #if UNITY_EDITOR
-using UnityEngine;
+using UnityEditor;
+
 [CustomEditor(typeof(BehaviorController), true)]
 public sealed class BehaviorControllerViewerOpenButton : Editor
 {
@@ -11,16 +12,13 @@ public sealed class BehaviorControllerViewerOpenButton : Editor
     {
         base.OnInspectorGUI();
 
-       
+
         if (GUILayout.Button("키 뷰어 창 열기", GUILayout.Height(50.0f)))
         {
-            AIBehaviorControllerKeyViewer.Initialize();  
+            AIBehaviorControllerKeyViewer.Initialize();
         }
-
-
     }
 
-
-
 }
+
 #endif
