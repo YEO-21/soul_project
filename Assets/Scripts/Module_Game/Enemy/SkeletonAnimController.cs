@@ -15,9 +15,20 @@ public sealed class SkeletonAnimController : AnimController
 
     #region 이벤트
     /// <summary>
+    /// 공격 영역 검사 시작 이벤트
+    /// </summary>
+    public event System.Action onAttackAreaCheckStarted;
+
+    /// <summary>
+    /// 공격 영역 검사 끝 이벤트
+    /// </summary>
+    public event System.Action onAttackAreaCheckFinished;
+
+    /// <summary>
     /// 공격 애니메이션 끝 이벤트
     /// </summary>
     public event System.Action onAttackAnimationFinished;
+
     #endregion
 
     public void Initialize(EnemySkeleton skeleton)
@@ -28,9 +39,9 @@ public sealed class SkeletonAnimController : AnimController
         skeleton.onHit += CALLBACK_OnDamaged;
 
         skeleton.attack.onAttackStarted += CALLBACK_OnAttackStarted;
-     
 
-        
+
+
 
     }
 
@@ -63,7 +74,7 @@ public sealed class SkeletonAnimController : AnimController
         #endregion
 
         float damagedDirectionZ = damageInstance.IsDamagedFromBackward(_Skeleton.transform) ? -1.0f : 1.0f;
-        
+
 
         // 피해입음 설정
         if (damageInstance.isCriticalDamage) SetParam(PARAM_ISCRITICALDAMAGE);
@@ -72,10 +83,6 @@ public sealed class SkeletonAnimController : AnimController
 
         // 피해 입은 방향 설정
         SetParam(PARAM_DAMAGEDDIRECTIONZ, damagedDirectionZ);
-
-          
-            
-
 
     }
 
@@ -90,4 +97,16 @@ public sealed class SkeletonAnimController : AnimController
     private void AnimEvent_OnAttackAnimFinished()
         => onAttackAnimationFinished?.Invoke();
 
+    /// <summary>
+    /// 공격 영역 검사 시작 함수
+    /// </summary>
+    private void AnimEvent_OnAttackAreaCheckStarted()
+        => onAttackAreaCheckStarted.Invoke();
+    
+
+    /// <summary>
+    /// 공격 영역 검사 끝 함수
+    /// </summary>
+    private void AnimEvent_OnAttackAreaCheckFinished()
+        => onAttackAreaCheckFinished.Invoke();
 }

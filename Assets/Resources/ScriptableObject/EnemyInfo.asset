@@ -16,6 +16,8 @@ MonoBehaviour:
   - m_EnemyCode: 000001
     m_Name: "\uC724\uC11D\uC5F4"
     m_MaxHp: 100
+    m_Atk: 10
   - m_EnemyCode: 000002
     m_Name: "\uC774\uC7AC\uBA85"
     m_MaxHp: 200
+    m_Atk: 1e+19

@@ -20,7 +20,7 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
         _AnimController ?? 
         (_AnimController = GetComponentInChildren<PlayerCharacterAnimController>());
 
-    public string objectName { get; private set; }
+    public string objectName { get; private set; } = "PlayerCharacter";
     public float currentHp { get; private set; }
     public float maxHp { get; private set; }
 
@@ -43,7 +43,7 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
 
     public void OnHit(DamageBase damageInstance)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("damage : " + damageInstance.damage);
     }
 
     
