@@ -6,8 +6,13 @@ public sealed class GameUIPanel : MonoBehaviour
 {
     private TargetEnemyUI _TargetEnemyUI;
 
-    private TargetEnemyUI targetEnemyUI => _TargetEnemyUI ??
+    private PlayerStateUI _PlayerStateUI;
+
+    public TargetEnemyUI targetEnemyUI => _TargetEnemyUI ??
         (_TargetEnemyUI = GetComponentInChildren<TargetEnemyUI>());
+
+    public PlayerStateUI playerStateUI => _PlayerStateUI ??
+        (_PlayerStateUI = GetComponentInChildren<PlayerStateUI>());
 
     /// <summary>
     /// UI 초기화
@@ -17,6 +22,9 @@ public sealed class GameUIPanel : MonoBehaviour
     {
         // 목표 적 표시 UI 초기화
         targetEnemyUI.InitializeUI(playerController);
+
+        // 플레이어 현재 체력 UI 초기화
+        playerStateUI.InitializeUI(playerController);
     }
 
 }

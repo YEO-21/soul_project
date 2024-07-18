@@ -18,9 +18,15 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     public PlayerCharacterAnimController animController => _AnimController ??
         (_AnimController = GetComponentInChildren<PlayerCharacterAnimController>());
 
+    /// <summary>
+    /// GameScenePlayerState 객체를 반환합니다.
+    /// </summary>
+    public GameScenePlayerState gameScenePlayerState 
+        => playerController.playerState as GameScenePlayerState;
+
     public string objectName { get; private set; } = "PlayerCharacter";
-    public float currentHp { get; private set; }
-    public float maxHp { get; private set; }
+    public float currentHp => gameScenePlayerState.hp;
+    public float maxHp => gameScenePlayerState.maxHp;
 
     /// <summary>
     /// 피해를 입고 있는 상태임을 나타냅니다.
@@ -59,6 +65,8 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
 
     void IDefaultPlayerInputReceivable.OnNormalAttackInput() => attack.RequestAttack(Constants.PLAYER_ATTACKCODE_NORMAL);
 
+    void IDefaultPlayerInputReceivable.OnUseItem1() { }
+
     public void OnHit(DamageBase damageInstance)
     {
         // 구르기중인 경우 호출 종료.
@@ -69,12 +77,22 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
 
         // 피해 입음 이벤트 발생
         onHit?.Invoke(damageInstance);
+
+        // 현재 체력을 얻습니다.
+        float currentHp = this.currentHp;
+
+        // 체력을 감소시킵니다.
+        currentHp -= damageInstance.damage;
+
+        // 계산된 체력을 설정합니다.
+        gameScenePlayerState.SetHp(currentHp);
     }
 
     private void CALLBACK_OnHitAnimationFinished()
     {
         isHit = false;
     }
+
 
 
 }

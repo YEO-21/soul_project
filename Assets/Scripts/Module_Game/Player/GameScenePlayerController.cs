@@ -8,6 +8,8 @@ using UnityEngine.InputSystem;
 /// </summary>
 public sealed class GameScenePlayerController : PlayerControllerBase
 {
+    private PlayerInventory _PlayerInventory;
+
     /// <summary>
     /// 사용자 입력을 처리할 객체입니다.
     /// </summary>
@@ -18,12 +20,28 @@ public sealed class GameScenePlayerController : PlayerControllerBase
     /// </summary>
     public GameUIPanel gameUI { get; private set; }
 
+    /// <summary>
+    /// 인벤토리 컴포넌트를 나타냅니다. 
+    /// </summary>
+    public PlayerInventory inventory => _PlayerInventory ??
+        (_PlayerInventory = GetComponent<PlayerInventory>());
+
+    public override void InitializePlayerState()
+    {
+        playerState = new GameScenePlayerState(100.0f);
+
+
+    }
+
 
     public override void StartControlCharacter(PlayerCharacterBase controlCharacter)
     {
         base.StartControlCharacter(controlCharacter);
 
         _PlayerInputReceivable = controlCharacter as IDefaultPlayerInputReceivable;
+
+        // 인벤토리 초기화
+        inventory.Initialize(this);
 
         // GameUIPanel 를 찾습니다.
         gameUI = FindObjectOfType<GameUIPanel>();
@@ -60,5 +78,10 @@ public sealed class GameScenePlayerController : PlayerControllerBase
     private void OnNormalAttackInput()
     {
         _PlayerInputReceivable?.OnNormalAttackInput();
+    }
+
+    private void OnUseItem1()
+    {
+        _PlayerInputReceivable?.OnUseItem1();
     }
 }

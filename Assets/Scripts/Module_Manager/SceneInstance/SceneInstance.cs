@@ -22,6 +22,9 @@ public class SceneInstance : MonoBehaviour
             // 플레이어 컨트롤러 생성
             playerController = Instantiate(m_PlayerControllerPrefab);
 
+            // 플레이어 스테이트 초기화
+            playerController.InitializePlayerState();
+
             // 컨트롤러가 조종할 캐릭터를 찾습니다.
             PlayerCharacterBase playerCharacter = FindObjectOfType<PlayerCharacterBase>();
 
