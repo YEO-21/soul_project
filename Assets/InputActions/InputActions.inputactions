@@ -44,7 +44,7 @@
                 {
                     "name": "UseItem1",
                     "type": "Button",
-                    "id": "0ee03bc7-d8d2-4c37-b90f-2519afe81c2c",
+                    "id": "c2c4e772-97c8-4fa1-8cd3-e9c4e331589a",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -142,7 +142,7 @@
                 },
                 {
                     "name": "",
-                    "id": "98560c60-a390-4ec0-b99f-2c177e89508e",
+                    "id": "9923dcd9-dace-4124-8a79-ae6744b8021b",
                     "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",

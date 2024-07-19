@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
 [CreateAssetMenu(
     fileName = "ItemInfo",
     menuName = "ScriptableObject/ItemInfo",
@@ -18,12 +17,8 @@ public sealed class ItemInfoScriptableObject : ScriptableObject
     /// </summary>
     /// <param name="itemCode"></param>
     /// <returns></returns>
-    public ItemInfo GetItemInfo(string itemCode)
-        => m_ItemInfos.Find(item => itemCode == item.m_ItemCode);
-    
-
-
-
+    public ItemInfo GetItemInfo(string itemCode) => 
+        m_ItemInfos.Find(item => itemCode == item.m_ItemCode);
 }
 
 /// <summary>
@@ -37,5 +32,5 @@ public sealed class ItemInfo
 
     [Header("# 아이템 코드")]
     public string m_ItemCode;
+    
 }
-

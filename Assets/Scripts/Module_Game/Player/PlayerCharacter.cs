@@ -21,8 +21,8 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     /// <summary>
     /// GameScenePlayerState 객체를 반환합니다.
     /// </summary>
-    public GameScenePlayerState gameScenePlayerState 
-        => playerController.playerState as GameScenePlayerState;
+    public GameScenePlayerState gameScenePlayerState => 
+        playerController.playerState as GameScenePlayerState;
 
     public string objectName { get; private set; } = "PlayerCharacter";
     public float currentHp => gameScenePlayerState.hp;
@@ -64,7 +64,7 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     void IDefaultPlayerInputReceivable.OnSprintInput(bool isPressed) => movement.OnSprintInput(isPressed);
 
     void IDefaultPlayerInputReceivable.OnNormalAttackInput() => attack.RequestAttack(Constants.PLAYER_ATTACKCODE_NORMAL);
-
+    
     void IDefaultPlayerInputReceivable.OnUseItem1() { }
 
     public void OnHit(DamageBase damageInstance)
@@ -86,12 +86,15 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
 
         // 계산된 체력을 설정합니다.
         gameScenePlayerState.SetHp(currentHp);
+
+        Debug.Log("현재 체력 : " + this.currentHp);
     }
 
     private void CALLBACK_OnHitAnimationFinished()
     {
         isHit = false;
     }
+
 
 
 

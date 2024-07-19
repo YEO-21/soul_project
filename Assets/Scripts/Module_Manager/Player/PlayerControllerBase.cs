@@ -13,7 +13,6 @@ public class PlayerControllerBase : MonoBehaviour
     /// </summary>
     public PlayerStateBase playerState { get; protected set; }
 
-
     /// <summary>
     /// 조종중인 플레이어 캐릭터 객체를 나타냅니다.
     /// </summary>
@@ -28,9 +27,7 @@ public class PlayerControllerBase : MonoBehaviour
         playerState = new PlayerStateBase();
         // 추후 다른 형태의 플레이어 스테이트 클래스를 사용하는 경우
         // playerState 프로퍼티에 자유롭게 할당하여 사용합니다.
-
     }
-
 
     /// <summary>
     /// 캐릭터 조종을 시작합니다.

@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1263698215346668983}
   - component: {fileID: 6851174384189111990}
+  - component: {fileID: -1971183255058188604}
   - component: {fileID: 8825432078624898162}
-  - component: {fileID: -2282206247342293417}
   m_Layer: 0
   m_Name: Object_GameScenePlayerController
   m_TagString: Untagged
@@ -46,6 +46,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fb610fb040837840bb8f65ec0e6f880, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-1971183255058188604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6253963424886969114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 549bf9aad3035b64292bd043e3c2282c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8825432078624898162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,15 +89,3 @@ MonoBehaviour:
   m_DefaultActionMap: GameMode
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &-2282206247342293417
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6253963424886969114}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40c37af23cc663049be5db4a4bc55cb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
