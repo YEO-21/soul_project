@@ -113,7 +113,7 @@ public sealed class PlayerCharacterAnimController : AnimController
     /// <summary>
     /// 피하기 시작시 호출되는 메서드입니다.
     /// </summary>
-    private void CALLBACK_OnDodgeRollStarted() => SetParam(PARAM_DODGEROLLREQUESTED);
+    private void CALLBACK_OnDodgeRollStarted() =>SetParam(PARAM_DODGEROLLREQUESTED);
 
     /// <summary>
     /// 공격 시작 시 호출되는 메서드입니다.

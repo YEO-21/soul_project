@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 퀵 슬롯 UI 전체를 관리하기 위한 컴포넌트
@@ -9,6 +10,13 @@ public sealed class ItemQuickSlotUI : MonoBehaviour
 {
     [Header("# 퀵 슬롯")]
     public List<QuickSlotUI> m_QuickSlotUI;
+
+    [Header("# 퀵 슬롯 이미지")]
+    public Image m_QuickSlotImage;
+
+   
+
+    public event System.Action onQuickSlotEmpty;
 
     public void InitializeUI(GameScenePlayerController playerController)
     {
@@ -19,8 +27,15 @@ public sealed class ItemQuickSlotUI : MonoBehaviour
    
     private void CALLBACK_OnQuickSlotItemChanged(InventoryItemInfo itemInfo)
     {
-        Debug.Log($"퀵슬롯에 등록된 아이템 코드 : {itemInfo.itemCode}");
-        Debug.Log($"퀵슬롯에 등록된 아이템 개수 : {itemInfo.itemCount}");
+        #region MyStyle
+        // if (m_QuickSlotUI.Count < 1) m_QuickSlotImage.color = Color.gray;
+
+        //foreach(QuickSlotUI quickSlot in m_QuickSlotUI)
+        //     quickSlot.OnQuickSlotItemChanged(itemInfo);
+        #endregion
+
+        m_QuickSlotUI[0].OnQuickSlotItemChanged(itemInfo);
+
     }
 
 }

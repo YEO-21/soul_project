@@ -189,6 +189,11 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     public event System.Action onDodgeRollStarted;
 
     /// <summary>
+    /// Stamina 사용 이벤트
+    /// </summary>
+    public event System.Func<float, bool> onStaminaUsed;
+
+    /// <summary>
     /// 공격 상태 확인을 위한 대리자
     /// </summary>
     private System.Func<bool> _IsAttacking;
@@ -197,6 +202,8 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// 피해입음 상태 확인을 위한 대리자
     /// </summary>
     private System.Func<bool> _IsHit;
+
+    
     #endregion
 
     #region 디버깅용 필드
@@ -544,6 +551,15 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         // 이동 입력이 들어오지 않은 경우 목표 속력을 0 으로 설정합니다.
         if (!_IsMovementInput) targetSpeed = 0.0f;
 
+        // 달리기 중이며, 이동 입력이 존재하는 경우
+        if(isSprint && _IsMovementInput)
+        {
+            // 스태미너를 사용합니다.
+            if (!onStaminaUsed.Invoke(targetSpeed * 0.1f))
+                isSprint = false;
+        }
+       
+
         // 이동 속력을 갱신합니다.
         _MoveSpeed = Mathf.MoveTowards(
             _MoveSpeed, 
@@ -552,6 +568,16 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
 
         // 공격중 상태인 경우 이동 블록
         if (_IsAttacking.Invoke() || _IsHit.Invoke()) _MoveSpeed = 0.0f;
+    }
+
+    /// <summary>
+    /// 구르기 시 스테미너 소모 
+    /// </summary>
+    private void UseDodgeStamina()
+    {
+        
+        if (isDodging)
+            onStaminaUsed.Invoke(50.0f);
     }
 
     /// <summary>
@@ -710,6 +736,14 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     }
 
     /// <summary>
+    /// 구르기 시 스테미너를 사용합니다.
+    /// </summary>
+    public void UseDodgeStamina()
+    {
+        
+    }
+
+    /// <summary>
     /// 구르기(피하기) 애니메이션 시작 시 호출되는 메서드
     /// </summary>
     private void CALLBACK_OnDodgeRollAnimationStarted()
@@ -717,6 +751,9 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         if (isDodging)
         {
             _AllowDodgeMovement = true;
+          
+
+
         }
     }
 

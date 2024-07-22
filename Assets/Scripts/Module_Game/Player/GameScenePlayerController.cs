@@ -28,7 +28,7 @@ public sealed class GameScenePlayerController : PlayerControllerBase
 
     public override void InitializePlayerState()
     {
-         playerState = new GameScenePlayerState(100.0f);
+         playerState = new GameScenePlayerState(100.0f, 50.0f);
         GameScenePlayerState gameScenePlayerState = playerState as GameScenePlayerState;
         gameScenePlayerState.SetItemInfo(new("000001", 5));
 
@@ -93,5 +93,6 @@ public sealed class GameScenePlayerController : PlayerControllerBase
     private void OnUseItem1()
     {
         _PlayerInputReceivable?.OnUseItem1();
+        inventory.UseItemFromQuickSlot(0);
     }
 }

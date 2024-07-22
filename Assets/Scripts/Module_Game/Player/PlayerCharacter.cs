@@ -8,6 +8,11 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     IDefaultPlayerInputReceivable,
     IDamageable
 {
+    /// <summary>
+    /// 마지막으로 스테미너를 사용한 시간
+    /// </summary>
+    private float _LastStaminaUsedTime;
+
     private PlayerCharacterMovement _MovementComponent;
     private PlayerCharacterAttack _AttackComponent;
     private PlayerCharacterAnimController _AnimController;
@@ -52,9 +57,14 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
         // Hit 애니메이션 끝남 콜백 등록
         animController.onHitAnimationFinished += CALLBACK_OnHitAnimationFinished;
 
+        // 스테미너 사용 콜백 등록
+        movement.onStaminaUsed += UseStamina;
+
         _IsDodging = () => movement.isDodging;
     }
 
+    private void Update()
+        => RechargeStamina();        
 
     void IDefaultPlayerInputReceivable.OnMovementInput(Vector2 inputAxis) => movement.OnMovementInput(inputAxis);
 
@@ -88,6 +98,41 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
         gameScenePlayerState.SetHp(currentHp);
 
         Debug.Log("현재 체력 : " + this.currentHp);
+    }
+
+    public bool UseStamina(float useStamina)
+    {
+        // 스테미너 사용 시간을 기록합니다.
+        _LastStaminaUsedTime = Time.time;
+
+        // 현재 Stamina
+        float stamina = gameScenePlayerState.stamina;
+
+        
+
+        if(stamina < useStamina)
+            return false;
+
+        stamina -= useStamina;
+
+       
+
+        gameScenePlayerState.SetStamina(stamina);
+        return true;
+
+
+    }
+
+    private void RechargeStamina()
+    {
+        if (_LastStaminaUsedTime + 0.1f > Time.time) return;
+
+        float rechargeStamina = 100.0f * Time.deltaTime;
+
+        float stamina = gameScenePlayerState.stamina;
+        stamina += rechargeStamina;
+
+        gameScenePlayerState.SetStamina(stamina);
     }
 
     private void CALLBACK_OnHitAnimationFinished()

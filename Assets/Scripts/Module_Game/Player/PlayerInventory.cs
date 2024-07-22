@@ -11,6 +11,7 @@ public sealed class PlayerInventory : MonoBehaviour
     /// </summary>
     public List<InventoryItemInfo> _QuickSlotItemInfos = new();
 
+
     /// <summary>
     /// 퀵 슬롯 아이템 갱신됨 이벤트
     /// 추후 퀵 슬롯 개수를 증설하는 경우
@@ -70,7 +71,51 @@ public sealed class PlayerInventory : MonoBehaviour
 
     public void UseItem(string itemCode)
     {
+        // itemCode 와 일치하는 아이템 정보를 얻습니다.
+        InventoryItemInfo itemInfo = _PlayerState.GetItemInfo(itemCode);
 
+        // 아이템 개수가 부족한 경우
+        if(itemInfo.itemCount <1)
+        {
+            Debug.Log("아이템 개수가 부족합니다.");
+            return;
+        }
+
+
+        // 아이템 감소
+        --itemInfo.itemCount;
+
+        // 변경한 아이템 정보를 설정
+        _PlayerState.SetItemInfo(itemInfo);
+
+        // 변경된 아이템 정보를 UI 에 반영
+        //SetQuickSlotItem(itemCode);
+        onQuickSlotItemUpdated?.Invoke(itemInfo);
+
+        // 아이템 사용됨
+        OnItemUsed(itemInfo);
+
+    }
+
+    /// <summary>
+    /// 아이템이 사용되었을 경우 호출됩니다.
+    /// </summary>
+    /// <param name="usedItem">사용된 아이템 정보가 전달됩니다.</param>
+    private void OnItemUsed(InventoryItemInfo usedItem)
+    {
+        switch ((usedItem.itemCode))
+        {
+            // Hp 회복 아이템
+            case "000001":
+                {
+                    // 현재 체력
+                    float currentHp = _PlayerState.hp;
+                    currentHp += 10.0f;
+                    _PlayerState.SetHp(currentHp);
+                }
+                break;
+
+        }
 
 
     }

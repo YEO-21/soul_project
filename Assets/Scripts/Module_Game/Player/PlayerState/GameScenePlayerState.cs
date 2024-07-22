@@ -10,6 +10,10 @@ public sealed class GameScenePlayerState : PlayerStateBase
     public float maxHp { get; private set; }
     public float hp { get; private set; }
 
+    public float maxStamina { get; private set; }
+    public float stamina { get; private set; }
+
+
     /// <summary>
     /// 인벤토리 아이템 정보를 나타냅니다.
     /// </summary>
@@ -20,9 +24,16 @@ public sealed class GameScenePlayerState : PlayerStateBase
     /// </summary>
     public event System.Action<float /*maxHp*/, float /*hp*/> onHpChanged;
 
-    public GameScenePlayerState(float initialHp)
+    /// <summary>
+    /// Stamina 변경됨 이벤트
+    /// </summary>
+    public event System.Action<float /*maxStamina*/, float /*stamina*/> onStaminaChanged;
+
+    public GameScenePlayerState(float initialHp, float initialStamina)
     {
         hp = maxHp = initialHp;
+        stamina = maxStamina = initialStamina;
+
         inventoryItemInfos = new();
     }
 
@@ -39,6 +50,20 @@ public sealed class GameScenePlayerState : PlayerStateBase
 
         // 체력 변경됨 이벤트 발생
         onHpChanged?.Invoke(maxHp, hp);
+
+    }
+
+    /// <summary>
+    /// Stamina 수치를 설정합니다.
+    /// </summary>
+    /// <param name="newStamina"></param>
+    public void SetStamina(float newStamina)
+    {
+        stamina = newStamina;
+        if(stamina > maxStamina) stamina = maxStamina;
+
+        // Stamina 변경됨 이벤트 발생
+        onStaminaChanged?.Invoke(maxStamina, stamina);
     }
 
     /// <summary>
