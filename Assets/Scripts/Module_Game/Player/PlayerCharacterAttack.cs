@@ -39,6 +39,11 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
     public bool isAttacking { get; private set; }
 
     /// <summary>
+    /// 방어 상태에 대한 프로퍼티입니다.
+    /// </summary>
+    public bool isGuardState { get; private set; }
+
+    /// <summary>
     /// 공격 시작 이벤트
     /// </summary>
     public event System.Action<int /*attackCode*/> onAttackStarted;
@@ -47,6 +52,16 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
     /// 공격 취소됨 이벤트
     /// </summary>
     public event System.Action onAttackCanceled;
+
+    /// <summary>
+    /// 방어 상태 변경된 이벤트
+    /// </summary>
+    public event System.Action<bool> onGuardStateUpdated;
+
+    /// <summary>
+    /// Stamina 사용 이벤트
+    /// </summary>
+    public event System.Func<float, bool> onStaminaUsed;
 
     /// <summary>
     /// 구르기 상태 확인을 위한 대리자
@@ -109,6 +124,13 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
         // 현재 공격이 실행중인 경우 함수 호출 종료.
         if (_CurrentAttack != null) return;
 
+        // 스태미너를 소모할 수 없는 경우 요청 취소.
+        if (!onStaminaUsed.Invoke(50.0f))
+        {
+            _NextAttack = null;
+            return;
+        }
+
         // 공격 상태로 설정합니다.
         isAttacking = true;
 
@@ -146,12 +168,23 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
         }
     }
 
+    public void OnGuardInput(bool isPressed)
+    {
+        if (isGuardState == isPressed) return;
+
+        isGuardState = isPressed;
+
+        // 방어 상태 변경됨 이벤트 발생
+        onGuardStateUpdated?.Invoke(isGuardState);
+    }
+
     /// <summary>
     /// 공격을 요청합니다.
     /// </summary>
     /// <param name="attackCode"/>요청시킬 공격 코드를 전달합니다.</param>
     public void RequestAttack(string attackCode)
     {
+
         // 공격이 요청되었을 때 피해를 입는 중이라면 요청 취소.
         if (_IsHit.Invoke()) return;
 

@@ -9,7 +9,7 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     IDamageable
 {
     /// <summary>
-    /// 마지막으로 스테미너를 사용한 시간
+    /// 마지막으로 스태미너를 사용한 시간
     /// </summary>
     private float _LastStaminaUsedTime;
 
@@ -28,6 +28,8 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     /// </summary>
     public GameScenePlayerState gameScenePlayerState => 
         playerController.playerState as GameScenePlayerState;
+
+
 
     public string objectName { get; private set; } = "PlayerCharacter";
     public float currentHp => gameScenePlayerState.hp;
@@ -59,12 +61,13 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
 
         // 스테미너 사용 콜백 등록
         movement.onStaminaUsed += UseStamina;
+        attack.onStaminaUsed += UseStamina;
 
         _IsDodging = () => movement.isDodging;
     }
 
-    private void Update()
-        => RechargeStamina();        
+    private void Update() => RechargeStamina();
+
 
     void IDefaultPlayerInputReceivable.OnMovementInput(Vector2 inputAxis) => movement.OnMovementInput(inputAxis);
 
@@ -76,6 +79,7 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     void IDefaultPlayerInputReceivable.OnNormalAttackInput() => attack.RequestAttack(Constants.PLAYER_ATTACKCODE_NORMAL);
     
     void IDefaultPlayerInputReceivable.OnUseItem1() { }
+    void IDefaultPlayerInputReceivable.OnGuardInput(bool isPressed) => attack.OnGuardInput(isPressed);
 
     public void OnHit(DamageBase damageInstance)
     {
@@ -102,25 +106,19 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
 
     public bool UseStamina(float useStamina)
     {
-        // 스테미너 사용 시간을 기록합니다.
+        // 스태미너 사용 시간을 기록합니다.
         _LastStaminaUsedTime = Time.time;
 
         // 현재 Stamina
         float stamina = gameScenePlayerState.stamina;
 
-        
-
-        if(stamina < useStamina)
+        if (stamina < useStamina)
             return false;
 
         stamina -= useStamina;
 
-       
-
         gameScenePlayerState.SetStamina(stamina);
         return true;
-
-
     }
 
     private void RechargeStamina()

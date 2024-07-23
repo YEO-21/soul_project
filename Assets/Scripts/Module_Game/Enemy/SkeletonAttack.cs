@@ -75,15 +75,13 @@ public sealed partial class SkeletonAttack : MonoBehaviour
     private void FinishAttackState()
     {
         isAttacking = false;
-        
-        // 공격 리스트 비우기
         _AttackedTargets.Clear();
     }
 
     private void CALLBACK_OnAttackAnimationFinished()
         => FinishAttackState();
 
-    private void CALLABACK_OnHit(DamageBase damageInstance)
+    private void CALLBACK_OnHit(DamageBase damageInstance)
     {
         if (isAttacking)
         {
