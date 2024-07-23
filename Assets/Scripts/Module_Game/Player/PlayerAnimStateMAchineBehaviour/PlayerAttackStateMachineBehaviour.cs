@@ -14,7 +14,4 @@ public class PlayerAttackStateMachineBehaviour : StateMachineBehaviour
         animator.SetBool(PARAM_ISATTACKING, true);
     }
 
-
-
-
 }

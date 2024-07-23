@@ -13,25 +13,19 @@ public sealed class BT_SkeletonAttack : RunnableBehavior
         _PlayerCharacterKey = playerCharacterKey;
     }
 
-
-    public override IEnumerator OnBehaivorStarted()
+    public override IEnumerator OnBehaviorStarted()
     {
         EnemySkeleton skeleton = (behaviorController as EnemyBehaviorController).
             ownerCharacter as EnemySkeleton;
 
-        PlayerCharacter playerCharacter = behaviorController.
-            GetKey<PlayerCharacter>(_PlayerCharacterKey);
+        PlayerCharacter playerCharacter =
+            behaviorController.GetKey<PlayerCharacter>(_PlayerCharacterKey);
 
-        // 플레이어 캐릭터로 향하는 방향 
-        Vector3 playerPosition = playerCharacter.gameObject.transform.position;
-        Vector3 enemyPosition = skeleton.gameObject.transform.position;
-
-        Vector3 dir = (playerPosition - enemyPosition);
-        dir.y = 0.0f;
-
-        // 플레이어에 대한 방향
-        Vector3 direction = dir.normalized;
-        
+        // 플레이어 캐릭터로 향하는 방향
+        Vector3 direction = playerCharacter.transform.position - skeleton.transform.position;
+        direction.y = 0.0f;
+        direction.Normalize();
+        //direction = direction.normalized;
 
         // 공격 시작
         skeleton.attack.StartAttack(direction);
@@ -43,9 +37,5 @@ public sealed class BT_SkeletonAttack : RunnableBehavior
 
         isSucceeded = true;
         yield return null;
-
-
     }
-
-
 }

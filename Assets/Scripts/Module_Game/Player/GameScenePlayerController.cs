@@ -8,16 +8,33 @@ using UnityEngine.InputSystem;
 /// </summary>
 public sealed class GameScenePlayerController : PlayerControllerBase
 {
+    private PlayerInventory _PlayerInventory;
+
     /// <summary>
     /// 사용자 입력을 처리할 객체입니다.
     /// </summary>
     private IDefaultPlayerInputReceivable _PlayerInputReceivable;
 
     /// <summary>
-    /// GameUIPanel 객체를 나타냅니다.
+    /// GameUIPanel 컴포넌트를 나타냅니다.
     /// </summary>
     public GameUIPanel gameUI { get; private set; }
 
+    /// <summary>
+    /// 인벤토리 컴포넌트를 나타냅니다.
+    /// </summary>
+    public PlayerInventory inventory => _PlayerInventory ??
+        (_PlayerInventory = GetComponent<PlayerInventory>());
+
+    public override void InitializePlayerState()
+    {
+         playerState = new GameScenePlayerState(100.0f, 50.0f);
+        GameScenePlayerState gameScenePlayerState = playerState as GameScenePlayerState;
+        gameScenePlayerState.SetItemInfo(new("000001", 5));
+
+
+
+    }
 
     public override void StartControlCharacter(PlayerCharacterBase controlCharacter)
     {
@@ -25,11 +42,19 @@ public sealed class GameScenePlayerController : PlayerControllerBase
 
         _PlayerInputReceivable = controlCharacter as IDefaultPlayerInputReceivable;
 
+        // 인벤토리 초기화
+        inventory.Initialize(this);
+
+        // 퀵 슬롯에 아이템 등록
+        inventory.SetQuickSlotItem("000001");
+
         // GameUIPanel 를 찾습니다.
         gameUI = FindObjectOfType<GameUIPanel>();
 
         // GameUIPanel 초기화
         gameUI.InitializeUI(this);
+
+
 
         // 커서를 화면 중앙에 계속 배치되도록 합니다.
         Cursor.lockState = CursorLockMode.Locked;
@@ -38,6 +63,11 @@ public sealed class GameScenePlayerController : PlayerControllerBase
         Cursor.visible = false;
     }
 
+    private void Start()
+    {
+        // 퀵 슬롯에 아이템 등록
+        inventory.SetQuickSlotItem("000001");
+    }
 
     private void OnMovementInput(InputValue value)
     {
@@ -58,5 +88,11 @@ public sealed class GameScenePlayerController : PlayerControllerBase
     private void OnNormalAttackInput()
     {
         _PlayerInputReceivable?.OnNormalAttackInput();
+    }
+
+    private void OnUseItem1()
+    {
+        _PlayerInputReceivable?.OnUseItem1();
+        inventory.UseItemFromQuickSlot(0);
     }
 }

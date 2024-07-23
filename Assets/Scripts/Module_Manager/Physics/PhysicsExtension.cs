@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
 /// <summary>
 /// 디버깅용 선 그리기에 필요한 정보를 담는 클래스
@@ -112,22 +110,22 @@ public static class PhysicsExt
     public static Collider[] OverlapSphere(
         out DrawGizmoSphereInfo info,
         Vector3 center, float radius, int layer,
-            QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
+        QueryTriggerInteraction queryTriggerInteraction = QueryTriggerInteraction.UseGlobal)
     {
-        Collider[] detectCollisions = 
-            Physics.OverlapSphere(center, radius, layer, queryTriggerInteraction);
+        Collider[] detectCollisions = Physics.OverlapSphere(
+             center, radius, layer, 
+             queryTriggerInteraction);
 
         info = new DrawGizmoSphereInfo
         {
             isHit = detectCollisions.Length > 0,
             start = center,
             end = center,
-            radius = radius,
+            radius = radius
         };
 
         return detectCollisions;
     }
-
 
 
     public static void DrawGizmoLine(in DrawGizmoLineInfo drawInfo)
@@ -154,11 +152,11 @@ public static class PhysicsExt
         Gizmos.DrawWireSphere(drawInfo.end, drawInfo.radius); // 끝 위치 구체 그리기
     }
 
-    public static void DrawOverlapSphere(in DrawGizmoSphereInfo drawinfo)
+    public static void DrawOverlapSphere(in DrawGizmoSphereInfo drawInfo)
     {
-        if(drawinfo == null) return;
+        if (drawInfo == null) return;
 
-        Gizmos.color = drawinfo.drawColor;
-        Gizmos.DrawWireSphere(drawinfo.start, drawinfo.radius);
+        Gizmos.color = drawInfo.drawColor;
+        Gizmos.DrawWireSphere(drawInfo.start, drawInfo.radius);
     }
 }

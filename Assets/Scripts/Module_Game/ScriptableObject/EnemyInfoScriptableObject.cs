@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,7 +13,6 @@ public sealed class EnemyInfoScriptableObject : ScriptableObject
     /// </summary>
     public List<EnemyInfo> m_EnemyInfos;
 
-
     /// <summary>
     /// 코드와 일치하는 적 정보를 얻습니다.
     /// </summary>
@@ -23,18 +21,14 @@ public sealed class EnemyInfoScriptableObject : ScriptableObject
     /// <returns></returns>
     public bool TryGetEnemyInfo(string enemyCode, out EnemyInfo out_EnemyInfo)
     {
-        // enemyCode 와 일치한느 코드를 가진 정보를 찾습니다.
+        // enemyCode 와 일치하는 코드를 가진 정보를 찾습니다.
         EnemyInfo findedEnemyInfo = m_EnemyInfos.Find(
             (elem) => elem.m_EnemyCode == enemyCode);
 
         out_EnemyInfo = findedEnemyInfo;
 
         return out_EnemyInfo != null;
-
-
     }
-
-
 }
 
 [System.Serializable]
@@ -53,4 +47,3 @@ public sealed class EnemyInfo
     public float m_Atk;
 
 }
-

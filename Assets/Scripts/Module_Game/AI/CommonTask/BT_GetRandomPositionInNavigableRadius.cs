@@ -18,29 +18,33 @@ public class BT_GetRandomPositionInNavigableRadius : RunnableBehavior
     private string _MaxMoveDistanceKey;
 
     /// <summary>
-    /// 기준 위치를 나타내는 키 이름
+    /// 기준 위치 나타내는 키
     /// </summary>
     private string _OriginPositionKey;
+    
+
 
     public BT_GetRandomPositionInNavigableRadius(
-        string resultKey, string maxMoveDistanceKey, string originPositionKey)
+        string resultKey,
+        string maxMoveDistanceKey,
+        string originPositionKey)
     {
         _ResultKey = resultKey;
         _MaxMoveDistanceKey = maxMoveDistanceKey;
         _OriginPositionKey = originPositionKey;
     }
 
-    public override IEnumerator OnBehaivorStarted()
+    public override IEnumerator OnBehaviorStarted()
     {
         // 최대 이동 거리를 얻습니다.
         float maxMoveDistance = behaviorController.GetKey<float>(_MaxMoveDistanceKey);
 
-        // 랜덤한 거리 
+        // 랜덤한 거리
         float distance = Random.Range(0.0f, maxMoveDistance);
 
         // 랜덤한 방향
         Vector3 direction = Random.insideUnitSphere;
-        // insideUnitSphere : 반지름이 1인 구 내에서 랜덤한 위치를 뽑아 반환합니다.
+        // insideUnitSphere : 반지름이 1인 구 내에서 랜더함 위치를 뽑아 반환합니다.
         direction.y = 0.0f;
         direction.Normalize();
 

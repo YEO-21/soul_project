@@ -91,8 +91,4 @@ public class GameManagerBase : MonoBehaviour
 
     }
 
-    public void Log(string str)
-    {
-        Debug.Log(str);
-    }
 }

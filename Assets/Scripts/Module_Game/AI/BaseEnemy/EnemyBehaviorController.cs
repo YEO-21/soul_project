@@ -11,7 +11,7 @@ public abstract class EnemyBehaviorController : BehaviorController
     /// <summary>
     /// 이 적 캐릭터가 생성된 위치를 나타냅니다.
     /// </summary>
-    public const string KEY_SPAWNPOSITION = "OriginPosition";
+    public const string KEY_SPAWNPOSITION = "SpawnPosition";
 
     /// <summary>
     /// 생성된 위치부터 이동 가능한 반경을 나타냅니다.
@@ -33,15 +33,16 @@ public abstract class EnemyBehaviorController : BehaviorController
     /// </summary>
     public const string KEY_ISAGGRESSIVESTATE = "IsAggressiveState";
 
-    private EnemyCharacterBase _OwnerCharacter;
-
-    public EnemyCharacterBase ownerCharacter => _OwnerCharacter ?? 
-        (_OwnerCharacter = GetComponent<EnemyCharacterBase>());
-
     private NavMeshAgent _NavMeshAgent;
 
-    public NavMeshAgent agent => 
-        _NavMeshAgent ?? (_NavMeshAgent = GetComponent<NavMeshAgent>());
+    private EnemyCharacterBase _OwnerCharacter;
+
+    public EnemyCharacterBase ownerCharacter => _OwnerCharacter ??
+        (_OwnerCharacter = GetComponent<EnemyCharacterBase>());
+
+    public NavMeshAgent agent => _NavMeshAgent ?? 
+        (_NavMeshAgent = GetComponent<NavMeshAgent>());
+
 
     protected virtual void Awake()
     {
@@ -51,7 +52,7 @@ public abstract class EnemyBehaviorController : BehaviorController
         // 생성 위치 키 추가
         SetKey(KEY_SPAWNPOSITION, transform.position);
 
-        // 이동 목표 키 추가
+        // 이동 목표 위치 키 추가
         SetKey(KEY_TARGETPOSITION);
 
         // 플레이어 캐릭터 키 추가
@@ -70,6 +71,4 @@ public abstract class EnemyBehaviorController : BehaviorController
     {
         StartBehavior();
     }
-
-
 }

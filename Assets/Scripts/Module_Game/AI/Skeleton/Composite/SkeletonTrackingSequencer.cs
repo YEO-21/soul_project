@@ -3,11 +3,9 @@
 using UnityEngine;
 
 public sealed class SkeletonTrackingSequencer : BehaviorSequencer
-{
+{ 
     public SkeletonTrackingSequencer()
     {
-        Debug.Log("Tracking");
-
         // 공격 가능 영역 검사 서비스 추가
         AddService(() => new BS_CheckAttackableArea(
             1.0f, 0.0f, 1.0f, LayerMask.GetMask("PlayerCharacter"),
@@ -19,7 +17,9 @@ public sealed class SkeletonTrackingSequencer : BehaviorSequencer
             SkeletonBehaviorController.KEY_TARGETPOSITION));
 
         // 목표 위치로 이동합니다.
-        AddBehavior(() => new BT_MoveTo(SkeletonBehaviorController.KEY_TARGETPOSITION, false));
+        AddBehavior(() => new BT_MoveTo(
+            SkeletonBehaviorController.KEY_TARGETPOSITION,
+            false));
 
         // 대기
         AddBehavior(() => new BT_Wait(0.5f));
@@ -32,4 +32,5 @@ public sealed class SkeletonTrackingSequencer : BehaviorSequencer
         return !behaviorController.GetKey<bool>(
             SkeletonBehaviorController.KEY_ISATTACKABLE);
     }
+
 }

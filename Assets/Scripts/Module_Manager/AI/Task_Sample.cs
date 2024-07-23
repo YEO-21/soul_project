@@ -1,19 +1,16 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Task_Sample : RunnableBehavior
 {
     private string _Print;
 
-
     public Task_Sample(string print)
     {
         _Print = print;
     }
 
-
-    public override IEnumerator OnBehaivorStarted()
+    public override IEnumerator OnBehaviorStarted()
     {
         Debug.Log(_Print);
 

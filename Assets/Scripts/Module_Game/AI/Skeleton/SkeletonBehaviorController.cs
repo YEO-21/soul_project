@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 /// <summary>
 /// 스켈레톤 적 캐릭터의 행동 제어 컴포넌트입니다.
 /// </summary>
 public sealed class SkeletonBehaviorController : EnemyBehaviorController
 {
+
     public const string KEY_ISATTACKABLE = "IsAttackable";
 
     protected override void Awake()
@@ -22,19 +22,14 @@ public sealed class SkeletonBehaviorController : EnemyBehaviorController
         sightSense.sightMaxAngle = 90.0f;
         sightSense.detectHeight = 1.5f;
         sightSense.detectLayer = LayerMask.GetMask("PlayerCharacter");
-
         sightSense.onTargetDetected += CALLBACK_OnNewTargetDetected;
         sightSense.onTargetLost += CALLBACK_OnTargetLost;
 
-
     }
-
 
     private void Start()
     {
         StartBehavior();
-
-
     }
 
     public void Initialize(EnemySkeleton skeleton)
@@ -45,47 +40,43 @@ public sealed class SkeletonBehaviorController : EnemyBehaviorController
     private void CALLBACK_OnHit(DamageBase damageInstance)
     {
         // 피해를 입힌 플레이어 캐릭터 객체를 얻습니다.
-        PlayerCharacter playerChracter = damageInstance.from.GetComponent<PlayerCharacter>();
+        PlayerCharacter playerCharacter = damageInstance.from.GetComponent<PlayerCharacter>();
 
-        // 공격  가능 상태 취소
+        // 공격 가능 상태 취소
         SetKey(KEY_ISATTACKABLE, false);
 
-        if (!playerChracter) return;
+        if (!playerCharacter) return;
 
-        if(agent.enabled) agent.SetDestination(transform.position);
+        if (agent.enabled) agent.SetDestination(transform.position);
 
         // 공격적인 상태로 설정합니다.
         SetKey(KEY_ISAGGRESSIVESTATE, true);
 
         // 플레이어 캐릭터 객체 설정
-        SetKey(KEY_PLAYERCHARACTER, playerChracter);
+        SetKey(KEY_PLAYERCHARACTER, playerCharacter);
 
         BehaviorStartRequest(2.0f);
-        
     }
 
     private void CALLBACK_OnNewTargetDetected(GameObject newTarget)
     {
-        // 피해를 입힌 플레이어 캐릭터 객체를 얻습니다.
-        PlayerCharacter playerChracter = newTarget.GetComponent<PlayerCharacter>();
+        PlayerCharacter playerCharacter = newTarget.GetComponent<PlayerCharacter>();
 
-        if(playerChracter)
+        if (playerCharacter)
         {
-            // 플레이어 캐릭터 객체 설정
-            SetKey(KEY_PLAYERCHARACTER, playerChracter);
-
             // 공격적인 상태로 설정합니다.
             SetKey(KEY_ISAGGRESSIVESTATE, true);
+
+            // 플레이어 캐릭터 객체 설정
+            SetKey(KEY_PLAYERCHARACTER, playerCharacter);
         }
-        
     }
 
     private void CALLBACK_OnTargetLost(GameObject lostTarget)
     {
-        PlayerCharacter playerChracter = lostTarget.GetComponent<PlayerCharacter>();
+        PlayerCharacter playerCharacter = lostTarget.GetComponent<PlayerCharacter>();
 
-
-        if (playerChracter)
+        if (playerCharacter)
         {
             SetKey(KEY_ISAGGRESSIVESTATE, false);
             SetKey(KEY_PLAYERCHARACTER, null);
@@ -95,9 +86,7 @@ public sealed class SkeletonBehaviorController : EnemyBehaviorController
     public override void StartBehavior()
     {
         base.StartBehavior();
-
-        StartBehaivor<SkeletonRootBehavior>();
+        StartBehavior<SkeletonRootBehavior>();
     }
-
 
 }

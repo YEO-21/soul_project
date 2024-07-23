@@ -13,7 +13,7 @@ public sealed class TargetEnemyUI : MonoBehaviour
     public Image m_HpImage;
 
     /// <summary>
-    ///  UI 숨김 타이머 루틴
+    /// UI 숨김 타이머 루틴
     /// </summary>
     private Coroutine _HideUITimerRoutine;
 
@@ -21,7 +21,6 @@ public sealed class TargetEnemyUI : MonoBehaviour
     /// 타이머 동작 시 대기시킬 시간을 나타냅니다.
     /// </summary>
     private WaitForSecondsRealtime _HideUISeconds;
-
 
 
     public void InitializeUI(GameScenePlayerController playerController)
@@ -37,9 +36,6 @@ public sealed class TargetEnemyUI : MonoBehaviour
         // UI 를 숨깁니다.
         SetUIVisibility(false);
     }
-
-
-
 
     /// <summary>
     /// 해당 UI 를 화면에 표시합니다.
@@ -57,14 +53,13 @@ public sealed class TargetEnemyUI : MonoBehaviour
                 StopCoroutine(_HideUITimerRoutine);
                 _HideUISeconds.Reset();
             }
+            
 
             // 타이머를 재실행합니다.
             _HideUITimerRoutine = StartCoroutine(SetHideUITimer());
         }
         // UI 를 숨깁니다.
         else gameObject.SetActive(false);
-
-
     }
 
     private IEnumerator SetHideUITimer()
@@ -81,22 +76,14 @@ public sealed class TargetEnemyUI : MonoBehaviour
     /// </summary>
     private void CALLBACK_OnNewDamageableDetected(IDamageable newDamageable)
     {
-
-
         // 적 이름 표시
         m_NameText.text = newDamageable.objectName;
-        
 
-        // 적 헌재 체력 표시
+        // 적 현재 체력 표시
         m_HpImage.fillAmount = newDamageable.currentHp / newDamageable.maxHp;
 
         // UI 를 표시합니다.
         SetUIVisibility(true);
-
-
     }
-
-
-
-
 }
+

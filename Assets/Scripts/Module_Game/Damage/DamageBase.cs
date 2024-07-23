@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Damage(피해) 객체입니다.
+/// Damage 객체입니다.
 /// </summary>
 public abstract class DamageBase
 {
@@ -18,7 +18,7 @@ public abstract class DamageBase
     public float damage { get; private set; }
 
     /// <summary>
-    ///  크리티컬 대미지
+    /// 크리티컬 대미지
     /// </summary>
     public bool isCriticalDamage { get; private set; }
 
@@ -29,18 +29,15 @@ public abstract class DamageBase
         this.isCriticalDamage = isCriticalDamage;
     }
 
-
     /// <summary>
-    /// 피해를 입힙니다
+    /// 피해를 입힙니다.
     /// </summary>
     /// <param name="to">피해자를 전달합니다.</param>
     /// <param name="damageInstance">Damage 객체를 전달합니다.</param>
     public static void Hit(IDamageable to, DamageBase damageInstance) 
     {
-       
         // 피해를 입힙니다.
         to.OnHit(damageInstance);
-
     }
 
     /// <summary>
@@ -70,9 +67,7 @@ public abstract class DamageBase
         // 각도차 구하기
         float deltaYaw = Mathf.Abs(Mathf.DeltaAngle(thisYaw, damagedYaw));
 
-
         return deltaYaw > 90.0f;
     }
-
 
 }

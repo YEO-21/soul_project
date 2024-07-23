@@ -31,8 +31,7 @@ public abstract class RunnableBehavior
     /// <summary>
     /// 이 행동을 제어하는 객체를 나타냅니다.
     /// </summary>
-    public BehaviorController behaviorController { get; private set; } 
-
+    public BehaviorController behaviorController { get; private set; }
 
     /// <summary>
     /// 이 행동의 실행 성공 여부를 나타냅니다.
@@ -48,7 +47,7 @@ public abstract class RunnableBehavior
         this.behaviorController = behaviorController;
 
         // 실행시킬 서비스가 존재한다면
-        if(_Services.Count != 0)
+        if (_Services.Count != 0)
         {
             // 등록된 서비스 객체를 모두 생성/초기화합니다.
             behaviorServices = new List<BehaviorService>();
@@ -62,38 +61,33 @@ public abstract class RunnableBehavior
 
                 // 실행시킬 서비스 객체 등록
                 behaviorServices.Add(runService);
-
             }
+
             // 서비스 실행
             _ServiceRoutine = behaviorController.StartCoroutine(ServiceRoutine());
-
         }
-        
-
 
         return true;
     }
 
     public virtual IEnumerator ServiceRoutine()
     {
-        while(behaviorServices != null)
+        while (behaviorServices != null)
         {
             foreach(BehaviorService service in behaviorServices)
             {
                 service.ServiceTick();
                 yield return null;
             }
-
         }
     }
-
 
     /// <summary>
     /// 행동이 시작되었을 때 호출되는 함수입니다.
     /// 동작 방식을 정의합니다.
     /// </summary>
     /// <returns></returns>
-    public abstract IEnumerator OnBehaivorStarted();
+    public abstract IEnumerator OnBehaviorStarted();
 
     public virtual void OnBehaviorFinished()
     {
@@ -101,7 +95,7 @@ public abstract class RunnableBehavior
         childBehavior?.OnBehaviorFinished();
 
         // 서비스를 실행하고 있는 경우
-        if(_ServiceRoutine != null)
+        if (_ServiceRoutine != null)
         {
             // 서비스 루틴 종료
             behaviorController.StopCoroutine(_ServiceRoutine);
@@ -113,31 +107,28 @@ public abstract class RunnableBehavior
 
             // 서비스 객체들 비우기
             behaviorServices.Clear();
-
         }
-
     }
 
-    public void AddService<TBehaviorService>() where
-        TBehaviorService : BehaviorService, new()
+    public void AddService<TBehaviorService>() where TBehaviorService :
+        BehaviorService, new()
         => AddService(() => new TBehaviorService());
 
-    public void AddService(System.Func<BehaviorService> fngetService)
-        => _Services.Add(fngetService);
+    public void AddService(System.Func<BehaviorService> fnGetService)
+        => _Services.Add(fnGetService);
+
 
 #if UNITY_EDITOR
-    public virtual void OnDrawGizmos()
+    public virtual void OnDrawGizmos() 
     {
-
-        if(behaviorServices != null)
+        if (behaviorServices != null)
         {
             foreach(BehaviorService service in behaviorServices)
-            {
                 service.OnDrawGizmos();
-            }
         }
 
         childBehavior?.OnDrawGizmos();
+
     }
 #endif
 }
