@@ -35,7 +35,16 @@
                 {
                     "name": "NormalAttackInput",
                     "type": "Button",
-                    "id": "ece5d962-9407-491c-ad36-048790be1402",
+                    "id": "687d0201-ccc9-443a-968d-a12bd6a00da4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "UseItem1",
+                    "type": "Button",
+                    "id": "c2c4e772-97c8-4fa1-8cd3-e9c4e331589a",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -122,12 +131,23 @@
                 },
                 {
                     "name": "",
-                    "id": "cf18f61c-df40-4776-88ae-1e07f08fab8d",
+                    "id": "599e9ca6-deee-4f53-86a8-78225432f38e",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
                     "action": "NormalAttackInput",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9923dcd9-dace-4124-8a79-ae6744b8021b",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "UseItem1",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

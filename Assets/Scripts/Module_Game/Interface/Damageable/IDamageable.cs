@@ -7,11 +7,16 @@ using UnityEngine;
 /// </summary>
 public interface IDamageable
 {
+    string objectName { get; }
+    float currentHp { get; }
+    float maxHp { get; }
+
     /// <summary>
     /// 피해를 입었을 경우 호출됩니다.
     /// </summary>
     /// <param name="damageInstance"></param>
     void OnHit(DamageBase damageInstance);
+
 
 
 }

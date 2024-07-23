@@ -9,12 +9,12 @@ public sealed class BS_CheckAttackableArea : BehaviorService
     /// <summary>
     /// 영역 Y 오프셋입니다.
     /// </summary>
-    private  float _AreaOffsetY;
+    private float _AreaOffsetY;
 
     /// <summary>
     /// 영역 Z 오프셋입니다.
     /// </summary>
-    private  float _AreaOffsetZ;
+    private float _AreaOffsetZ;
 
     /// <summary>
     /// 영역의 반지름
@@ -33,18 +33,14 @@ public sealed class BS_CheckAttackableArea : BehaviorService
     #endregion
 
     public BS_CheckAttackableArea(
-        float areaOffsetY,
-        float areaOffsetZ,
-        float areaRadius,
-        LayerMask detectLayer,
-        string isAttackableKey)
+        float areaOffsetY, float areaOffsetZ, float areaRadius, 
+        LayerMask detectLayer, string isAttackableKey)
     {
         _AreaOffsetY = areaOffsetY;
         _AreaOffsetZ = areaOffsetZ;
         _AreaRadius = areaRadius;
         _DetectLayer = detectLayer;
         _IsAttackableKey = isAttackableKey;
-       
     }
 
     public override void ServiceTick()
@@ -52,21 +48,22 @@ public sealed class BS_CheckAttackableArea : BehaviorService
         if (behaviorController.GetKey<bool>(_IsAttackableKey)) return;
 
         // 검사 영역의 중심 위치를 계산합니다.
-        Vector3 center = behaviorController.transform.position + 
+        Vector3 center =
+            behaviorController.transform.position +
             (behaviorController.transform.up * _AreaOffsetY) +
             (behaviorController.transform.forward * _AreaOffsetZ);
 
-        Collider[] detectCollisions = PhysicsExt.OverlapSphere(out _DebugAttackArea,
-            center, _AreaRadius, _DetectLayer, QueryTriggerInteraction.Ignore);
+        Collider[] detectCollisions = PhysicsExt.OverlapSphere(
+            out _DebugAttackArea, center, _AreaRadius, _DetectLayer,
+            QueryTriggerInteraction.Ignore);
 
         if (detectCollisions.Length > 0)
         {
-            EnemyBehaviorController behvController = behaviorController as EnemyBehaviorController;
-            behvController.SetKey(_IsAttackableKey, true);
-            behvController.BehaviorStartRequest();
+            EnemyBehaviorController bhvController = behaviorController as EnemyBehaviorController;
+            bhvController.SetKey(_IsAttackableKey, true);
+            bhvController.BehaviorStartRequest();
         }
         else behaviorController.SetKey(_IsAttackableKey, false);
-
     }
 
 #if UNITY_EDITOR
@@ -76,5 +73,4 @@ public sealed class BS_CheckAttackableArea : BehaviorService
         PhysicsExt.DrawOverlapSphere(_DebugAttackArea);
     }
 #endif
-
 }

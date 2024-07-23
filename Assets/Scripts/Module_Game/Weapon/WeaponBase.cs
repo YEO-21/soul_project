@@ -14,7 +14,6 @@ public abstract class WeaponBase : MonoBehaviour
     [Header("# 공격 영역 크기")]
     public float m_AttackCheckRadius = 0.2f;
 
-    [Header("# 감지 레이어")]
     private LayerMask _DetectLayer;
 
     /// <summary>
@@ -31,9 +30,7 @@ public abstract class WeaponBase : MonoBehaviour
 
     #region 디버그
     private DrawGizmoSphereInfo _AttackAreaCheckGizmoInfo;
-
     #endregion
-
 
     protected virtual void Update()
     {
@@ -49,27 +46,29 @@ public abstract class WeaponBase : MonoBehaviour
     {
         _DetectLayer = detectLayer;
     }
-    
+
     /// <summary>
-   /// 공격 영역을 검사합니다.
-   /// </summary>
+    /// 공격 영역을 검사합니다.
+    /// </summary>
     private void CheckAttackArea()
     {
-        // 공격 영역 검사중이 아닌 경우 호출 종료
+        // 공격 영역 검사중이 아닌 경우 호출 종료.
         if (!_IsAttackAreaChecking) return;
 
-
-        Vector3 checkDirectioin = 
-            m_AttackCheckEndPosition.position - m_AttackCheckStartPosition.position;
-
-        checkDirectioin.Normalize();
+        // 발사 방향을 계산합니다.
+        Vector3 checkDirection =
+            m_AttackCheckEndPosition.transform.position - 
+            m_AttackCheckStartPosition.transform.position;
+        checkDirection.Normalize();
 
         // 감지 최대 거리를 계산합니다.
         float checkMaxDistance = Vector3.Distance(
-            m_AttackCheckEndPosition.position, m_AttackCheckStartPosition.position);
+            m_AttackCheckEndPosition.transform.position,
+            m_AttackCheckStartPosition.transform.position);
 
-        Ray ray = new Ray(m_AttackCheckStartPosition.position,
-            checkDirectioin);
+        Ray ray = new Ray(
+            m_AttackCheckStartPosition.transform.position,
+            checkDirection);
 
         if (PhysicsExt.SphereCast(
             out _AttackAreaCheckGizmoInfo,
@@ -83,15 +82,17 @@ public abstract class WeaponBase : MonoBehaviour
             // 피해를 입을 수 있는 감지된 객체를 얻습니다.
             IDamageable detectedObject = hitInfo.transform.GetComponent<IDamageable>();
 
-            if(detectedObject != null) 
+            if (detectedObject != null)
             {
                 // 감지 이벤트 발생
                 onDetected?.Invoke(detectedObject);
             }
+
 #if UNITY_EDITOR
             else
             {
-                Debug.LogError($"{hitInfo.transform.gameObject.name}" + $"에 IDamageable 인터페이스를 구현하는 클래스가 존재하지 않습니다.");
+                Debug.LogError($"{hitInfo.transform.gameObject.name} " +
+                    $"에 IDamageable 인터페이스를 구현하는 클래스가 존재하지 않습니다.");
             }
 #endif
         }
@@ -113,11 +114,14 @@ public abstract class WeaponBase : MonoBehaviour
         _IsAttackAreaChecking = false;
     }
 
+
 #if UNITY_EDITOR
     protected virtual void OnDrawGizmos()
     {
-        if(_IsAttackAreaChecking)
-        PhysicsExt.DrawGizmoSphere(_AttackAreaCheckGizmoInfo);
+        if (_IsAttackAreaChecking)
+            PhysicsExt.DrawGizmoSphere(_AttackAreaCheckGizmoInfo);
     }
 #endif
+
+
 }

@@ -1,5 +1,8 @@
 
 
+
+using UnityEngine;
+
 public sealed class SkeletonAttackSelector : BehaviorSelector
 {
     public SkeletonAttackSelector()
@@ -7,7 +10,6 @@ public sealed class SkeletonAttackSelector : BehaviorSelector
         AddBehavior(() => new BT_SkeletonAttack(
             SkeletonBehaviorController.KEY_ISATTACKABLE,
             EnemyBehaviorController.KEY_PLAYERCHARACTER));
-
     }
 
     public override bool OnInitialized(BehaviorController behaviorController)
@@ -17,6 +19,4 @@ public sealed class SkeletonAttackSelector : BehaviorSelector
         return behaviorController.GetKey<bool>(
             SkeletonBehaviorController.KEY_ISATTACKABLE);
     }
-
-
 }

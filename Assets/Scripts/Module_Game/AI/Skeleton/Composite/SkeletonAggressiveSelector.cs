@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using UnityEngine;
 
 public sealed class SkeletonAggressiveSelector : BehaviorSelector
@@ -11,10 +10,7 @@ public sealed class SkeletonAggressiveSelector : BehaviorSelector
 
         // 플레이어가 공격 가능 영역에 존재하지 않은 경우
         AddBehavior<SkeletonTrackingSequencer>();
-
-       
     }
-
 
     public override bool OnInitialized(BehaviorController behaviorController)
     {

@@ -20,4 +20,7 @@ public interface IDefaultPlayerInputReceivable
     // 기본 공격
     void OnNormalAttackInput();
 
+    // 첫번째 아이템 사용
+    void OnUseItem1();
+
 }

@@ -14,10 +14,12 @@ public abstract class AnimController : MonoBehaviour
 
     public Animator animator => _Animator ?? (_Animator = GetComponent<Animator>());
 
-    protected void SetParam(string paramName, bool value) => animator.SetBool(paramName, value);
-    protected void SetParam(string paramName, float value) => animator.SetFloat(paramName, value);
-    protected void SetParam(string paramName, int value) => animator.SetInteger(paramName, value);
-    protected void SetParam(string paramName) => animator.SetTrigger(paramName);  
-
-
+    protected void SetParam(string paramName, bool value)
+        => animator.SetBool(paramName, value);
+    protected void SetParam(string paramName, float value)
+        => animator.SetFloat(paramName, value);
+    protected void SetParam(string paramName, int value)
+        => animator.SetInteger(paramName, value);
+    protected void SetParam(string paramName)
+        => animator.SetTrigger(paramName);
 }

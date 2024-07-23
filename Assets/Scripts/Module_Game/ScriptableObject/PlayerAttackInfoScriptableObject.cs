@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,7 +12,6 @@ public sealed class PlayerAttackInfoScriptableObject : ScriptableObject
     /// 플레이어 공격 정보들을 나타냅니다.
     /// </summary>
     public List<PlayerAttackInfo> m_PlayerAttackInfos;
-    
 
     /// <summary>
     /// 코드와 일치하는 플레이어 공격 정보를 얻습니다.
@@ -22,14 +20,15 @@ public sealed class PlayerAttackInfoScriptableObject : ScriptableObject
     /// <param name="out_PlayerAttackInfo">공격 정보를 반환받을 변수를 전달합니다.</param>
     /// <returns>공격 정보 탐색 성공 여부를 반환합니다.</returns>
     public bool TryGetPlayerAttackInfo(
-        string attackCode,
+        string attackCode, 
         out PlayerAttackInfo out_PlayerAttackInfo)
     {
         // attackCode 와 일치하는 공격 정보를 탐색합니다.
         PlayerAttackInfo findedInfo = m_PlayerAttackInfos.Find(
             (PlayerAttackInfo attackInfo) => attackInfo.m_PlayerAttackCode == attackCode);
 
-        if (findedInfo == null) 
+        // attackCode 와 일치하는 공격 정보를 찾지 못한 경우
+        if (findedInfo == null)
         {
             out_PlayerAttackInfo = null;
             return false;
@@ -38,8 +37,6 @@ public sealed class PlayerAttackInfoScriptableObject : ScriptableObject
         out_PlayerAttackInfo = findedInfo;
         return true;
     }
-
-
 }
 
 /// <summary>
@@ -55,7 +52,7 @@ public sealed class PlayerAttackInfo
     public string m_PlayerAttackCode;
 
     [Header("# 중복 피해 허용 여부")]
-    public bool m_AlllowDuplicateDamage;
+    public bool m_AllowDuplicateDamage;
 
     [Header("# 피해량")]
     public float m_Damage;
@@ -63,12 +60,13 @@ public sealed class PlayerAttackInfo
     [Header("# 크리티컬 대미지")]
     public bool m_IsCriticalDamage;
 
-
     /// <summary>
     /// 정수 형태의 공격 코드를 나타냅니다.
     /// </summary>
     private int _IntAttackCode = -1;
 
-    public int intAttackCode =>(_IntAttackCode <0) ? 
+    public int intAttackCode => (_IntAttackCode < 0) ?
         (_IntAttackCode = int.Parse(m_PlayerAttackCode)) : _IntAttackCode;
 }
+
+
