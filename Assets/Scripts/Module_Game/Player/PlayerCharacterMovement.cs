@@ -194,6 +194,11 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     public event System.Func<float, bool> onStaminaUsed;
 
     /// <summary>
+    /// 가드 상태임을 확인하기 위한 대리자
+    /// </summary>
+    private System.Func<bool> _IsGuardState;
+
+    /// <summary>
     /// 공격 상태 확인을 위한 대리자
     /// </summary>
     private System.Func<bool> _IsAttacking;
@@ -217,6 +222,7 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
 
         _IsAttacking = () => playerCharacter.attack.isAttacking;
         _IsHit = () => playerCharacter.isHit;
+        _IsGuardState = () => playerCharacter.attack.isGuardState;
     }
 
     public void Update()
@@ -543,11 +549,15 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         // 점프 상태인 경우 속력을 갱신하지 않도록 합니다.
         if (isJumping) return;
 
+
         // 목표 속력을 지정합니다.
         float targetSpeed = isSprint ? m_SprintSpeed : m_WalkSpeed;
 
         // 이동 입력이 들어오지 않은 경우 목표 속력을 0 으로 설정합니다.
         if (!_IsMovementInput) targetSpeed = 0.0f;
+
+        // 가드 상태인 경우 속력을 갱신하지 않습니다.
+        if (_IsGuardState.Invoke()) targetSpeed = 0.0f;
 
         // 달리기 중이며, 이동 입력이 존재하는 경우
         if (isSprint && _IsMovementInput)
@@ -686,6 +696,9 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         // 공격중 상태인 경우 구르기 요청 취소
         if (_IsAttacking.Invoke()) return;
 
+        // 가드 상태인 경우 호출 종료
+        if (_IsGuardState.Invoke()) return;
+
         // 피하기 상태가 아닌 경우에만 실행
         if (isDodging) return;
 
@@ -720,6 +733,9 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     /// <param name="isPressed"></param>
     public void OnSprintInput(bool isPressed)
     {
+        // 가드 상태인 경우 호출 종료
+        if(_IsGuardState.Invoke()) return;
+
         isSprint = isPressed;
     }
 

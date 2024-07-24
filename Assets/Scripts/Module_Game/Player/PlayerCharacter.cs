@@ -86,6 +86,11 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
         // 구르기중인 경우 호출 종료.
         if (_IsDodging.Invoke()) return;
 
+        // 패링 성공 여부 확인
+        if (attack.IsParried(damageInstance.from.position)) return;
+        // 패링 실패 시 가드 상태 비활성화
+        else attack.OnGuardInput(false);
+
         // 피해를 입는 상태로 설정합니다.
         isHit = true;
 
