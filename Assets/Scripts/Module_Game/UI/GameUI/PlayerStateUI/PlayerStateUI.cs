@@ -8,9 +8,8 @@ public sealed class PlayerStateUI : MonoBehaviour
     [Header("# 체력 이미지")]
     public Image m_HpImage;
 
-    [Header("# 스테미너 이미지")]
+    [Header("# 스태미너 이미지")]
     public Image m_StaminaImage;
-
 
     public void InitializeUI(GameScenePlayerController playerController)
     {
@@ -28,5 +27,7 @@ public sealed class PlayerStateUI : MonoBehaviour
     {
         m_StaminaImage.fillAmount = stamina / maxStamina;
     }
+
+
 
 }

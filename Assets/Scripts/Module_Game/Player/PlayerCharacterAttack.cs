@@ -7,6 +7,9 @@ using UnityEngine;
 /// </summary>
 public sealed class PlayerCharacterAttack : MonoBehaviour
 {
+    private const float PARRIED_ANGLE = 40.0f;
+
+
     [Header("# 장착중인 무기")]
     public WeaponBase m_EquippedWeapon;
 
@@ -39,6 +42,11 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
     public bool isAttacking { get; private set; }
 
     /// <summary>
+    /// 방어 상태에 대한 프로퍼티입니다.
+    /// </summary>
+    public bool isGuardState { get; private set; }
+
+    /// <summary>
     /// 공격 시작 이벤트
     /// </summary>
     public event System.Action<int /*attackCode*/> onAttackStarted;
@@ -47,6 +55,16 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
     /// 공격 취소됨 이벤트
     /// </summary>
     public event System.Action onAttackCanceled;
+
+    /// <summary>
+    /// 방어 상태 변경된 이벤트
+    /// </summary>
+    public event System.Action<bool> onGuardStateUpdated;
+
+    /// <summary>
+    /// Stamina 사용 이벤트
+    /// </summary>
+    public event System.Func<float, bool> onStaminaUsed;
 
     /// <summary>
     /// 구르기 상태 확인을 위한 대리자
@@ -109,6 +127,13 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
         // 현재 공격이 실행중인 경우 함수 호출 종료.
         if (_CurrentAttack != null) return;
 
+        // 스태미너를 소모할 수 없는 경우 요청 취소.
+        if (!onStaminaUsed.Invoke(50.0f))
+        {
+            _NextAttack = null;
+            return;
+        }
+
         // 공격 상태로 설정합니다.
         isAttacking = true;
 
@@ -146,17 +171,87 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
         }
     }
 
+    public void OnGuardInput(bool isPressed)
+    {
+        // 상태가 변경된 경우가 아니라면 호출 종료
+        if (isGuardState == isPressed) return;
+
+        // 공격 상태인 경우 호출 종료
+        if (isAttacking) return;
+
+        // 구르기 상태인 경우 호출 종료
+        if (_IsDodging.Invoke()) return;
+
+        isGuardState = isPressed;
+
+        // 방어 상태 변경됨 이벤트 발생
+        onGuardStateUpdated?.Invoke(isGuardState);
+    }
+
+    public bool IsParried(Vector3 from)
+    {
+        // 방어 상태가 아닌 경우 함수 호출 종료
+        if(!isGuardState) return false;
+
+        #region MyStyle
+        //// 캐릭터 앞 방향과 40도 이상 차이가 나지 않는 경우 패링 성공
+        //Vector3 playerCharacterVector = gameObject.transform.position;
+
+        //Vector3 dir = from - playerCharacterVector;
+        //dir.y = 0.0f;
+        //dir.Normalize();
+
+        //// 플레이어가 적을 바라보는 방향을 구합니다.
+        //float newParriedAngle = Mathf.Abs(Mathf.Acos(Vector3.Dot(dir, gameObject.transform.forward)) * Mathf.Rad2Deg);
+
+        //Debug.Log("newParredAngle = " +  newParriedAngle);
+
+        #endregion
+
+        // 캐릭터의 현재 위치
+        Vector3 currentPosition = transform.position;
+
+        // 캐릭터에서 적 캐릭터를 향하는 방향
+        Vector3 direction = from - currentPosition;
+        direction.y = 0.0f;
+        direction.Normalize();
+
+        // 캐릭터의 앞 방향
+        Vector3 forward = transform.forward;
+
+        // 캐릭터의 Yaw 회전
+        float thisYaw = Mathf.Atan2(forward.z, forward.x) * Mathf.Rad2Deg;
+
+        // 적 캐릭터로 향하는 방향의 Yaw 회전
+        float damagedYaw = Mathf.Atan2(direction.z, direction.x)*Mathf.Rad2Deg;
+
+        // 각도차를 구합니다.
+        float deltaYaw = Mathf.Abs(Mathf.DeltaAngle(thisYaw, damagedYaw));
+
+        // 캐릭터 앞 방향과 40도 이상 차이가 나지 않는 경우 패링 성공
+        return deltaYaw <= PARRIED_ANGLE;
+
+
+
+
+    }
+
+
     /// <summary>
     /// 공격을 요청합니다.
     /// </summary>
     /// <param name="attackCode"/>요청시킬 공격 코드를 전달합니다.</param>
     public void RequestAttack(string attackCode)
     {
+
         // 공격이 요청되었을 때 피해를 입는 중이라면 요청 취소.
         if (_IsHit.Invoke()) return;
 
         // 공격이 요청되었을 때 구르기 상태라면 요청 취소.
         if (_IsDodging.Invoke()) return;
+
+        // 가드 상태라면 요청 취소
+        if (isGuardState) return;
 
         // 다음 공격을 예약하지 못하는 경우라면 함수 호출 종료.
         if (_NextAttack != null) return;

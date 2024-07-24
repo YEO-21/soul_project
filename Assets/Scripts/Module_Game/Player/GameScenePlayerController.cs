@@ -28,12 +28,10 @@ public sealed class GameScenePlayerController : PlayerControllerBase
 
     public override void InitializePlayerState()
     {
-         playerState = new GameScenePlayerState(100.0f, 50.0f);
+        playerState = new GameScenePlayerState(100.0f, 300.0f);
+
         GameScenePlayerState gameScenePlayerState = playerState as GameScenePlayerState;
-        gameScenePlayerState.SetItemInfo(new("000001", 5));
-
-
-
+        gameScenePlayerState.SetItemInfo(new ("000001", 5));
     }
 
     public override void StartControlCharacter(PlayerCharacterBase controlCharacter)
@@ -44,9 +42,6 @@ public sealed class GameScenePlayerController : PlayerControllerBase
 
         // 인벤토리 초기화
         inventory.Initialize(this);
-
-        // 퀵 슬롯에 아이템 등록
-        inventory.SetQuickSlotItem("000001");
 
         // GameUIPanel 를 찾습니다.
         gameUI = FindObjectOfType<GameUIPanel>();
@@ -68,6 +63,7 @@ public sealed class GameScenePlayerController : PlayerControllerBase
         // 퀵 슬롯에 아이템 등록
         inventory.SetQuickSlotItem("000001");
     }
+
 
     private void OnMovementInput(InputValue value)
     {
@@ -94,5 +90,10 @@ public sealed class GameScenePlayerController : PlayerControllerBase
     {
         _PlayerInputReceivable?.OnUseItem1();
         inventory.UseItemFromQuickSlot(0);
+    }
+
+    private void OnGuardInput(InputValue value)
+    {
+        _PlayerInputReceivable?.OnGuardInput(value.isPressed);
     }
 }

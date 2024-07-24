@@ -9,10 +9,8 @@ public sealed class GameScenePlayerState : PlayerStateBase
 {
     public float maxHp { get; private set; }
     public float hp { get; private set; }
-
-    public float maxStamina { get; private set; }
+    public float maxStamina { get; private set; }  
     public float stamina { get; private set; }
-
 
     /// <summary>
     /// 인벤토리 아이템 정보를 나타냅니다.
@@ -37,8 +35,6 @@ public sealed class GameScenePlayerState : PlayerStateBase
         inventoryItemInfos = new();
     }
 
-
-
     /// <summary>
     /// Hp 수치를 설정합니다.
     /// </summary>
@@ -50,7 +46,6 @@ public sealed class GameScenePlayerState : PlayerStateBase
 
         // 체력 변경됨 이벤트 발생
         onHpChanged?.Invoke(maxHp, hp);
-
     }
 
     /// <summary>
@@ -60,7 +55,7 @@ public sealed class GameScenePlayerState : PlayerStateBase
     public void SetStamina(float newStamina)
     {
         stamina = newStamina;
-        if(stamina > maxStamina) stamina = maxStamina;
+        if (stamina > maxStamina) stamina = maxStamina;
 
         // Stamina 변경됨 이벤트 발생
         onStaminaChanged?.Invoke(maxStamina, stamina);
@@ -81,11 +76,11 @@ public sealed class GameScenePlayerState : PlayerStateBase
     public void SetItemInfo(InventoryItemInfo newItemInfo)
     {
         // newItemInfo 의 아이템 코드와 일치하는 요소 인덱스를 찾습니다.
-        int index = 
-            inventoryItemInfos.FindIndex(itemInfo => itemInfo.itemCode == newItemInfo.itemCode);
+        int index = inventoryItemInfos.FindIndex(
+            itemInfo => itemInfo.itemCode == newItemInfo.itemCode);
 
         // 아이템을 찾지 못한 경우 요소 추가
-        if(index == -1)
+        if (index == -1)
             inventoryItemInfos.Add(newItemInfo);
 
         // 아이템을 찾은 경우 아이템 설정
@@ -96,4 +91,6 @@ public sealed class GameScenePlayerState : PlayerStateBase
             Debug.Log($"추가된 아이템 : {info.itemCode}");
         }
     }
+
+
 }

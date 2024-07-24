@@ -13,6 +13,7 @@ public sealed class PlayerCharacterAnimController : AnimController
     private const string PARAM_ATTACKCODE = "_AttackCode";
     private const string PARAM_ISATTACKING = "_IsAttacking";
     private const string PARAM_ISDAMAGED = "_IsDamaged";
+    private const string PARAM_ISGUARD = "_IsGuard";
 
     public float m_MoveSpeedBlend = 10.0f;
 
@@ -77,6 +78,9 @@ public sealed class PlayerCharacterAnimController : AnimController
         // 공격 취소됨 콜백 등록
         playerCharacter.attack.onAttackCanceled += CALLBACK_OnAttackCanceled;
 
+        // 방어 상태 변경됨 콜백 등록
+        playerCharacter.attack.onGuardStateUpdated += CALLBACK_OnGuardStateUpdated;
+
         // 피해 입음 콜백 등록
         playerCharacter.onHit += CALLBACK_OnHit;
     }
@@ -113,7 +117,7 @@ public sealed class PlayerCharacterAnimController : AnimController
     /// <summary>
     /// 피하기 시작시 호출되는 메서드입니다.
     /// </summary>
-    private void CALLBACK_OnDodgeRollStarted() =>SetParam(PARAM_DODGEROLLREQUESTED);
+    private void CALLBACK_OnDodgeRollStarted() => SetParam(PARAM_DODGEROLLREQUESTED);
 
     /// <summary>
     /// 공격 시작 시 호출되는 메서드입니다.
@@ -135,6 +139,11 @@ public sealed class PlayerCharacterAnimController : AnimController
     {
         SetParam(PARAM_ATTACKCODE, 0);
         SetParam(PARAM_ISATTACKING, false);
+    }
+
+    private void CALLBACK_OnGuardStateUpdated(bool isGuardState)
+    {
+        SetParam(PARAM_ISGUARD, isGuardState);
     }
 
     /// <summary>

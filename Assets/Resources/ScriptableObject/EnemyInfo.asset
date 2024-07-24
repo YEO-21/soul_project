@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_EnemyInfos:
   - m_EnemyCode: 000001
-    m_Name: "\uC724\uC11D\uC5F4"
+    m_Name: "\uC2A4\uCEEC"
     m_MaxHp: 100
     m_Atk: 20

@@ -11,8 +11,7 @@ public class InventoryItemInfo
     public string itemCode;
     public int itemCount;
 
-
-    public InventoryItemInfo() { }  
+    public InventoryItemInfo() { }
 
     public InventoryItemInfo(string itemCode, int itemCount = 1)
     {
