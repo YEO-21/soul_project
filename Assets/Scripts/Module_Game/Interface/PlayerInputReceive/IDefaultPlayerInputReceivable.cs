@@ -41,4 +41,9 @@ public interface IDefaultPlayerInputReceivable
     /// <param name="isPressed"></param>
     void OnGuardInput(bool isPressed);
 
+    /// <summary>
+    /// 상호작용 입력
+    /// </summary>
+    void OnInteractInput();
+
 }

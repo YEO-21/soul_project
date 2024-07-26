@@ -16,12 +16,16 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     private PlayerCharacterMovement _MovementComponent;
     private PlayerCharacterAttack _AttackComponent;
     private PlayerCharacterAnimController _AnimController;
+    private PlayerCharacterInteract _InteractComponent;
 
     public PlayerCharacterMovement movement => _MovementComponent ?? (_MovementComponent = GetComponent<PlayerCharacterMovement>());
     public PlayerCharacterAttack attack => 
         _AttackComponent ?? (_AttackComponent = GetComponent<PlayerCharacterAttack>());
     public PlayerCharacterAnimController animController => _AnimController ??
         (_AnimController = GetComponentInChildren<PlayerCharacterAnimController>());
+
+    public PlayerCharacterInteract interact => _InteractComponent ??
+        (_InteractComponent = GetComponent<PlayerCharacterInteract>());
 
     /// <summary>
     /// GameScenePlayerState 객체를 반환합니다.
@@ -55,6 +59,7 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
         movement.Initialize(this);
         attack.Initialize(this);
         animController.Initialize(this);
+        interact.Initialize(this);
 
         // Hit 애니메이션 끝남 콜백 등록
         animController.onHitAnimationFinished += CALLBACK_OnHitAnimationFinished;
@@ -80,6 +85,10 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     
     void IDefaultPlayerInputReceivable.OnUseItem1() { }
     void IDefaultPlayerInputReceivable.OnGuardInput(bool isPressed) => attack.OnGuardInput(isPressed);
+
+    void IDefaultPlayerInputReceivable.OnInteractInput() => interact.OnInteractInput();
+
+    
 
     public void OnHit(DamageBase damageInstance)
     {

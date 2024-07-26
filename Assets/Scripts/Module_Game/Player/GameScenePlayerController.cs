@@ -96,4 +96,9 @@ public sealed class GameScenePlayerController : PlayerControllerBase
     {
         _PlayerInputReceivable?.OnGuardInput(value.isPressed);
     }
+
+    private void OnInteractInput()
+    {
+        _PlayerInputReceivable?.OnInteractInput();
+    }
 }
