@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-
 
 /// <summary>
 /// 상호작용 기능을 나타내는 컴포넌트입니다.
@@ -12,6 +10,8 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
     [Header("# 상호작용 레이어")]
     public LayerMask m_PlayerInteractableLayer;
 
+    private GameScenePlayerController _PlayerController;
+
     /// <summary>
     /// 상호작용 가능한 객체들을 담기 위한 리스트
     /// </summary>
@@ -19,7 +19,6 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
 
     #region 디버그
     private DrawGizmoSphereInfo _DebugDrawInteractableArea;
-
     private List<DrawGizmoLineInfo> _DebugDrawInteractableLines = new();
     #endregion
 
@@ -29,7 +28,7 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
     /// <param name="playerCharacter"></param>
     public void Initialize(PlayerCharacter playerCharacter)
     {
-        
+        _PlayerController = playerCharacter.playerController as GameScenePlayerController;
     }
 
     private void Update()
@@ -52,39 +51,43 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
         _Interactables.Clear();
         _DebugDrawInteractableLines.Clear();
 
-        if(detectedCollisions.Length != 0)
+        if (detectedCollisions.Length != 0)
         {
-           
-           
-            foreach(Collider collision in detectedCollisions)
-
+            foreach (Collider collision in detectedCollisions)
             {
-
                 DrawGizmoLineInfo checkLine;
 
-                Vector3 start = transform.position + Vector3. up;
+                Vector3 start = transform.position + Vector3.up;
 
-                Vector3 checkDirection = (collision.transform.position - transform.forward).normalized;
+                // 감지한 객체로의 방향
+                Vector3 checkDirection = 
+                    (collision.transform.position - start).normalized;
 
                 Ray ray = new Ray(start, checkDirection);
                 RaycastHit hit;
-                if(PhysicsExt.Raycast(out checkLine, ray, out hit, 3.0f, int.MaxValue, QueryTriggerInteraction.Collide))
+                
+                if (PhysicsExt.Raycast(
+                    out checkLine,
+                    ray,
+                    out hit,
+                    3.0f,
+                    int.MaxValue,
+                    QueryTriggerInteraction.Collide))
                 {
-                    IPlayerInteractable interactable = hit.transform.gameObject.GetComponent<IPlayerInteractable>();
+                    IPlayerInteractable interactable =
+                        hit.transform.gameObject.GetComponent<IPlayerInteractable>();
 
                     // 상호작용 가능한 객체를 찾은 경우
                     if (interactable != null)
                     {
                         _Interactables.Add(interactable);
-                        Debug.Log(hit.transform.gameObject.name);
                     }
                 }
-
 
                 _DebugDrawInteractableLines.Add(checkLine);
             }
 
-            if(_Interactables.Count > 1)
+            if (_Interactables.Count > 1)
             {
                 _Interactables.Sort((item1, item2) =>
                 {
@@ -94,30 +97,40 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
                     return item1Dist < item2Dist ? -1 : 1;
                 });
             }
-
         }
-
     }
-
 
     /// <summary>
     /// 상호작용 키 입력 시 호출됩니다.
     /// </summary>
     public void OnInteractInput()
     {
+        // 상호작용 가능한 객체가 존재하지 않는다면 함수 호출 종료.
+        if (_Interactables.Count == 0) return;
 
+        // 상호작용 가능한 객체 하나를 얻습니다.
+        IPlayerInteractable firstInteractable = _Interactables[0];
+
+        // Npc 객체의 상호작용 시작 메서드 호출
+        firstInteractable.OnInteractStarted();
+
+        // 상호작용 UI 띄우기
+        //GameSceneUIInstance uiInstance = SceneManagerBase.instance.sceneInstance.
+        //    playerController.uiInstance as GameSceneUIInstance;
+        GameSceneUIInstance uiInstance = _PlayerController.uiInstance as GameSceneUIInstance;
+        uiInstance.OpenNpcInteractUI(firstInteractable.npcInfo);
     }
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        PhysicsExt.DrawGizmoSphere(_DebugDrawInteractableArea);
+        PhysicsExt.DrawOverlapSphere(_DebugDrawInteractableArea);
 
-        foreach (DrawGizmoLineInfo info in _DebugDrawInteractableLines)
+        foreach(DrawGizmoLineInfo info in _DebugDrawInteractableLines)
+        {
             PhysicsExt.DrawGizmoLine(info);
-
+        }
     }
-#endif 
-
+#endif
 
 }

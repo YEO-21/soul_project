@@ -62,7 +62,7 @@
                 {
                     "name": "InteractInput",
                     "type": "Button",
-                    "id": "4d7d9670-fe49-4c75-bf61-833f6beedd2e",
+                    "id": "fd12c7f6-e53e-46c8-8c9d-aea314f5628f",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -182,7 +182,7 @@
                 },
                 {
                     "name": "",
-                    "id": "b6e3bd8f-d7f3-4c47-ba52-bfd1209f41c7",
+                    "id": "b9c7ab70-36ae-4740-93f2-d183bb0e0b83",
                     "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",

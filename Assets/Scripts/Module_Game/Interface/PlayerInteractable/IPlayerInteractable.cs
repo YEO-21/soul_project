@@ -8,10 +8,8 @@ public interface IPlayerInteractable
 
     Transform transform { get; }
 
+    NpcInfo npcInfo { get; }
+
     void OnInteractStarted();
     void OnInteractFinished();
-
-
-
-
 }

@@ -88,6 +88,7 @@ public class GameManagerBase : MonoBehaviour
     protected virtual void OnGameManagerInitialized()
     {
         RegisterManager<SceneManagerBase>();
+        RegisterManager<SoundManager>();
 
     }
 

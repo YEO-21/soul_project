@@ -23,7 +23,6 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
         _AttackComponent ?? (_AttackComponent = GetComponent<PlayerCharacterAttack>());
     public PlayerCharacterAnimController animController => _AnimController ??
         (_AnimController = GetComponentInChildren<PlayerCharacterAnimController>());
-
     public PlayerCharacterInteract interact => _InteractComponent ??
         (_InteractComponent = GetComponent<PlayerCharacterInteract>());
 
@@ -60,6 +59,7 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
         attack.Initialize(this);
         animController.Initialize(this);
         interact.Initialize(this);
+        
 
         // Hit 애니메이션 끝남 콜백 등록
         animController.onHitAnimationFinished += CALLBACK_OnHitAnimationFinished;
@@ -84,21 +84,23 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     void IDefaultPlayerInputReceivable.OnNormalAttackInput() => attack.RequestAttack(Constants.PLAYER_ATTACKCODE_NORMAL);
     
     void IDefaultPlayerInputReceivable.OnUseItem1() { }
+
     void IDefaultPlayerInputReceivable.OnGuardInput(bool isPressed) => attack.OnGuardInput(isPressed);
 
     void IDefaultPlayerInputReceivable.OnInteractInput() => interact.OnInteractInput();
-
-    
 
     public void OnHit(DamageBase damageInstance)
     {
         // 구르기중인 경우 호출 종료.
         if (_IsDodging.Invoke()) return;
 
+
         // 패링 성공 여부 확인
         if (attack.IsParried(damageInstance.from.position)) return;
+
         // 패링 실패 시 가드 상태 비활성화
         else attack.OnGuardInput(false);
+
 
         // 피해를 입는 상태로 설정합니다.
         isHit = true;
@@ -115,8 +117,11 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
         // 계산된 체력을 설정합니다.
         gameScenePlayerState.SetHp(currentHp);
 
-        Debug.Log("현재 체력 : " + this.currentHp);
+        // 사운드 재생
+        SoundManager.instance.PlayHitSound(transform.position);
     }
+
+
 
     public bool UseStamina(float useStamina)
     {
