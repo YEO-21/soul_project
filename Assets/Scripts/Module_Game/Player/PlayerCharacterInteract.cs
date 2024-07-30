@@ -1,3 +1,4 @@
+using GameModule;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,16 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
     public LayerMask m_PlayerInteractableLayer;
 
     private GameScenePlayerController _PlayerController;
+
+    /// <summary>
+    /// 현재 사용중인 Npc 상호작용 UI 객체
+    /// </summary>
+    private NpcInteractUIPanel _CurrentNpcInteractUIPanel;
+
+    /// <summary>
+    /// 현재 상호작용중인 객체
+    /// </summary>
+    private IPlayerInteractable _CurrentInteractionTarget;
 
     /// <summary>
     /// 상호작용 가능한 객체들을 담기 위한 리스트
@@ -32,9 +43,7 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
     }
 
     private void Update()
-    {
-        CheckInteractableObject();
-    }
+       =>CheckInteractableObject();
 
     /// <summary>
     /// 상호작용 가능한 객체를 확인합니다.
@@ -109,16 +118,41 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
         if (_Interactables.Count == 0) return;
 
         // 상호작용 가능한 객체 하나를 얻습니다.
-        IPlayerInteractable firstInteractable = _Interactables[0];
+        _CurrentInteractionTarget = _Interactables[0];
 
-        // Npc 객체의 상호작용 시작 메서드 호출
-        firstInteractable.OnInteractStarted();
 
         // 상호작용 UI 띄우기
         //GameSceneUIInstance uiInstance = SceneManagerBase.instance.sceneInstance.
         //    playerController.uiInstance as GameSceneUIInstance;
         GameSceneUIInstance uiInstance = _PlayerController.uiInstance as GameSceneUIInstance;
-        uiInstance.OpenNpcInteractUI(firstInteractable.npcInfo);
+
+        _CurrentNpcInteractUIPanel = uiInstance.OpenNpcInteractUI(_CurrentInteractionTarget.npcInfo);
+
+        // UI 닫힘 콜백 등록
+        _CurrentNpcInteractUIPanel.onUIClosed += CALLBACK_OnInteractUIClosed;
+
+        // Npc 객체의 상호작용 시작 메서드 호출
+        _CurrentInteractionTarget.OnInteractStarted(_CurrentNpcInteractUIPanel);
+
+        // 입력 모드를 UI모드로 설정합니다.
+        _PlayerController.SetInputMode(Constants.INPUTMODE_UI, true);
+    }
+
+    private void CALLBACK_OnInteractUIClosed()
+    {
+
+        // 상호작용 종료
+        _CurrentInteractionTarget.OnInteractFinished();
+
+        // 상호작용 대상 비우기
+        _CurrentInteractionTarget = null;
+
+        // 상호작용 UI 비우기
+        _CurrentNpcInteractUIPanel = null;
+
+        // 입력 모드를 GameMode로 설정합니다.
+        _PlayerController.SetInputMode(Constants.INPUTMODE_GAME, false);
+
     }
 
 #if UNITY_EDITOR

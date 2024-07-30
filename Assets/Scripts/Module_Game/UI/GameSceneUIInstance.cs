@@ -30,9 +30,16 @@ public sealed class GameSceneUIInstance : UIInstanceBase
     }
 
     public NpcInteractUIPanel OpenNpcInteractUI(NpcInfo npcInfo)
+        => OpenNpcInteractUI<NpcInteractUIPanel>(npcInfo);
+
+
+    public T OpenNpcInteractUI<T>(NpcInfo npcInfo, 
+        NpcInteractUIPanel interactUIPrefab = null)
+        where T : NpcInteractUIPanel
     {
-        NpcInteractUIPanel interactUIPanel = Instantiate(
-            _NpcInteractUIPanelPrefab, transform);
+        T interactUIPanel = Instantiate(
+            (interactUIPrefab) ? interactUIPrefab : _NpcInteractUIPanelPrefab,
+             transform).GetComponent<T>();
 
         interactUIPanel.InitializeUI(npcInfo);
 

@@ -6,6 +6,9 @@ namespace GameModule
 { 
     public static class Constants
     {
+        public const string INPUTMODE_GAME = "GameMode";
+        public const string INPUTMODE_UI = "UIMode";
+
         /// <summary>
         /// 플레이어 기본 공격 코드
         /// </summary>

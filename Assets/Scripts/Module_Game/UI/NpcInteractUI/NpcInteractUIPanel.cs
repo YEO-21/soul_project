@@ -2,16 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NpcInteractUIPanel : MonoBehaviour
 {
-    [Header("# 이름 텍스트")]
-    public TMP_Text m_NameText;
+    private TMP_Text _NameText;
+    private TMP_Text _DialogText;
 
-    [Header("# 대화 내용 텍스트")]
-    public TMP_Text m_DialogText;
+    public Button quitButton { get; private set; } 
+    public List<Button> selectButtons { get; private set; }
 
-
+    #region 이벤트
+    // 이 UI가 닫힐 경우 발생하는 이벤트
+    public event System.Action onUIClosed;
+    #endregion
 
     public RectTransform rectTransform => transform as RectTransform;
 
@@ -22,8 +26,14 @@ public class NpcInteractUIPanel : MonoBehaviour
     private NpcInfo _NpcInfo;
 
 
-   public void InitializeUI(NpcInfo npcInfo)
+   public virtual void InitializeUI(NpcInfo npcInfo)
     {
+        // UI 요소 초기화
+        InitializeUIElements();
+
+
+        ShowSelections(0);
+
         // Npc 정보 설정
         _NpcInfo = npcInfo;
 
@@ -33,9 +43,59 @@ public class NpcInteractUIPanel : MonoBehaviour
         // 대화 정보 초기화
         InitializeDialogInfo();
 
-        Debug.Log($"Npc 이름 : {_NpcInfo.m_Name}");
-        Debug.Log($"대화 내용 : {_NpcInfo.m_DefaultDialog}");
+        // 닫힘 버튼 이벤트 설정
+        quitButton.onClick.AddListener(CALLBACK_OnQuitButtonClicked);
     }
+
+    public virtual void CloseUI()
+    {
+        onUIClosed?.Invoke();
+        Destroy(gameObject);
+    }
+
+    public void ShowSelections(int selCount)
+    {
+        for(int i = 0; i <selCount; ++i)
+        {
+            selectButtons[i].gameObject.SetActive(true);
+        }
+    }
+
+    /// <summary>
+    /// 선택지 문자열 변경 메서드
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="label"></param>
+    public void SetSelectionLabel(int index, string label)
+    {
+        TMP_Text labelText = selectButtons[index].GetComponentInChildren<TMP_Text>();
+        labelText.text = label;
+    }
+
+
+    private void InitializeUIElements()
+    {
+        Transform defaultDialogParentUI = transform.Find("Panel_Dialog");
+        _NameText = defaultDialogParentUI.Find("Text_InteractableName").GetComponent<TMP_Text>();
+        _DialogText = defaultDialogParentUI.Find("Text_Dialog").GetComponent<TMP_Text>();
+
+        Transform selectionParentUI = transform.Find("Panel_Selections");
+        quitButton = selectionParentUI.Find("Button_Quit").GetComponent<Button>();
+        selectButtons = new List<Button>();
+
+        for(int i = 0; i <6; ++i)
+        {
+            Button findedSelectionButton = 
+                selectionParentUI.Find($"Button_Selection0{(i + 1)}").GetComponent<Button>();
+
+            // 기본적으로 비활성화 상태가 되도록 합니다.
+            findedSelectionButton.gameObject.SetActive( false );
+
+            selectButtons.Add( findedSelectionButton );
+        }
+        
+    }
+
 
     private void InitializeRectTransformInfo()
     {
@@ -58,7 +118,10 @@ public class NpcInteractUIPanel : MonoBehaviour
 
     private void InitializeDialogInfo()
     {
-        m_NameText.text = _NpcInfo.m_Name;
-        m_DialogText.text = _NpcInfo.m_DefaultDialog;
+        _NameText.text = _NpcInfo.m_Name;
+        _DialogText.text = _NpcInfo.m_DefaultDialog;
     }
+
+    private void CALLBACK_OnQuitButtonClicked()
+        => CloseUI();
 }

@@ -44,7 +44,7 @@ public abstract class NpcBase : MonoBehaviour,
     /// <summary>
     /// 상호작용 시작 시 호출될 메서드
     /// </summary>
-    public virtual void OnInteractStarted()
+    public virtual void OnInteractStarted(NpcInteractUIPanel useInteractUI)
     {
         Debug.Log("상호작용 시작됨");
     }

@@ -1,5 +1,7 @@
+using GameModule;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,12 +12,15 @@ public sealed class GameScenePlayerController : PlayerControllerBase
 {
     private PlayerInventory _PlayerInventory;
 
+    private PlayerInput _PlayerInput;
+
     /// <summary>
     /// 사용자 입력을 처리할 객체입니다.
     /// </summary>
     private IDefaultPlayerInputReceivable _PlayerInputReceivable;
 
-
+    public PlayerInput playerInput => _PlayerInput ??
+        (_PlayerInput = GetComponent<PlayerInput>());
 
     /// <summary>
     /// 인벤토리 컴포넌트를 나타냅니다.
@@ -40,17 +45,42 @@ public sealed class GameScenePlayerController : PlayerControllerBase
         // 인벤토리 초기화
         inventory.Initialize(this);
 
+        SetInputMode(Constants.INPUTMODE_GAME, false);
+
         // 커서를 화면 중앙에 계속 배치되도록 합니다.
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
 
         // 커서를 표시하지 않도록 합니다.
-        Cursor.visible = false;
+        //Cursor.visible = false;
     }
+
 
     private void Start()
     {
         // 퀵 슬롯에 아이템 등록
         inventory.SetQuickSlotItem("000001");
+    }
+
+    /// <summary>
+    /// 입력 모드를 변경합니다.
+    /// </summary>
+    /// <param name="InputModeNmae"></param>
+    public void SetInputMode(string InputModeName, bool bShowCursor = false)
+    {
+        playerInput.SwitchCurrentActionMap(InputModeName);    
+
+
+        if (bShowCursor)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
     }
 
 

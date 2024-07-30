@@ -10,6 +10,6 @@ public interface IPlayerInteractable
 
     NpcInfo npcInfo { get; }
 
-    void OnInteractStarted();
+    void OnInteractStarted(NpcInteractUIPanel useInteractUI);
     void OnInteractFinished();
 }
