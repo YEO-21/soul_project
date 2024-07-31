@@ -8,6 +8,10 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     IDefaultPlayerInputReceivable,
     IDamageable
 {
+    [Header("# 캐릭터 Mesh Transform")]
+    public Transform m_CharacterMesshTransform;
+
+
     /// <summary>
     /// 마지막으로 스태미너를 사용한 시간
     /// </summary>
@@ -68,6 +72,10 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
         movement.onStaminaUsed += UseStamina;
         attack.onStaminaUsed += UseStamina;
 
+        // 상호작용 시작 끝 콜백 등록
+        interact.onInteractStarted += CALLBACK_OnInteractStarted;
+        interact.onInteractFinished += CALLBACK_OnInteractFinished;
+
         _IsDodging = () => movement.isDodging;
     }
 
@@ -88,6 +96,8 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     void IDefaultPlayerInputReceivable.OnGuardInput(bool isPressed) => attack.OnGuardInput(isPressed);
 
     void IDefaultPlayerInputReceivable.OnInteractInput() => interact.OnInteractInput();
+
+    void IDefaultPlayerInputReceivable.OnCloseUIInput() => interact.EscapeUIMode();
 
     public void OnHit(DamageBase damageInstance)
     {
@@ -157,7 +167,27 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
         isHit = false;
     }
 
+    /// <summary>
+    /// 상호작용 시작 시 호출됩니다.
+    /// </summary>
+    /// <param name="target"></param>
+    private void CALLBACK_OnInteractStarted(IPlayerInteractable target)
+    {
+        // 상호작용 시 캐릭터가 배치될 Transform 입니다.
+        Transform interactTransform = target.GetInteractionTransform();
 
+        m_CharacterMesshTransform.position = interactTransform.position;
+        m_CharacterMesshTransform.rotation = interactTransform.rotation;
+    }
+
+    /// <summary>
+    /// 상호자굥이 끝날 때 호출됩니다.
+    /// </summary>
+    private void CALLBACK_OnInteractFinished()
+    {
+        m_CharacterMesshTransform.localPosition = Vector3.zero;
+        m_CharacterMesshTransform.localRotation = Quaternion.identity;
+    }
 
 
 }

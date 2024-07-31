@@ -28,6 +28,18 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
     /// </summary>
     private List<IPlayerInteractable> _Interactables = new();
 
+    #region 이벤트
+    /// <summary>
+    /// 상호작용 시작 이벤트
+    /// </summary>
+    public event System.Action<IPlayerInteractable> onInteractStarted;
+
+    /// <summary>
+    /// 상호작용 끝 이벤트
+    /// </summary>
+    public event System.Action onInteractFinished;
+    #endregion
+
     #region 디버그
     private DrawGizmoSphereInfo _DebugDrawInteractableArea;
     private List<DrawGizmoLineInfo> _DebugDrawInteractableLines = new();
@@ -136,7 +148,25 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
 
         // 입력 모드를 UI모드로 설정합니다.
         _PlayerController.SetInputMode(Constants.INPUTMODE_UI, true);
+
+        // 상호작용 이벤트 발생
+        onInteractStarted?.Invoke(_CurrentInteractionTarget);
     }
+    
+    /// <summary>
+    /// UI 닫기 입력
+    /// </summary>
+    public void EscapeUIMode()
+    {
+        // UI 가 띄어진 경우
+        if(_CurrentNpcInteractUIPanel)
+        {
+            // UI 닫기
+            _CurrentNpcInteractUIPanel.CloseUI();
+
+        }
+    }
+
 
     private void CALLBACK_OnInteractUIClosed()
     {
@@ -153,7 +183,12 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
         // 입력 모드를 GameMode로 설정합니다.
         _PlayerController.SetInputMode(Constants.INPUTMODE_GAME, false);
 
+        // 상호작용 끝 이벤트 발생
+        onInteractFinished?.Invoke();
+
     }
+
+
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()

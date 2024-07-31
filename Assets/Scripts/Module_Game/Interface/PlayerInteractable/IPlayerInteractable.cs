@@ -12,4 +12,10 @@ public interface IPlayerInteractable
 
     void OnInteractStarted(NpcInteractUIPanel useInteractUI);
     void OnInteractFinished();
+
+    /// <summary>
+    /// 상호작용 시 캐릭터가 배치될 트랜스폼을 반환합니다.
+    /// </summary>
+    /// <returns></returns>
+    Transform GetInteractionTransform();
 }

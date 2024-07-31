@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,8 +21,13 @@ public abstract class NpcBase : MonoBehaviour,
 {
     private static NpcInfoScriptableObject _NpcInfoScriptableObject;
 
+    private CinemachineVirtualCamera _VirtualCamera;
+
     [Header("# NPC Code")]
     public string m_NpcCode;
+
+    [Header("# 상호작용 트랜스폼")]
+    public Transform m_InteractTransform;
 
 
     /// <summary>
@@ -37,6 +43,12 @@ public abstract class NpcBase : MonoBehaviour,
             _NpcInfoScriptableObject = Resources.Load<NpcInfoScriptableObject>(
                 "ScriptableObject/NpcInfo");
 
+        // Find Cinemachine Virtual Camera Component
+        _VirtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
+
+        if (_VirtualCamera)
+            _VirtualCamera.Priority = GameModule.Constants.INTERACT_CAMERA_DISABLE_PRIORITY;
+
         // Npc 정보를 얻습니다.
         npcInfo = _NpcInfoScriptableObject.GetNpcInfoFromCode(m_NpcCode);
 ;    }
@@ -46,7 +58,9 @@ public abstract class NpcBase : MonoBehaviour,
     /// </summary>
     public virtual void OnInteractStarted(NpcInteractUIPanel useInteractUI)
     {
-        Debug.Log("상호작용 시작됨");
+
+        if (_VirtualCamera)
+        _VirtualCamera.Priority = GameModule.Constants.INTERACT_CAMERA_ENABLE_PRIORITY;
     }
 
     /// <summary>
@@ -54,6 +68,14 @@ public abstract class NpcBase : MonoBehaviour,
     /// </summary>
     public virtual void OnInteractFinished()
     {
-        Debug.Log("상호작용 끝남");
+        if (_VirtualCamera)
+            _VirtualCamera.Priority = GameModule.Constants.INTERACT_CAMERA_DISABLE_PRIORITY;
     }
+
+    /// <summary>
+    /// 상호작용 위치를 반환합니다.
+    /// </summary>
+    /// <returns></returns>
+    public virtual Transform GetInteractionTransform()
+        => m_InteractTransform;
 }

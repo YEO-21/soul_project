@@ -28,12 +28,13 @@ public sealed class GameScenePlayerController : PlayerControllerBase
     public PlayerInventory inventory => _PlayerInventory ??
         (_PlayerInventory = GetComponent<PlayerInventory>());
 
+
     public override void InitializePlayerState()
     {
         playerState = new GameScenePlayerState(100.0f, 300.0f);
 
         GameScenePlayerState gameScenePlayerState = playerState as GameScenePlayerState;
-        gameScenePlayerState.SetItemInfo(new ("000001", 5));
+        gameScenePlayerState.SetItemInfo(new ("000001", 0));
     }
 
     public override void StartControlCharacter(PlayerCharacterBase controlCharacter)
@@ -119,5 +120,10 @@ public sealed class GameScenePlayerController : PlayerControllerBase
     private void OnInteractInput()
     {
         _PlayerInputReceivable?.OnInteractInput();
+    }
+
+    private void OnCloseUIInput()
+    {
+        _PlayerInputReceivable?.OnCloseUIInput();
     }
 }

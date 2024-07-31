@@ -46,4 +46,9 @@ public interface IDefaultPlayerInputReceivable
     /// </summary>
     void OnInteractInput();
 
+    /// <summary>
+    /// UI ´Ý±â ÀÔ·Â
+    /// </summary>
+    void OnCloseUIInput();
+
 }
