@@ -89,7 +89,6 @@ public class GameManagerBase : MonoBehaviour
     {
         RegisterManager<SceneManagerBase>();
         RegisterManager<SoundManager>();
-
     }
 
 }
