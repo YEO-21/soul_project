@@ -14,6 +14,11 @@ public class PlayerControllerBase : MonoBehaviour
     public PlayerStateBase playerState { get; protected set; }
 
     /// <summary>
+    /// UI 객체를 나타냅니다.
+    /// </summary>
+    public UIInstanceBase uiInstance { get; private set; }
+
+    /// <summary>
     /// 조종중인 플레이어 캐릭터 객체를 나타냅니다.
     /// </summary>
     public PlayerCharacterBase controlledCharacter { get; private set; }
@@ -27,6 +32,15 @@ public class PlayerControllerBase : MonoBehaviour
         playerState = new PlayerStateBase();
         // 추후 다른 형태의 플레이어 스테이트 클래스를 사용하는 경우
         // playerState 프로퍼티에 자유롭게 할당하여 사용합니다.
+    }
+
+    public virtual void InitializeUIInstance()
+    {
+        // UI 객체를 찾습니다.
+        uiInstance = FindObjectOfType<UIInstanceBase>();
+
+        // UI 객체 초기화
+        uiInstance?.InitializeUI(this);
     }
 
     /// <summary>

@@ -71,6 +71,9 @@ public sealed class EnemySkeleton : EnemyCharacterBase
 
         // 방향을 적용합니다.
         transform.forward = direction * (damagedFromBack ? 1 : -1);
+
+        // 사운드 재생
+        SoundManager.instance.PlayHitSound(transform.position);
     }
 
 

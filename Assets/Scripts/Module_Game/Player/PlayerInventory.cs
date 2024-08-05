@@ -24,6 +24,8 @@ public sealed class PlayerInventory : MonoBehaviour
     public void Initialize(GameScenePlayerController playerController)
     {
         _PlayerState = playerController.playerState as GameScenePlayerState;
+
+        _PlayerState.onItemChanged += CALLBACK_OnItemChanged;
     }
 
     public void SetQuickSlotItem(string itemCode)
@@ -117,5 +119,12 @@ public sealed class PlayerInventory : MonoBehaviour
 
     }
 
+    private void CALLBACK_OnItemChanged(InventoryItemInfo itemInfo)
+    {
+        InventoryItemInfo changedItemInfo = _QuickSlotItemInfos.Find(elem => elem.itemCode == itemInfo.itemCode);
 
+        if (changedItemInfo == null) return;
+
+        onQuickSlotItemUpdated?.Invoke(changedItemInfo);
+    }
 }
