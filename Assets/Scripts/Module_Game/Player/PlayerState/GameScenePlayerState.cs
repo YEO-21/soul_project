@@ -27,6 +27,11 @@ public sealed class GameScenePlayerState : PlayerStateBase
     /// </summary>
     public event System.Action<float /*maxStamina*/, float /*stamina*/> onStaminaChanged;
 
+    /// <summary>
+    /// 아이템 변경됨 이벤트
+    /// </summary>
+    public event System.Action<InventoryItemInfo> onItemChanged;
+
     public GameScenePlayerState(float initialHp, float initialStamina)
     {
         hp = maxHp = initialHp;
@@ -86,10 +91,9 @@ public sealed class GameScenePlayerState : PlayerStateBase
         // 아이템을 찾은 경우 아이템 설정
         else inventoryItemInfos[index] = newItemInfo;
 
-        foreach(var info in inventoryItemInfos)
-        {
-            Debug.Log($"추가된 아이템 : {info.itemCode}");
-        }
+        onItemChanged?.Invoke(newItemInfo);
+
+         
     }
 
 
