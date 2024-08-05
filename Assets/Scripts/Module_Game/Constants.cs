@@ -7,6 +7,14 @@ namespace GameModule
     public static class Constants
     {
         /// <summary>
+        /// Tags
+        /// </summary>
+        public const string TAG_PLAYER = "Player";
+
+
+
+
+        /// <summary>
         /// 플레이어 기본 공격 코드
         /// </summary>
         public const string PLAYER_ATTACKCODE_NORMAL        = "0001";
