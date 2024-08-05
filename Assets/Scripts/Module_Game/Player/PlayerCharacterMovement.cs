@@ -549,7 +549,6 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         // 점프 상태인 경우 속력을 갱신하지 않도록 합니다.
         if (isJumping) return;
 
-
         // 목표 속력을 지정합니다.
         float targetSpeed = isSprint ? m_SprintSpeed : m_WalkSpeed;
 
@@ -557,7 +556,7 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         if (!_IsMovementInput) targetSpeed = 0.0f;
 
         // 가드 상태인 경우 속력을 갱신하지 않습니다.
-        if (_IsGuardState.Invoke()) targetSpeed = 0.0f;
+        if (_IsGuardState()) targetSpeed = 0.0f;
 
         // 달리기 중이며, 이동 입력이 존재하는 경우
         if (isSprint && _IsMovementInput)
@@ -697,7 +696,7 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
         if (_IsAttacking.Invoke()) return;
 
         // 가드 상태인 경우 호출 종료
-        if (_IsGuardState.Invoke()) return;
+        if (_IsGuardState()) return;
 
         // 피하기 상태가 아닌 경우에만 실행
         if (isDodging) return;
@@ -734,7 +733,7 @@ public sealed class PlayerCharacterMovement : MonoBehaviour
     public void OnSprintInput(bool isPressed)
     {
         // 가드 상태인 경우 호출 종료
-        if(_IsGuardState.Invoke()) return;
+        if (_IsGuardState()) return;
 
         isSprint = isPressed;
     }

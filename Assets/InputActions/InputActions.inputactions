@@ -58,6 +58,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "InteractInput",
+                    "type": "Button",
+                    "id": "fd12c7f6-e53e-46c8-8c9d-aea314f5628f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -168,6 +177,45 @@
                     "processors": "",
                     "groups": "PC",
                     "action": "GuardInput",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b9c7ab70-36ae-4740-93f2-d183bb0e0b83",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "InteractInput",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UIMode",
+            "id": "f784ab7f-fdc2-4d8e-a5c4-de83ab8fc122",
+            "actions": [
+                {
+                    "name": "CloseUIInput",
+                    "type": "Button",
+                    "id": "f088a8a8-c1a0-4b8b-84b4-174f824c30b9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "64079943-7ee8-44f2-bb7f-be1ec797c472",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "CloseUIInput",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

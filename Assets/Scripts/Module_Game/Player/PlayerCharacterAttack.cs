@@ -7,9 +7,6 @@ using UnityEngine;
 /// </summary>
 public sealed class PlayerCharacterAttack : MonoBehaviour
 {
-    private const float PARRIED_ANGLE = 40.0f;
-
-
     [Header("# 장착중인 무기")]
     public WeaponBase m_EquippedWeapon;
 
@@ -173,14 +170,14 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
 
     public void OnGuardInput(bool isPressed)
     {
-        // 상태가 변경된 경우가 아니라면 호출 종료
+        // 상태가 변경된 경우가 아니라면 호출 종료.
         if (isGuardState == isPressed) return;
 
-        // 공격 상태인 경우 호출 종료
-        if (isAttacking) return;
+        // 구르기 상태라면 호출 종료
+        if (_IsDodging()) return;
 
-        // 구르기 상태인 경우 호출 종료
-        if (_IsDodging.Invoke()) return;
+        // 공격 상태인 경우 호출 종료.
+        if (isAttacking) return;
 
         isGuardState = isPressed;
 
@@ -191,22 +188,7 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
     public bool IsParried(Vector3 from)
     {
         // 방어 상태가 아닌 경우 함수 호출 종료
-        if(!isGuardState) return false;
-
-        #region MyStyle
-        //// 캐릭터 앞 방향과 40도 이상 차이가 나지 않는 경우 패링 성공
-        //Vector3 playerCharacterVector = gameObject.transform.position;
-
-        //Vector3 dir = from - playerCharacterVector;
-        //dir.y = 0.0f;
-        //dir.Normalize();
-
-        //// 플레이어가 적을 바라보는 방향을 구합니다.
-        //float newParriedAngle = Mathf.Abs(Mathf.Acos(Vector3.Dot(dir, gameObject.transform.forward)) * Mathf.Rad2Deg);
-
-        //Debug.Log("newParredAngle = " +  newParriedAngle);
-
-        #endregion
+        if (!isGuardState) return false;
 
         // 캐릭터의 현재 위치
         Vector3 currentPosition = transform.position;
@@ -223,19 +205,19 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
         float thisYaw = Mathf.Atan2(forward.z, forward.x) * Mathf.Rad2Deg;
 
         // 적 캐릭터로 향하는 방향의 Yaw 회전
-        float damagedYaw = Mathf.Atan2(direction.z, direction.x)*Mathf.Rad2Deg;
+        float damagedYaw = Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg;
 
         // 각도차를 구합니다.
         float deltaYaw = Mathf.Abs(Mathf.DeltaAngle(thisYaw, damagedYaw));
 
         // 캐릭터 앞 방향과 40도 이상 차이가 나지 않는 경우 패링 성공
-        return deltaYaw <= PARRIED_ANGLE;
+        bool isParried = deltaYaw < 40.0f;
 
+        if (isParried) 
+            SoundManager.instance.PlayGuardSound(transform.position);
 
-
-
+        return isParried;
     }
-
 
     /// <summary>
     /// 공격을 요청합니다.
@@ -243,7 +225,6 @@ public sealed class PlayerCharacterAttack : MonoBehaviour
     /// <param name="attackCode"/>요청시킬 공격 코드를 전달합니다.</param>
     public void RequestAttack(string attackCode)
     {
-
         // 공격이 요청되었을 때 피해를 입는 중이라면 요청 취소.
         if (_IsHit.Invoke()) return;
 

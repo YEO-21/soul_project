@@ -179,4 +179,13 @@ public sealed class PlayerCharacterAnimController : AnimController
     /// </summary>
     private void AnimEvent_OnAttackAreaCheckFinished()
         => onAttackAreaCheckFinished?.Invoke();
+
+    private void AnimEvent_PlayEffectSound01() =>
+        SoundManager.instance.PlayEffectSound(SoundManager.EFFECT_SWING01, transform.position);
+
+    private void AnimEvent_PlayEffectSound02() =>
+        SoundManager.instance.PlayEffectSound(SoundManager.EFFECT_SWING02, transform.position);
+
+    private void AnimEvent_PlayEffectSound03() =>
+        SoundManager.instance.PlayEffectSound(SoundManager.EFFECT_SWING03, transform.position);
 }
