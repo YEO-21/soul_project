@@ -14,4 +14,13 @@ public sealed class GameManager : GameManagerBase
 
     public static GameManager instance => _Instance ?? (_Instance = Get<GameManager>());
 
+    protected override void OnGameManagerInitialized()
+    {
+        base.OnGameManagerInitialized();
+
+        RegisterManager<LocalDataManager>();
+
+
+    }
+
 }

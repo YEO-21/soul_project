@@ -14,10 +14,5 @@ OcclusionCullingData:
     indexPortals: 0
     sizePortals: 0
     scene: 8124e5870f4fd4c779e7a5f994e84ad1
-  - indexRenderers: 0
-    sizeRenderers: 0
-    indexPortals: 0
-    sizePortals: 0
-    scene: ad195bdc3ed6f6649984493e13fdc3e9
   m_StaticRenderers: []
   m_Portals: []

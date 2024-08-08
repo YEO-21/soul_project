@@ -9,8 +9,7 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
     IDamageable
 {
     [Header("# 캐릭터 Mesh Transform")]
-    public Transform m_CharacterMesshTransform;
-
+    public Transform m_CharacterMeshTransform;
 
     /// <summary>
     /// 마지막으로 스태미너를 사용한 시간
@@ -97,7 +96,8 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
 
     void IDefaultPlayerInputReceivable.OnInteractInput() => interact.OnInteractInput();
 
-    void IDefaultPlayerInputReceivable.OnCloseUIInput() => interact.EscapeUIMode();
+    void IDefaultPlayerInputReceivable.OnCloseUIInput() => interact.OnCloseUIInput();
+    
 
     public void OnHit(DamageBase damageInstance)
     {
@@ -176,18 +176,21 @@ public sealed class PlayerCharacter : PlayerCharacterBase,
         // 상호작용 시 캐릭터가 배치될 Transform 입니다.
         Transform interactTransform = target.GetInteractionTransform();
 
-        m_CharacterMesshTransform.position = interactTransform.position;
-        m_CharacterMesshTransform.rotation = interactTransform.rotation;
+        m_CharacterMeshTransform.position = interactTransform.position;
+        m_CharacterMeshTransform.rotation = interactTransform.rotation;
     }
 
     /// <summary>
-    /// 상호자굥이 끝날 때 호출됩니다.
+    /// 상호작용이 끝날 때 호출됩니다.
     /// </summary>
     private void CALLBACK_OnInteractFinished()
     {
-        m_CharacterMesshTransform.localPosition = Vector3.zero;
-        m_CharacterMesshTransform.localRotation = Quaternion.identity;
+        m_CharacterMeshTransform.localPosition = Vector3.zero;
+        m_CharacterMeshTransform.localRotation = Quaternion.identity;
     }
+
+
+
 
 
 }

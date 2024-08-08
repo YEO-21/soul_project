@@ -14,9 +14,9 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
     private GameScenePlayerController _PlayerController;
 
     /// <summary>
-    /// 현재 사용중인 Npc 상호작용 UI 객체
+    /// 상호작용 가능한 객체들을 담기 위한 리스트
     /// </summary>
-    private NpcInteractUIPanel _CurrentNpcInteractUIPanel;
+    private List<IPlayerInteractable> _Interactables = new();
 
     /// <summary>
     /// 현재 상호작용중인 객체
@@ -24,9 +24,9 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
     private IPlayerInteractable _CurrentInteractionTarget;
 
     /// <summary>
-    /// 상호작용 가능한 객체들을 담기 위한 리스트
+    /// 현재 사용중인 Npc 상호작용 UI 객체
     /// </summary>
-    private List<IPlayerInteractable> _Interactables = new();
+    private NpcInteractUIPanel _CurrentNpcInteractUIPanel;
 
     #region 이벤트
     /// <summary>
@@ -39,6 +39,7 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
     /// </summary>
     public event System.Action onInteractFinished;
     #endregion
+
 
     #region 디버그
     private DrawGizmoSphereInfo _DebugDrawInteractableArea;
@@ -55,7 +56,9 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
     }
 
     private void Update()
-       =>CheckInteractableObject();
+    {
+        CheckInteractableObject();
+    }
 
     /// <summary>
     /// 상호작용 가능한 객체를 확인합니다.
@@ -132,13 +135,12 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
         // 상호작용 가능한 객체 하나를 얻습니다.
         _CurrentInteractionTarget = _Interactables[0];
 
-
         // 상호작용 UI 띄우기
         //GameSceneUIInstance uiInstance = SceneManagerBase.instance.sceneInstance.
         //    playerController.uiInstance as GameSceneUIInstance;
         GameSceneUIInstance uiInstance = _PlayerController.uiInstance as GameSceneUIInstance;
-
-        _CurrentNpcInteractUIPanel = uiInstance.OpenNpcInteractUI(_CurrentInteractionTarget.npcInfo);
+        _CurrentNpcInteractUIPanel = uiInstance.OpenNpcInteractUI(
+            _CurrentInteractionTarget.npcInfo);
 
         // UI 닫힘 콜백 등록
         _CurrentNpcInteractUIPanel.onUIClosed += CALLBACK_OnInteractUIClosed;
@@ -152,25 +154,22 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
         // 상호작용 이벤트 발생
         onInteractStarted?.Invoke(_CurrentInteractionTarget);
     }
-    
+
     /// <summary>
     /// UI 닫기 입력
     /// </summary>
-    public void EscapeUIMode()
+    public void OnCloseUIInput()
     {
-        // UI 가 띄어진 경우
-        if(_CurrentNpcInteractUIPanel)
+        // UI 가 띄워진 경우
+        if (_CurrentNpcInteractUIPanel)
         {
             // UI 닫기
             _CurrentNpcInteractUIPanel.CloseUI();
-
         }
     }
 
-
     private void CALLBACK_OnInteractUIClosed()
     {
-
         // 상호작용 종료
         _CurrentInteractionTarget.OnInteractFinished();
 
@@ -185,10 +184,7 @@ public sealed class PlayerCharacterInteract : MonoBehaviour
 
         // 상호작용 끝 이벤트 발생
         onInteractFinished?.Invoke();
-
     }
-
-
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()

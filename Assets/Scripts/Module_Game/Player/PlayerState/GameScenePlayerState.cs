@@ -92,8 +92,6 @@ public sealed class GameScenePlayerState : PlayerStateBase
         else inventoryItemInfos[index] = newItemInfo;
 
         onItemChanged?.Invoke(newItemInfo);
-
-         
     }
 
 

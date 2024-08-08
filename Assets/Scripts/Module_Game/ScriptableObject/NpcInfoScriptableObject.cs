@@ -5,7 +5,6 @@ using UnityEngine;
 
 
 
-
 [CreateAssetMenu(
     fileName = "NpcInfo",
     menuName = "ScriptableObject/NpcInfo",
@@ -16,7 +15,6 @@ public sealed class NpcInfoScriptableObject : ScriptableObject
 
     public NpcInfo GetNpcInfoFromCode(string code)
         => m_NpcInfos.Find(elem => elem.m_Code == code);
-
 }
 
 [System.Serializable]
@@ -28,7 +26,6 @@ public class NpcInfo
     [Header("# Npc 이름")]
     public string m_Name;
 
-
     [Header("# Npc 타입")]
     public NpcType m_Type;
 
@@ -38,8 +35,5 @@ public class NpcInfo
 
     [Header("# Params")]
     public List<string> m_StringParams;
-
-
-
 }
 

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
 [RequireComponent(typeof(Collider))]
 public class SceneBounds : MonoBehaviour
 {
@@ -20,14 +19,13 @@ public class SceneBounds : MonoBehaviour
     {
         _Bound = GetComponent<Collider>();
         _Bound.isTrigger = true;
-
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(Constants.TAG_PLAYER))
             StartCoroutine(LoadAsync());
-    }    
+    }
 
     private void OnTriggerExit(Collider other)
     {
@@ -38,7 +36,7 @@ public class SceneBounds : MonoBehaviour
     private IEnumerator LoadAsync()
     {
         // 이미 로드된 경우 루틴을 종료합니다.
-        if(_IsLoaded) yield break;
+        if (_IsLoaded) yield break;
 
         // 로딩 / 언로딩 상태가 끝날때까지 대기합니다.
         yield return new WaitWhile(() => _IsLoadingOrUnloading);
@@ -56,9 +54,6 @@ public class SceneBounds : MonoBehaviour
 
         // 로드됨 상태로 설정
         _IsLoaded = true;
-
-
-
     }
 
     private IEnumerator UnloadAsync()
@@ -70,7 +65,6 @@ public class SceneBounds : MonoBehaviour
         yield return new WaitWhile(() => _IsLoadingOrUnloading);
 
         _IsLoadingOrUnloading = true;
-
 
         // 씬 언로드를 진행합니다.
         AsyncOperation ao = SceneManager.UnloadSceneAsync(m_LoadSceneName);
@@ -84,5 +78,4 @@ public class SceneBounds : MonoBehaviour
         // 언로드 상태로 설정
         _IsLoaded = false;
     }
-
 }

@@ -1,7 +1,6 @@
 using GameModule;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -22,12 +21,13 @@ public sealed class GameScenePlayerController : PlayerControllerBase
     public PlayerInput playerInput => _PlayerInput ??
         (_PlayerInput = GetComponent<PlayerInput>());
 
+
+
     /// <summary>
     /// 인벤토리 컴포넌트를 나타냅니다.
     /// </summary>
     public PlayerInventory inventory => _PlayerInventory ??
         (_PlayerInventory = GetComponent<PlayerInventory>());
-
 
     public override void InitializePlayerState()
     {
@@ -55,21 +55,13 @@ public sealed class GameScenePlayerController : PlayerControllerBase
         //Cursor.visible = false;
     }
 
-
-    private void Start()
-    {
-        // 퀵 슬롯에 아이템 등록
-        inventory.SetQuickSlotItem("000001");
-    }
-
     /// <summary>
     /// 입력 모드를 변경합니다.
     /// </summary>
-    /// <param name="InputModeNmae"></param>
+    /// <param name="InputModeName"></param>
     public void SetInputMode(string InputModeName, bool bShowCursor = false)
     {
-        playerInput.SwitchCurrentActionMap(InputModeName);    
-
+        playerInput.SwitchCurrentActionMap(InputModeName);
 
         if (bShowCursor)
         {
@@ -81,7 +73,12 @@ public sealed class GameScenePlayerController : PlayerControllerBase
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+    }
 
+    private void Start()
+    {
+        // 퀵 슬롯에 아이템 등록
+        inventory.SetQuickSlotItem("000001");
     }
 
 
@@ -125,5 +122,15 @@ public sealed class GameScenePlayerController : PlayerControllerBase
     private void OnCloseUIInput()
     {
         _PlayerInputReceivable?.OnCloseUIInput();
+    }
+
+    private void OnOpenMenuInput()
+    {
+        SetInputMode(Constants.INPUTMODE_UI, true);
+
+        GameSceneUIInstance gameSceneUI = uiInstance as GameSceneUIInstance;
+        gameSceneUI.OpenGameMenu();
+
+        Time.timeScale = 0.0f;
     }
 }

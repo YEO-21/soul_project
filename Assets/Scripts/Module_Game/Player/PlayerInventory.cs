@@ -24,7 +24,6 @@ public sealed class PlayerInventory : MonoBehaviour
     public void Initialize(GameScenePlayerController playerController)
     {
         _PlayerState = playerController.playerState as GameScenePlayerState;
-
         _PlayerState.onItemChanged += CALLBACK_OnItemChanged;
     }
 
@@ -127,4 +126,5 @@ public sealed class PlayerInventory : MonoBehaviour
 
         onQuickSlotItemUpdated?.Invoke(changedItemInfo);
     }
+
 }

@@ -67,6 +67,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "OpenMenuInput",
+                    "type": "Button",
+                    "id": "74b0c352-1e9f-4aa2-a58a-81d5cdf929f0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -190,17 +199,28 @@
                     "action": "InteractInput",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c56b9bc7-7249-464b-9cc1-8b39f6dda0ed",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "OpenMenuInput",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
         {
             "name": "UIMode",
-            "id": "f784ab7f-fdc2-4d8e-a5c4-de83ab8fc122",
+            "id": "249ee584-c50c-453d-a681-1351419c4633",
             "actions": [
                 {
                     "name": "CloseUIInput",
                     "type": "Button",
-                    "id": "f088a8a8-c1a0-4b8b-84b4-174f824c30b9",
+                    "id": "1963a155-7ba5-43a1-9354-3d4063059a1e",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -210,7 +230,7 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "64079943-7ee8-44f2-bb7f-be1ec797c472",
+                    "id": "ad7950ad-159a-44c6-be28-457ab176a811",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
